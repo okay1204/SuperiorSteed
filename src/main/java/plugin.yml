@@ -1,0 +1,14 @@
+main: me.screescree.SuperiorSteed.SuperiorSteed
+name: SuperiorSteed
+description: This plugin makes horses much more powerful, to make them more pet-like.
+version: 1.0
+author: screescree
+api-version: 1.18
+
+commands:
+  summonhorse:
+    description: "DEBUG. Spawn a SuperiorHorse"
+    usage: "§cUsage: /<command>" 
+  horsestats:
+    description: "Displays the stats of the horse you are currently riding or looking at."
+    usage: "§cUsage: /<command>"
