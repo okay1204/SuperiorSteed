@@ -63,6 +63,7 @@ public class CommandListener implements CommandExecutor, TabCompleter {
             Horse horse = (Horse) entity;
             player.sendMessage(Utils.colorize("&aHorse stats:"));
             player.sendMessage(Utils.colorize("&a- Hunger: &f" + horse.getPersistentDataContainer().get(new NamespacedKey(plugin, "hunger"), PersistentDataType.DOUBLE)));
+            player.sendMessage(Utils.colorize("&a- Trust: &f" + horse.getPersistentDataContainer().get(new NamespacedKey(plugin, "trust"), PersistentDataType.DOUBLE)));
         }
         
         return true;
