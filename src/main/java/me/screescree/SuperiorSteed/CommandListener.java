@@ -52,7 +52,6 @@ public class CommandListener implements CommandExecutor, TabCompleter {
 
             Entity entity = raytraceResult.getHitEntity();
             SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse((Horse) entity);
-            // TODO display horse stats with meters using these characters: ░ █
 
             String horseName = superiorHorse.getBukkitEntity().getCustomName() != null ? superiorHorse.getBukkitEntity().getCustomName() : "Horse";
             // limit horse name to 20 characters

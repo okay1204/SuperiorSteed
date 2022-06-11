@@ -110,7 +110,6 @@ public class SuperiorHorse {
         
         horse.remove();
         
-        // // TODO copy all the data from the normal horse to the superior horse
         PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
 
         double hunger = containerValueOrDefault(container, "hunger", PersistentDataType.DOUBLE);
