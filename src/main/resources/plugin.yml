@@ -7,12 +7,38 @@ api-version: 1.18
 
 commands:
   summonhorse:
-    description: "DEBUG. Spawn a SuperiorHorse"
+    description: "Spawns a custom horse"
     usage: "§cUsage: /<command>" 
+    permission: "superiorsteed.admin.summonhorse"
   horsestats:
     description: "Displays the stats of the horse you are currently riding or looking at."
     usage: "§cUsage: /<command>"
-  # temporary debug commands
+    permission: "superiorsteed.horsestats"
+  # debug commands
   horsecache:
-    description: "DEBUG. Displays the cache of all horses in the server."
+    description: "Displays the cache of all horses in the server."
     usage: "§cUsage: /<command>"
+    permission: "superiorsteed.debug.horsecache"
+
+permissions:
+  superiorsteed.horsestats:
+    description: "Allows the user to see the stats of the horse they are looking at."
+    default: true
+
+  superiorsteed.admin:
+    description: "Allows the user to use the plugin's admin commands."
+    default: op
+    children:
+      superiorsteed.admin.summonhorse: true
+  superiorsteed.admin.summonhorse:
+    description: "Allows the user to summon in a custom horse."
+    default: op
+  
+  superiorsteed.debug:
+    description: "Allows the user to use the plugin's debug commands."
+    default: false
+    children:
+      superiorsteed.debug.horsecache: true
+  superiorsteed.debug.horsecache:
+    description: "Allows the user to see the cache of all horses in the server."
+    default: false
