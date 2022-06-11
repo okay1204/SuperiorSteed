@@ -26,14 +26,7 @@ public class CommandListener implements CommandExecutor, TabCompleter {
         String commandName = command.getName();
 
         Player player;
-        if (commandName.equals("summonhorse")) {
-            // TODO add ability to change spawn location, and horse settings
-            player = (Player) sender;
-
-            plugin.getHorseManager().newSuperiorHorse(player.getLocation());
-            plugin.getLogger().info("Summoned a horse!");
-        }
-        else if (commandName.equals("horsestats")) {
+        if (commandName.equals("horsestats")) {
             // TODO implement checking for horse player is riding on
             // for now it checks the horse that is being looked at
             
@@ -59,15 +52,43 @@ public class CommandListener implements CommandExecutor, TabCompleter {
 
             Entity entity = raytraceResult.getHitEntity();
             SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse((Horse) entity);
-            player.sendMessage(Utils.colorize("&aHorse stats:"));
-            player.sendMessage(Utils.colorize("&a- Hunger: &f" + superiorHorse.hungerStat().get()));
-            player.sendMessage(Utils.colorize("&a- Trust: &f" + superiorHorse.trustStat().get()));
+            // TODO display horse stats with meters using these characters: ░ █
+
+            String horseName = superiorHorse.getBukkitEntity().getCustomName() != null ? superiorHorse.getBukkitEntity().getCustomName() : "Horse";
+            // limit horse name to 20 characters
+            if (horseName.length() > 20) {
+                horseName = horseName.substring(0, 20);
+            }
+
+            player.sendMessage(Utils.colorize("&7---------------- &e" + horseName + "'s stats &7----------------"));
+            String firstStatLine = "";
+            firstStatLine += addStatMessage("Hunger", superiorHorse.hungerStat().get());
+            firstStatLine += addStatMessage("Trust", superiorHorse.trustStat().get());
+            firstStatLine += addStatMessage("Friendliness", superiorHorse.friendlinessStat().get());
+            String secondStatLine = Utils.colorize("&f          ");
+            secondStatLine += addStatMessage("Comfortability", superiorHorse.comfortabilityStat().get());
+            secondStatLine += addStatMessage("Water Bravery", superiorHorse.waterBraveryStat().get());
+
+            player.sendMessage(firstStatLine);
+            player.sendMessage(secondStatLine);
+        }
+        // ADMIN COMMANDS
+        else if (commandName.equals("summonhorse")) {
+            // TODO add ability to change spawn location, and horse settings
+            player = (Player) sender;
+
+            plugin.getHorseManager().newSuperiorHorse(player.getLocation());
+            plugin.getLogger().info("Summoned a horse!");
         }
         // DEBUG COMMANDS
         else if (commandName.equals("horsecache")) {
             sender.sendMessage(Utils.colorize("&aHorse cache:"));
+            String cacheString = plugin.getHorseManager().getCache().toString();
+            if (cacheString.length() > 255) {
+                cacheString = cacheString.substring(0, 255);
+            }
             sender.sendMessage(plugin.getHorseManager().getCache().toString());
-            sender.sendMessage(plugin.getHorseManager().getCache().size() + "");
+            sender.sendMessage("Length: " + plugin.getHorseManager().getCache().size());
         }
         
         return true;
@@ -78,5 +99,22 @@ public class CommandListener implements CommandExecutor, TabCompleter {
         String commandName = command.getName();
 
         return new ArrayList<>();
+    }
+
+    private String addStatMessage(String name, double value) {
+        int percentValue = (int) Math.ceil(value * 100);
+        String outputString = Utils.colorize("&a" + name + ": &f" + percentValue + "%");
+        
+        String meterString = "&a";
+        for (int i = 0; i < percentValue / 10; i++) {
+            meterString += "█";
+        }
+        meterString += "&7";
+        for (int i = 0; i < (100 - percentValue) / 10; i++) {
+            meterString += "░";
+        }
+
+        outputString += " " + Utils.colorize(meterString) + "    ";
+        return outputString;
     }
 }
