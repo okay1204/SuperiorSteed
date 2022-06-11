@@ -74,7 +74,7 @@ public class SuperiorHorsesManager implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     private void onHorseSpawn(CreatureSpawnEvent event) {
-        if (!(event.getEntityType() == EntityType.HORSE) || isSpawningCustomHorse) {
+        if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.DEFAULT || !(event.getEntityType() == EntityType.HORSE) || isSpawningCustomHorse) {
             return;
         }
 
