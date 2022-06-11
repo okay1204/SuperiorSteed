@@ -192,5 +192,9 @@ public class SuperiorHorse {
     public SuperiorHorseEntity getNMSEntity() {
         return nmsEntity;
     }
+
+    public Entity getBukkitEntity() {
+        return bukkitEntity;
+    }
 }
 
