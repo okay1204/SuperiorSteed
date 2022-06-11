@@ -24,13 +24,11 @@ public class SuperiorHorsesManager implements Listener {
     public SuperiorHorsesManager(SuperiorSteed plugin) {
         this.plugin = plugin;
         
-        isSpawningCustomHorse = true;
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntitiesByClass(Horse.class)) {
                 superiorHorses.add(new SuperiorHorse((Horse) entity));
             }
         }
-        isSpawningCustomHorse = false;
     }
     
     // TODO add method to clear any horses that are no longer in the server from the cache

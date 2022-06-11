@@ -36,7 +36,7 @@ public class SuperiorHorse {
         nmsEntity = new SuperiorHorseEntity(horse);
         bukkitEntity = ((CraftWorld) spawnLocation.getWorld()).addEntity(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         bukkitEntity.setRotation(spawnLocation.getYaw(), spawnLocation.getPitch());
-        
+        bukkitEntity.teleport(spawnLocation, TeleportCause.PLUGIN);
         bukkitEntity.setAI(horse.hasAI());
         bukkitEntity.setTamed(horse.isTamed());
         bukkitEntity.setOwner(horse.getOwner());
@@ -108,6 +108,9 @@ public class SuperiorHorse {
         bukkitEntity.setRemainingAir(horse.getRemainingAir());
         bukkitEntity.setSwimming(horse.isSwimming());
         
+        horse.remove();
+        
+        // // TODO copy all the data from the normal horse to the superior horse
         PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
 
         double hunger = containerValueOrDefault(container, "hunger", PersistentDataType.DOUBLE);
