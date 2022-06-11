@@ -3,7 +3,6 @@ package me.screescree.SuperiorSteed;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,11 +11,9 @@ import org.bukkit.craftbukkit.v1_18_R1.entity.CraftHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.RayTraceResult;
 
 import me.screescree.SuperiorSteed.SuperiorHorse.SuperiorHorse;
-
 public class CommandListener implements CommandExecutor, TabCompleter {
     private SuperiorSteed plugin;
 
@@ -30,9 +27,10 @@ public class CommandListener implements CommandExecutor, TabCompleter {
 
         Player player;
         if (commandName.equals("summonhorse")) {
+            // TODO add ability to change spawn location, and horse settings
             player = (Player) sender;
 
-            new SuperiorHorse(player.getLocation());
+            plugin.getHorseManager().newSuperiorHorse(player.getLocation());
             plugin.getLogger().info("Summoned a horse!");
         }
         else if (commandName.equals("horsestats")) {
@@ -60,10 +58,16 @@ public class CommandListener implements CommandExecutor, TabCompleter {
             }
 
             Entity entity = raytraceResult.getHitEntity();
-            Horse horse = (Horse) entity;
+            SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse((Horse) entity);
             player.sendMessage(Utils.colorize("&aHorse stats:"));
-            player.sendMessage(Utils.colorize("&a- Hunger: &f" + horse.getPersistentDataContainer().get(new NamespacedKey(plugin, "hunger"), PersistentDataType.DOUBLE)));
-            player.sendMessage(Utils.colorize("&a- Trust: &f" + horse.getPersistentDataContainer().get(new NamespacedKey(plugin, "trust"), PersistentDataType.DOUBLE)));
+            player.sendMessage(Utils.colorize("&a- Hunger: &f" + superiorHorse.hungerStat().get()));
+            player.sendMessage(Utils.colorize("&a- Trust: &f" + superiorHorse.trustStat().get()));
+        }
+        // DEBUG COMMANDS
+        else if (commandName.equals("horsecache")) {
+            sender.sendMessage(Utils.colorize("&aHorse cache:"));
+            sender.sendMessage(plugin.getHorseManager().getCache().toString());
+            sender.sendMessage(plugin.getHorseManager().getCache().size() + "");
         }
         
         return true;

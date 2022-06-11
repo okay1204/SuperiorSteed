@@ -12,3 +12,7 @@ commands:
   horsestats:
     description: "Displays the stats of the horse you are currently riding or looking at."
     usage: "§cUsage: /<command>"
+  # temporary debug commands
+  horsecache:
+    description: "DEBUG. Displays the cache of all horses in the server."
+    usage: "§cUsage: /<command>"

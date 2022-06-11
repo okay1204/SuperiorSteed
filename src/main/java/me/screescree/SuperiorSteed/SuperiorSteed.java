@@ -7,11 +7,13 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.screescree.SuperiorSteed.SuperiorHorse.SuperiorHorse;
+import me.screescree.SuperiorSteed.SuperiorHorse.SuperiorHorsesManager;
 
 public class SuperiorSteed extends JavaPlugin
 {
     private Map<String, Map<String, Object>> commands;
     private CommandListener commandListener;
+    private SuperiorHorsesManager superiorHorsesManager;
 
     @Override
     public void onEnable() {
@@ -28,6 +30,8 @@ public class SuperiorSteed extends JavaPlugin
         
         // set up listeners
         PluginManager pm = getServer().getPluginManager();
+        superiorHorsesManager = new SuperiorHorsesManager(this);
+        pm.registerEvents(superiorHorsesManager, this);
         
         getLogger().info("SuperiorSteed has been enabled!");        
     }
@@ -35,5 +39,9 @@ public class SuperiorSteed extends JavaPlugin
     @Override
     public void onDisable() {
         getLogger().info("SuperiorSteed has been disabled!");
+    }
+
+    public SuperiorHorsesManager getHorseManager() {
+        return superiorHorsesManager;
     }
 }
