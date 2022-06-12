@@ -15,8 +15,6 @@ import org.bukkit.persistence.PersistentDataType;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 
 public class SuperiorHorse {
-    private static SuperiorSteed plugin;
-
     private SuperiorHorseEntity nmsEntity;
     private Horse bukkitEntity;
     
@@ -25,10 +23,6 @@ public class SuperiorHorse {
     private Stat friendliness;
     private Stat comfortability;
     private Stat waterBravery;
-
-    public static void setPlugin(SuperiorSteed plugin) {
-        SuperiorHorse.plugin = plugin;
-    }
 
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
@@ -111,8 +105,6 @@ public class SuperiorHorse {
         
         PersistentDataContainer container = horse.getPersistentDataContainer();
         
-        System.out.println(container.get(new NamespacedKey(plugin, "trust"), PersistentDataType.DOUBLE));
-        
         double hunger = containerValueOrDefault(container, "hunger", PersistentDataType.DOUBLE);
         double trust = containerValueOrDefault(container, "trust", PersistentDataType.DOUBLE);
         double friendliness = containerValueOrDefault(container, "friendliness", PersistentDataType.DOUBLE);
@@ -138,7 +130,7 @@ public class SuperiorHorse {
     }
 
     private double containerValueOrDefault(PersistentDataContainer container, String keyName, PersistentDataType<Double, Double> type) {
-        NamespacedKey key = new NamespacedKey(plugin, keyName);
+        NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
         if (container.has(key, type)) {
             return container.get(key, type);
         }
@@ -149,6 +141,7 @@ public class SuperiorHorse {
 
     // bukkitEntity must be set before calling this method
     private void initializeInfo(SuperiorHorseInfo horseInfo) {
+        SuperiorSteed plugin = SuperiorSteed.getInstance();
         PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
 
         hunger = new Stat(horseInfo.getHunger(), container, new NamespacedKey(plugin, "hunger"));

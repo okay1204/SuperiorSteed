@@ -9,14 +9,10 @@ import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
 
 public class SummonHorse implements CommandExecutor {
-    private SuperiorSteed plugin;
-
-    public SummonHorse(SuperiorSteed plugin) {
-        this.plugin = plugin;
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        SuperiorSteed plugin = SuperiorSteed.getInstance();
+
         Player player;
         if (sender instanceof Player) {
             player = (Player) sender;

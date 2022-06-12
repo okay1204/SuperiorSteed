@@ -15,14 +15,10 @@ import me.screescree.SuperiorSteed.SuperiorHorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.SuperiorHorse.SuperiorHorseInfo;
 
 public class UpdateHorse implements CommandExecutor, TabCompleter {
-    private SuperiorSteed plugin;
-
-    public UpdateHorse(SuperiorSteed plugin) {
-        this.plugin = plugin;
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        SuperiorSteed plugin = SuperiorSteed.getInstance();
+        
         Player player;
 
         if (sender instanceof Player) {

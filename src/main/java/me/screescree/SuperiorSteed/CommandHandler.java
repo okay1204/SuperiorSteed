@@ -9,19 +9,15 @@ import me.screescree.SuperiorSteed.Commands.SummonHorse;
 import me.screescree.SuperiorSteed.Commands.UpdateHorse;
 
 public class CommandHandler {
-    private SuperiorSteed plugin;
-
-    public CommandHandler(SuperiorSteed plugin) {
-        this.plugin = plugin;
-        
-        setExecutor("horsestats", new HorseStats(plugin));
-        setExecutor("summonhorse", new SummonHorse(plugin));
-        setExecutor("updatehorse", new UpdateHorse(plugin));
-        setExecutor("horsecache", new HorseCache(plugin));
-        setExecutor("readpersistentdata", new ReadPersistentData(plugin));
+    public CommandHandler() {
+        setExecutor("horsestats", new HorseStats());
+        setExecutor("summonhorse", new SummonHorse());
+        setExecutor("updatehorse", new UpdateHorse());
+        setExecutor("horsecache", new HorseCache());
+        setExecutor("readpersistentdata", new ReadPersistentData());
     }
 
     private void setExecutor(String commandName, CommandExecutor executor) {
-        plugin.getCommand(commandName).setExecutor(executor);
+        SuperiorSteed.getInstance().getCommand(commandName).setExecutor(executor);
     }
 }

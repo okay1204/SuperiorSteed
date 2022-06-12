@@ -8,14 +8,10 @@ import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
 
 public class HorseCache implements CommandExecutor {
-    private SuperiorSteed plugin;
-
-    public HorseCache(SuperiorSteed plugin) {
-        this.plugin = plugin;
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        SuperiorSteed plugin = SuperiorSteed.getInstance();
+        
         sender.sendMessage(Utils.colorize("&aHorse cache:"));
         String cacheString = plugin.getHorseManager().getCache().toString();
         if (cacheString.length() > 255) {

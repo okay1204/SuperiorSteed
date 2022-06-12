@@ -12,6 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import me.screescree.SuperiorSteed.SuperiorSteed;
+import me.screescree.SuperiorSteed.Utils;
 
 public class SuperiorHorsesManager implements Listener {
     // cache of all superior horses, to retain NMS horse instances
@@ -24,10 +28,37 @@ public class SuperiorHorsesManager implements Listener {
                 superiorHorses.add(new SuperiorHorse((Horse) entity));
             }
         }
+
+        int cleanupCacheInterval = SuperiorSteed.getInstance().getPluginConfig().getInt("cleanupCacheInterval");
+        if (cleanupCacheInterval > 0) {
+            long cleanupCacheIntervalTicks = cleanupCacheInterval * 1200;
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    SuperiorSteed plugin = SuperiorSteed.getInstance();
+                    plugin.getLogger().info("Cleaning up cache...");
+                    cleanupCache();
+                    plugin.getLogger().info("Cache cleaned up!");
+                }
+            }.runTaskTimer(SuperiorSteed.getInstance(), cleanupCacheIntervalTicks, cleanupCacheIntervalTicks);
+        }
+
     }
     
     // TODO add method to clear any horses that are no longer in the server from the cache
     // and make a scheduled task that runs every certain amount of time, configurable via config.yml
+
+    public void cleanupCache() {
+        int i = 0;
+        while (i < superiorHorses.size()) {
+            if (!superiorHorses.get(i).getBukkitEntity().isValid()) {
+                superiorHorses.remove(i);
+            }
+            else {
+                i++;
+            }
+        }
+    }
 
     public ArrayList<SuperiorHorse> getCache() {
         return superiorHorses;

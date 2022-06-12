@@ -1,0 +1,4 @@
+# The plugin will clear all excess cache on a regular interval, potentially freeing up some memory.
+# This is the amount of time in minutes between each cache clear. Note that this may cause a little lag.
+# You may set this to 0 or a negative number to disable the cache clear (not recommended).
+cleanupCacheInterval: 60

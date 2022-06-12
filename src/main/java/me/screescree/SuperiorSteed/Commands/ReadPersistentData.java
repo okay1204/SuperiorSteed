@@ -16,15 +16,12 @@ import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
 
 public class ReadPersistentData implements CommandExecutor, TabCompleter {
-    private SuperiorSteed plugin;
     private final List<String> PERSISTENT_TYPES = List.of("double");
-    
-    public ReadPersistentData(SuperiorSteed plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        SuperiorSteed plugin = SuperiorSteed.getInstance();
+        
         Player player;
         if (sender instanceof Player) {
             player = (Player) sender;
