@@ -1,8 +1,5 @@
 package me.screescree.SuperiorSteed;
 
-import java.util.Map;
-
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,20 +8,12 @@ import me.screescree.SuperiorSteed.SuperiorHorse.SuperiorHorsesManager;
 
 public class SuperiorSteed extends JavaPlugin
 {
-    private Map<String, Map<String, Object>> commands;
-    private CommandListener commandListener;
+    private CommandHandler commandHandler;
     private SuperiorHorsesManager superiorHorsesManager;
 
     @Override
     public void onEnable() {
-        PluginDescriptionFile pdfFile = getDescription();
-        commands = pdfFile.getCommands();
-        
-        
-        commandListener = new CommandListener(this);
-        for (Map.Entry<String, Map<String, Object>> command : commands.entrySet()) {
-            getCommand(command.getKey()).setExecutor(commandListener);
-        }
+        commandHandler = new CommandHandler(this);
         
         SuperiorHorse.setPlugin(this);
         
@@ -43,5 +32,9 @@ public class SuperiorSteed extends JavaPlugin
 
     public SuperiorHorsesManager getHorseManager() {
         return superiorHorsesManager;
+    }
+
+    public CommandHandler getCommandHandler() {
+        return commandHandler;
     }
 }
