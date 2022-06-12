@@ -29,6 +29,13 @@ public class UpdateHorse implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
+        if (targetHorse == null) {
+            sender.sendMessage(Utils.colorize("&cYou must be riding or looking at a horse."));
+            return true;
+        }
+        SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
+
         if (args.length < 1) {
             return false;
         }
@@ -63,13 +70,6 @@ public class UpdateHorse implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
-            if (targetHorse == null) {
-                player.sendMessage(Utils.colorize("&cYou must be riding or looking at a horse."));
-                return true;
-            }
-            SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
-
             superiorHorse.getStat(statName).set(statValue / 100.0);
             player.sendMessage(Utils.colorize("&aUpdated &2" + statName + " &aof &2" + superiorHorse.getName(20) + " &ato &f" + statValue + "%"));
         }
@@ -77,9 +77,7 @@ public class UpdateHorse implements CommandExecutor, TabCompleter {
             if (args.length < 3) {
                 return false;
             }
-            
-            Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
-            SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
+        
             if (args[1].equals("color")) {
                 Horse.Color color;
                 try {
