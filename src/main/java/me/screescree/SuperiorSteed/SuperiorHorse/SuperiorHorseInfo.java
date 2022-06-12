@@ -3,9 +3,10 @@ package me.screescree.SuperiorSteed.SuperiorHorse;
 import java.util.List;
 
 public class SuperiorHorseInfo {
-    public static final List<String> STAT_NAMES = List.of("hunger", "trust", "friendliness", "comfortability", "waterbravery");
+    public static final List<String> STAT_NAMES = List.of("hunger", "hydration", "trust", "friendliness", "comfortability", "waterbravery");
 
     private double hunger;
+    private double hydration;
     private double trust;
     private double friendliness;
     private double comfortability;
@@ -13,8 +14,9 @@ public class SuperiorHorseInfo {
 
     private boolean isMale;
 
-    SuperiorHorseInfo(double hunger, double trust, double friendliness, double comfortability, double waterBravery, boolean isMale) {
+    SuperiorHorseInfo(double hunger, double hydration, double trust, double friendliness, double comfortability, double waterBravery, boolean isMale) {
         this.hunger = hunger;
+        this.hydration = hydration;
         this.trust = trust;
         this.friendliness = friendliness;
         this.comfortability = comfortability;
@@ -36,6 +38,7 @@ public class SuperiorHorseInfo {
     public static SuperiorHorseInfo generateNew() {
         return new SuperiorHorseInfo(
             1.0,
+            1.0,
             0.5,
             0.3,
             0.2,
@@ -46,6 +49,10 @@ public class SuperiorHorseInfo {
 
     public double getHunger() {
         return hunger;
+    }
+
+    public double getHydration() {
+        return hydration;
     }
 
     public double getTrust() {

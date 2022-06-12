@@ -34,10 +34,12 @@ public class HorseStats implements CommandExecutor {
         player.sendMessage(Utils.colorize("&7---------------- &e" + superiorHorse.getName(20) + "'s stats &7----------------"));
         String stats = "";
         stats += addStatMessage("Hunger", superiorHorse.hungerStat().get());
+        stats += addStatMessage("Hydration", superiorHorse.hydrationStat().get());
         stats += addStatMessage("Trust", superiorHorse.trustStat().get());
-        stats += addStatMessage("Friendliness", superiorHorse.friendlinessStat().get());
         stats += "\n";
+        stats += addStatMessage("Friendliness", superiorHorse.friendlinessStat().get());
         stats += addStatMessage("Comfortability", superiorHorse.comfortabilityStat().get());
+        stats += "\n";
         stats += addStatMessage("Water Bravery", superiorHorse.waterBraveryStat().get());
 
         player.sendMessage(stats);
@@ -54,6 +56,10 @@ public class HorseStats implements CommandExecutor {
     }
 
     private String addStatMessage(String name, double value) {
+        return addStatMessage(name, value, 4);
+    }
+
+    private String addStatMessage(String name, double value, int trailingSpaces) {
         String colorCode;
         if (value < 0.2) {
             colorCode = "&c";
@@ -77,7 +83,11 @@ public class HorseStats implements CommandExecutor {
             meterString += "░";
         }
 
-        outputString += " " + Utils.colorize(meterString) + "    ";
+        outputString += " " + Utils.colorize(meterString);
+        for (int i = 0; i < trailingSpaces; i++) {
+            outputString += " ";
+        }
+
         return outputString;
     }
 }

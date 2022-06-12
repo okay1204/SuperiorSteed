@@ -19,6 +19,7 @@ public class SuperiorHorse {
     private Horse bukkitEntity;
     
     private Stat hunger;
+    private Stat hydration;
     private Stat trust;
     private Stat friendliness;
     private Stat comfortability;
@@ -109,6 +110,7 @@ public class SuperiorHorse {
         SuperiorHorseInfo generatedInfo = SuperiorHorseInfo.generateNew();
         
         double hunger = containerValueOrDefault(container, "hunger", generatedInfo.getHunger());
+        double hydration = containerValueOrDefault(container, "hydration", generatedInfo.getHydration());
         double trust = containerValueOrDefault(container, "trust", generatedInfo.getTrust());
         double friendliness = containerValueOrDefault(container, "friendliness", generatedInfo.getFriendliness());
         double comfortability = containerValueOrDefault(container, "comfortability", generatedInfo.getComfortability());
@@ -116,7 +118,7 @@ public class SuperiorHorse {
 
         boolean isMale = containerValueOrDefault(container, "isMale", generatedInfo.isMale());
         
-        SuperiorHorseInfo horseInfo = new SuperiorHorseInfo(hunger, trust, friendliness, comfortability, waterBravery, isMale);
+        SuperiorHorseInfo horseInfo = new SuperiorHorseInfo(hunger, hydration, trust, friendliness, comfortability, waterBravery, isMale);
         
         initializeInfo(horseInfo);
         horse.remove();
@@ -161,6 +163,7 @@ public class SuperiorHorse {
         PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
 
         hunger = new Stat(horseInfo.getHunger(), container, new NamespacedKey(plugin, "hunger"));
+        hydration = new Stat(horseInfo.getHydration(), container, new NamespacedKey(plugin, "hydration"));
         trust = new Stat(horseInfo.getTrust(), container, new NamespacedKey(plugin, "trust"));
         friendliness = new Stat(horseInfo.getFriendliness(), container, new NamespacedKey(plugin, "friendliness"));
         comfortability = new Stat(horseInfo.getComfortability(), container, new NamespacedKey(plugin, "comfortability"));
@@ -179,7 +182,7 @@ public class SuperiorHorse {
     }
 
     public SuperiorHorseInfo getInfo() {
-        return new SuperiorHorseInfo(hunger.get(), trust.get(), friendliness.get(), comfortability.get(), waterBravery.get(), isMale());
+        return new SuperiorHorseInfo(hunger.get(), hydration.get(), trust.get(), friendliness.get(), comfortability.get(), waterBravery.get(), isMale());
     }
 
     public String getName() {
@@ -200,6 +203,8 @@ public class SuperiorHorse {
         switch (statName.toLowerCase()) {
             case "hunger":
                 return hunger;
+            case "hydration":
+                return hydration;
             case "trust":
                 return trust;
             case "friendliness":
@@ -215,6 +220,10 @@ public class SuperiorHorse {
     
     public Stat hungerStat() {
         return hunger;
+    }
+
+    public Stat hydrationStat() {
+        return hydration;
     }
 
     public Stat trustStat() {
