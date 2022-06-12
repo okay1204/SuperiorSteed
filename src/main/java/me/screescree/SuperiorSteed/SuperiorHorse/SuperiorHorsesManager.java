@@ -15,7 +15,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
-import me.screescree.SuperiorSteed.Utils;
 
 public class SuperiorHorsesManager implements Listener {
     // cache of all superior horses, to retain NMS horse instances
@@ -44,9 +43,6 @@ public class SuperiorHorsesManager implements Listener {
         }
 
     }
-    
-    // TODO add method to clear any horses that are no longer in the server from the cache
-    // and make a scheduled task that runs every certain amount of time, configurable via config.yml
 
     public void cleanupCache() {
         int i = 0;
