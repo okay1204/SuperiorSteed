@@ -32,16 +32,23 @@ public class HorseStats implements CommandExecutor {
         SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
 
         player.sendMessage(Utils.colorize("&7---------------- &e" + superiorHorse.getName(20) + "'s stats &7----------------"));
-        String firstStatLine = "";
-        firstStatLine += addStatMessage("Hunger", superiorHorse.hungerStat().get());
-        firstStatLine += addStatMessage("Trust", superiorHorse.trustStat().get());
-        firstStatLine += addStatMessage("Friendliness", superiorHorse.friendlinessStat().get());
-        String secondStatLine = Utils.colorize("&f          ");
-        secondStatLine += addStatMessage("Comfortability", superiorHorse.comfortabilityStat().get());
-        secondStatLine += addStatMessage("Water Bravery", superiorHorse.waterBraveryStat().get());
+        String stats = "";
+        stats += addStatMessage("Hunger", superiorHorse.hungerStat().get());
+        stats += addStatMessage("Trust", superiorHorse.trustStat().get());
+        stats += addStatMessage("Friendliness", superiorHorse.friendlinessStat().get());
+        stats += "\n";
+        stats += addStatMessage("Comfortability", superiorHorse.comfortabilityStat().get());
+        stats += addStatMessage("Water Bravery", superiorHorse.waterBraveryStat().get());
 
-        player.sendMessage(firstStatLine);
-        player.sendMessage(secondStatLine);
+        player.sendMessage(stats);
+        player.sendMessage("\n");
+
+        if (superiorHorse.isMale()) {
+            player.sendMessage(Utils.colorize("&9♂ Male"));
+        }
+        else {
+            player.sendMessage(Utils.colorize("&d♀ Female"));
+        }
 
         return true;
     }

@@ -24,6 +24,8 @@ public class SuperiorHorse {
     private Stat comfortability;
     private Stat waterBravery;
 
+    private boolean isMale;
+
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
 
@@ -104,21 +106,24 @@ public class SuperiorHorse {
         
         
         PersistentDataContainer container = horse.getPersistentDataContainer();
+        SuperiorHorseInfo generatedInfo = SuperiorHorseInfo.generateNew();
         
-        double hunger = containerValueOrDefault(container, "hunger", PersistentDataType.DOUBLE);
-        double trust = containerValueOrDefault(container, "trust", PersistentDataType.DOUBLE);
-        double friendliness = containerValueOrDefault(container, "friendliness", PersistentDataType.DOUBLE);
-        double comfortability = containerValueOrDefault(container, "comfortability", PersistentDataType.DOUBLE);
-        double waterBravery = containerValueOrDefault(container, "waterBravery", PersistentDataType.DOUBLE);
+        double hunger = containerValueOrDefault(container, "hunger", generatedInfo.getHunger());
+        double trust = containerValueOrDefault(container, "trust", generatedInfo.getTrust());
+        double friendliness = containerValueOrDefault(container, "friendliness", generatedInfo.getFriendliness());
+        double comfortability = containerValueOrDefault(container, "comfortability", generatedInfo.getComfortability());
+        double waterBravery = containerValueOrDefault(container, "waterBravery", generatedInfo.getWaterBravery());
+
+        boolean isMale = containerValueOrDefault(container, "isMale", generatedInfo.isMale());
         
-        SuperiorHorseInfo horseInfo = new SuperiorHorseInfo(hunger, trust, friendliness, comfortability, waterBravery);
+        SuperiorHorseInfo horseInfo = new SuperiorHorseInfo(hunger, trust, friendliness, comfortability, waterBravery, isMale);
         
         initializeInfo(horseInfo);
         horse.remove();
     }
     
     public SuperiorHorse(Location spawnLocation) {
-        this(spawnLocation, SuperiorHorseInfo.DEFAULT);
+        this(spawnLocation, SuperiorHorseInfo.generateNew());
     }
     
     public SuperiorHorse(Location spawnLocation, SuperiorHorseInfo horseInfo) {
@@ -129,13 +134,24 @@ public class SuperiorHorse {
         initializeInfo(horseInfo);
     }
 
-    private double containerValueOrDefault(PersistentDataContainer container, String keyName, PersistentDataType<Double, Double> type) {
+    private double containerValueOrDefault(PersistentDataContainer container, String keyName, double defaultValue) {
         NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
+        if (container.has(key, PersistentDataType.DOUBLE)) {
+            return container.get(key, PersistentDataType.DOUBLE);
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
+    public boolean containerValueOrDefault(PersistentDataContainer container, String keyName, boolean defaultValue) {
+        NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
+        BooleanTagType type = new BooleanTagType();
         if (container.has(key, type)) {
             return container.get(key, type);
         }
         else {
-            return (double) SuperiorHorseInfo.DEFAULT_MAP.get(keyName);
+            return defaultValue;
         }
     }
 
@@ -149,6 +165,9 @@ public class SuperiorHorse {
         friendliness = new Stat(horseInfo.getFriendliness(), container, new NamespacedKey(plugin, "friendliness"));
         comfortability = new Stat(horseInfo.getComfortability(), container, new NamespacedKey(plugin, "comfortability"));
         waterBravery = new Stat(horseInfo.getWaterBravery(), container, new NamespacedKey(plugin, "waterBravery"));
+
+        isMale = horseInfo.isMale();
+        container.set(new NamespacedKey(plugin, "isMale"), new BooleanTagType(), isMale);
     }
 
     public boolean equals(SuperiorHorse other) {
@@ -160,7 +179,7 @@ public class SuperiorHorse {
     }
 
     public SuperiorHorseInfo getInfo() {
-        return new SuperiorHorseInfo(hunger.get(), trust.get(), friendliness.get(), comfortability.get(), waterBravery.get());
+        return new SuperiorHorseInfo(hunger.get(), trust.get(), friendliness.get(), comfortability.get(), waterBravery.get(), isMale());
     }
 
     public String getName() {
@@ -212,6 +231,10 @@ public class SuperiorHorse {
 
     public Stat waterBraveryStat() {
         return waterBravery;
+    }
+
+    public boolean isMale() {
+        return isMale;
     }
 
     public SuperiorHorseEntity getNMSEntity() {

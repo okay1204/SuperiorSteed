@@ -93,7 +93,7 @@ public class SuperiorHorsesManager implements Listener {
     }
 
     public SuperiorHorse newSuperiorHorse(Location location) {
-        return newSuperiorHorse(location, SuperiorHorseInfo.DEFAULT);
+        return newSuperiorHorse(location, SuperiorHorseInfo.generateNew());
     }
 
     @EventHandler(ignoreCancelled = true)

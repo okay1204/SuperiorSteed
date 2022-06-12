@@ -14,9 +14,10 @@ import org.bukkit.persistence.PersistentDataType;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
+import me.screescree.SuperiorSteed.SuperiorHorse.BooleanTagType;
 
 public class ReadPersistentData implements CommandExecutor, TabCompleter {
-    private final List<String> PERSISTENT_TYPES = List.of("double");
+    private final List<String> PERSISTENT_TYPES = List.of("double", "boolean");
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -48,6 +49,10 @@ public class ReadPersistentData implements CommandExecutor, TabCompleter {
 
         if (type.equals("double")) {
             Double value = container.get(new NamespacedKey(plugin, key), PersistentDataType.DOUBLE);
+            sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
+        }
+        else if (type.equals("boolean")) {
+            Boolean value = container.get(new NamespacedKey(plugin, key), new BooleanTagType());
             sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
         }
 

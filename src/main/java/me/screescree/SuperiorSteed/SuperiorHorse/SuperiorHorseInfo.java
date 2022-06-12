@@ -1,23 +1,9 @@
 package me.screescree.SuperiorSteed.SuperiorHorse;
 
-import java.util.Map;
-import static java.util.Map.entry;
+import java.util.List;
 
 public class SuperiorHorseInfo {
-    public static final Map<String, Object> DEFAULT_MAP = Map.ofEntries(
-        entry("hunger", 1.0),
-        entry("trust", 0.5),
-        entry("friendliness", 0.3),
-        entry("comfortability", 0.2),
-        entry("waterBravery", 0.1)
-    );
-    public static final SuperiorHorseInfo DEFAULT = new SuperiorHorseInfo(
-        (double) DEFAULT_MAP.get("hunger"),
-        (double) DEFAULT_MAP.get("trust"),
-        (double) DEFAULT_MAP.get("friendliness"),
-        (double) DEFAULT_MAP.get("comfortability"),
-        (double) DEFAULT_MAP.get("waterBravery")
-    );
+    public static final List<String> STAT_NAMES = List.of("hunger", "trust", "friendliness", "comfortability", "waterbravery");
 
     private double hunger;
     private double trust;
@@ -25,12 +11,15 @@ public class SuperiorHorseInfo {
     private double comfortability;
     private double waterBravery;
 
-    SuperiorHorseInfo(double hunger, double trust, double friendliness, double comfortability, double waterBravery) {
+    private boolean isMale;
+
+    SuperiorHorseInfo(double hunger, double trust, double friendliness, double comfortability, double waterBravery, boolean isMale) {
         this.hunger = hunger;
         this.trust = trust;
         this.friendliness = friendliness;
         this.comfortability = comfortability;
         this.waterBravery = waterBravery;
+        this.isMale = isMale;
     }
 
     public String toString() {
@@ -40,7 +29,19 @@ public class SuperiorHorseInfo {
             ", friendliness=" + friendliness +
             ", comfortability=" + comfortability +
             ", waterBravery=" + waterBravery +
+            ", isMale=" + isMale +
             '}';
+    }
+
+    public static SuperiorHorseInfo generateNew() {
+        return new SuperiorHorseInfo(
+            1.0,
+            0.5,
+            0.3,
+            0.2,
+            0.1,
+            Math.random() < 0.5
+        );
     }
 
     public double getHunger() {
@@ -61,5 +62,9 @@ public class SuperiorHorseInfo {
 
     public double getWaterBravery() {
         return waterBravery;
+    }
+
+    public boolean isMale() {
+        return isMale;
     }
 }

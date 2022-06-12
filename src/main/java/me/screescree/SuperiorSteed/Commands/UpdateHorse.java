@@ -45,14 +45,8 @@ public class UpdateHorse implements CommandExecutor, TabCompleter {
             }
 
             String statName = args[1];
-            boolean foundStatName = false;
-            for (String stat : SuperiorHorseInfo.DEFAULT_MAP.keySet()) {
-                if (stat.equals(statName)) {
-                    foundStatName = true;
-                    break;
-                }
-            }
-            if (!foundStatName) {
+
+            if (!SuperiorHorseInfo.STAT_NAMES.contains(statName)) {
                 player.sendMessage(Utils.colorize("&cInvalid stat name."));
                 return true;
             }
@@ -116,7 +110,7 @@ public class UpdateHorse implements CommandExecutor, TabCompleter {
 
         if (args.length == 2) {
             if (args[0].equals("stat"))
-                return List.of("hunger", "trust", "friendliness", "comfortability", "waterbravery");
+                return SuperiorHorseInfo.STAT_NAMES;
             else if (args[0].equals("looks"))
                 return List.of("color", "style");
         }
