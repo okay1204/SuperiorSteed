@@ -108,19 +108,21 @@ public class SuperiorHorse {
         bukkitEntity.setRemainingAir(horse.getRemainingAir());
         bukkitEntity.setSwimming(horse.isSwimming());
         
-        horse.remove();
         
-        PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
-
+        PersistentDataContainer container = horse.getPersistentDataContainer();
+        
+        System.out.println(container.get(new NamespacedKey(plugin, "trust"), PersistentDataType.DOUBLE));
+        
         double hunger = containerValueOrDefault(container, "hunger", PersistentDataType.DOUBLE);
         double trust = containerValueOrDefault(container, "trust", PersistentDataType.DOUBLE);
         double friendliness = containerValueOrDefault(container, "friendliness", PersistentDataType.DOUBLE);
         double comfortability = containerValueOrDefault(container, "comfortability", PersistentDataType.DOUBLE);
         double waterBravery = containerValueOrDefault(container, "waterBravery", PersistentDataType.DOUBLE);
-
+        
         SuperiorHorseInfo horseInfo = new SuperiorHorseInfo(hunger, trust, friendliness, comfortability, waterBravery);
-
+        
         initializeInfo(horseInfo);
+        horse.remove();
     }
     
     public SuperiorHorse(Location spawnLocation) {
@@ -166,6 +168,37 @@ public class SuperiorHorse {
 
     public SuperiorHorseInfo getInfo() {
         return new SuperiorHorseInfo(hunger.get(), trust.get(), friendliness.get(), comfortability.get(), waterBravery.get());
+    }
+
+    public String getName() {
+        return getBukkitEntity().getCustomName() != null ? getBukkitEntity().getCustomName() : "Horse";
+    }
+
+    public String getName(int limit) {
+        String horseName = getName();
+
+        if (horseName.length() > limit) {
+            horseName = horseName.substring(0, limit);
+        }
+
+        return horseName;
+    }
+
+    public Stat getStat(String statName) {
+        switch (statName.toLowerCase()) {
+            case "hunger":
+                return hunger;
+            case "trust":
+                return trust;
+            case "friendliness":
+                return friendliness;
+            case "comfortability":
+                return comfortability;
+            case "waterbravery":
+                return waterBravery;
+            default:
+                return null;
+        }
     }
     
     public Stat hungerStat() {

@@ -55,7 +55,9 @@ public class SuperiorHorsesManager implements Listener {
             }
         }
         // if horse is not found, create a new one
+        isSpawningCustomHorse = true;
         SuperiorHorse superiorHorse = new SuperiorHorse(horse);
+        isSpawningCustomHorse = false;
         superiorHorses.add(superiorHorse);
         return superiorHorse;
     }

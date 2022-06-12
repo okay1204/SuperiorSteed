@@ -33,6 +33,16 @@ public class SuperiorHorseInfo {
         this.waterBravery = waterBravery;
     }
 
+    public String toString() {
+        return "SuperiorHorseInfo{" +
+            "hunger=" + hunger +
+            ", trust=" + trust +
+            ", friendliness=" + friendliness +
+            ", comfortability=" + comfortability +
+            ", waterBravery=" + waterBravery +
+            '}';
+    }
+
     public double getHunger() {
         return hunger;
     }
