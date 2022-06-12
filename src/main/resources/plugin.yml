@@ -17,7 +17,7 @@ commands:
     permission: "superiorsteed.admin.summonhorse"
   updatehorse:
     description: "Sets the information of the horse you are currently riding or looking at."
-    usage: "§cUsage: /<command> stat <stat_name> <value> §7or\n§cUsage: /<command> looks <color|style> <value>"
+    usage: "§cUsage: /<command> stat <stat_name> <value> §7or\n§c/<command> looks <color|style> <value>"
     permission: "superiorsteed.admin.updatehorse"
 
   # debug commands

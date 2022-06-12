@@ -46,7 +46,7 @@ public class UpdateHorse implements CommandExecutor, TabCompleter {
                 }
             }
             if (!foundStatName) {
-                sender.sendMessage(Utils.colorize("&cInvalid stat name."));
+                player.sendMessage(Utils.colorize("&cInvalid stat name."));
                 return true;
             }
 
@@ -54,24 +54,58 @@ public class UpdateHorse implements CommandExecutor, TabCompleter {
             try {
                 statValue = Integer.parseInt(args[2]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(Utils.colorize("&cValue should be an integer from 0 to 100."));
+                player.sendMessage(Utils.colorize("&cValue should be an integer from 0 to 100."));
                 return true;
             }
 
             if (statValue < 0 || statValue > 100) {
-                sender.sendMessage(Utils.colorize("&cValue should be an integer from 0 to 100."));
+                player.sendMessage(Utils.colorize("&cValue should be an integer from 0 to 100."));
                 return true;
             }
 
             Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
             if (targetHorse == null) {
-                sender.sendMessage(Utils.colorize("&cYou must be riding or looking at a horse."));
+                player.sendMessage(Utils.colorize("&cYou must be riding or looking at a horse."));
                 return true;
             }
             SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
 
             superiorHorse.getStat(statName).set(statValue / 100.0);
-            sender.sendMessage(Utils.colorize("&aUpdated &2" + statName + " &aof &2" + superiorHorse.getName(20) + " &ato &f" + statValue + "%"));
+            player.sendMessage(Utils.colorize("&aUpdated &2" + statName + " &aof &2" + superiorHorse.getName(20) + " &ato &f" + statValue + "%"));
+        }
+        else if (args[0].equals("looks")) {
+            if (args.length < 3) {
+                return false;
+            }
+            
+            Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
+            SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
+            if (args[1].equals("color")) {
+                Horse.Color color;
+                try {
+                    color = Horse.Color.valueOf(args[2].toUpperCase());
+                }
+                catch (IllegalArgumentException e) {
+                    player.sendMessage(Utils.colorize("&cInvalid color."));
+                    return true;
+                }
+
+                superiorHorse.getBukkitEntity().setColor(color);
+                player.sendMessage(Utils.colorize("&aUpdated &2color &aof &2" + superiorHorse.getName(20) + " &ato &f" + args[2].toLowerCase() + "&a."));
+            }
+            else if (args[1].equals("style")) {
+                Horse.Style style;
+                try {
+                    style = Horse.Style.valueOf(args[2].toUpperCase());
+                }
+                catch (IllegalArgumentException e) {
+                    player.sendMessage(Utils.colorize("&cInvalid style."));
+                    return true;
+                }
+
+                superiorHorse.getBukkitEntity().setStyle(style);
+                player.sendMessage(Utils.colorize("&aUpdated &2style &aof &2" + superiorHorse.getName(20) + " &ato &f" + args[2].toLowerCase() + "&a."));
+            }
         }
 
         return true;
@@ -90,10 +124,10 @@ public class UpdateHorse implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 3) {
-            if (args[2].equals("color"))
-                return List.of("black", "brown", "chestnut", "creamy", "darkbrown", "gray", "white");
-            else if (args[2].equals("style"))
-                return List.of("blackdots", "none", "white", "whitedots", "whitefield");
+            if (args[1].equals("color"))
+                return List.of("black", "brown", "chestnut", "creamy", "dark_brown", "gray", "white");
+            else if (args[1].equals("style"))
+                return List.of("black_dots", "none", "white", "white_dots", "whitefield");
         }
 
         return List.of();

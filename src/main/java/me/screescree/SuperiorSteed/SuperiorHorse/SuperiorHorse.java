@@ -218,7 +218,7 @@ public class SuperiorHorse {
         return nmsEntity;
     }
 
-    public Entity getBukkitEntity() {
+    public Horse getBukkitEntity() {
         return bukkitEntity;
     }
 }
