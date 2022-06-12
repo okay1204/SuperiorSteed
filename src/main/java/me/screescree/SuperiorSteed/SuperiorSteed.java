@@ -19,7 +19,7 @@ public class SuperiorSteed extends JavaPlugin
         
         // set up listeners
         PluginManager pm = getServer().getPluginManager();
-        superiorHorsesManager = new SuperiorHorsesManager(this);
+        superiorHorsesManager = new SuperiorHorsesManager();
         pm.registerEvents(superiorHorsesManager, this);
         
         getLogger().info("SuperiorSteed has been enabled!");        

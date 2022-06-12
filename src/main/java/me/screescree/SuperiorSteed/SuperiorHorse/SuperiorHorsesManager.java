@@ -12,18 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import me.screescree.SuperiorSteed.SuperiorSteed;
 
 public class SuperiorHorsesManager implements Listener {
-    private SuperiorSteed plugin;
-
     // cache of all superior horses, to retain NMS horse instances
     private ArrayList<SuperiorHorse> superiorHorses = new ArrayList<SuperiorHorse>();
     private boolean isSpawningCustomHorse = false;
 
-    public SuperiorHorsesManager(SuperiorSteed plugin) {
-        this.plugin = plugin;
-        
+    public SuperiorHorsesManager() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntitiesByClass(Horse.class)) {
                 superiorHorses.add(new SuperiorHorse((Horse) entity));
