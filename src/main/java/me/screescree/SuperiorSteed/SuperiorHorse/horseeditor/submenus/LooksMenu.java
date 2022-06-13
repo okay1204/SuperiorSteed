@@ -25,6 +25,8 @@ public class LooksMenu extends SubMenu {
         "0111110"
     );
 
+    private static final String SELECTED_TEXT = ChatColor.AQUA + "" + ChatColor.BOLD + "Selected: ";
+
     private static enum ColorSelector {
         WHITE(Horse.Color.WHITE, Material.WHITE_CONCRETE, ChatColor.of("#e1d2cb") + "White"),
         CREAMY(Horse.Color.CREAMY, Material.WHITE_TERRACOTTA, ChatColor.of("#c59b7c") + "Creamy"),
@@ -151,7 +153,14 @@ public class LooksMenu extends SubMenu {
         
         // Color Selectors
         for (ColorSelector colorSelector : ColorSelector.values()) {
-            pane.addItem(HorseEditor.guiItem(colorSelector.getMaterial(), colorSelector.getName(), false, colorSelector.getHorseColor() == horseInfo.getColor()));
+            boolean selected = colorSelector.getHorseColor() == horseInfo.getColor();
+            String colorName;
+            if (selected)
+                colorName = ChatColor.AQUA + "" + ChatColor.BOLD + "Selected: " + colorSelector.getName();
+            else
+                colorName = colorSelector.getName();
+
+            pane.addItem(HorseEditor.guiItem(colorSelector.getMaterial(), colorName, false, colorSelector.getHorseColor() == horseInfo.getColor()));
         }
         
         // Style Selectors
@@ -182,7 +191,7 @@ public class LooksMenu extends SubMenu {
         pane.insertItem(HorseEditor.guiItem(activeColor.getMaterial(), activeColor.getName(), false, false), activeColor.getItemIndex());
         // add enchant to newly selected color
         pane.removeItem(pane.getItems().get(newColor.getItemIndex()));
-        pane.insertItem(HorseEditor.guiItem(newColor.getMaterial(), newColor.getName(), false, true), newColor.getItemIndex());
+        pane.insertItem(HorseEditor.guiItem(newColor.getMaterial(), SELECTED_TEXT + newColor.getName(), false, true), newColor.getItemIndex());
         // save new color
         activeColor = newColor;
         getHorseInfo().setColor(activeColor.getHorseColor());
@@ -208,7 +217,7 @@ public class LooksMenu extends SubMenu {
         pane.insertItem(HorseEditor.guiItem(activeStyle.getMaterial(), activeStyle.getName(), false, false), activeStyle.getItemIndex());
         // add enchant to newly selected color
         pane.removeItem(pane.getItems().get(newStyle.getItemIndex()));
-        pane.insertItem(HorseEditor.guiItem(newStyle.getMaterial(), newStyle.getName(), false, true), newStyle.getItemIndex());
+        pane.insertItem(HorseEditor.guiItem(newStyle.getMaterial(), SELECTED_TEXT + newStyle.getName(), false, true), newStyle.getItemIndex());
         // save new color
         activeStyle = newStyle;
         getHorseInfo().setStyle(activeStyle.getHorseStyle());
