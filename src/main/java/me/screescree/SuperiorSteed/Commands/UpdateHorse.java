@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.Commands;
+package me.screescree.SuperiorSteed.commands;
 
 import java.util.List;
 
@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
-import me.screescree.SuperiorSteed.SuperiorHorse.SuperiorHorse;
-import me.screescree.SuperiorSteed.SuperiorHorse.SuperiorHorseInfo;
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
 
 public class UpdateHorse implements CommandExecutor, TabCompleter {
     @Override

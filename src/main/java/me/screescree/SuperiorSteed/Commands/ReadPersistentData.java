@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.Commands;
+package me.screescree.SuperiorSteed.commands;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
-import me.screescree.SuperiorSteed.SuperiorHorse.BooleanTagType;
+import me.screescree.SuperiorSteed.superiorhorse.BooleanTagType;
 
 public class ReadPersistentData implements CommandExecutor, TabCompleter {
     private final List<String> PERSISTENT_TYPES = List.of("double", "boolean");

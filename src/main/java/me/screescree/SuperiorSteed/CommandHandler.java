@@ -2,11 +2,11 @@ package me.screescree.SuperiorSteed;
 
 import org.bukkit.command.CommandExecutor;
 
-import me.screescree.SuperiorSteed.Commands.HorseCache;
-import me.screescree.SuperiorSteed.Commands.HorseStats;
-import me.screescree.SuperiorSteed.Commands.ReadPersistentData;
-import me.screescree.SuperiorSteed.Commands.SummonHorse;
-import me.screescree.SuperiorSteed.Commands.UpdateHorse;
+import me.screescree.SuperiorSteed.commands.HorseCache;
+import me.screescree.SuperiorSteed.commands.HorseStats;
+import me.screescree.SuperiorSteed.commands.ReadPersistentData;
+import me.screescree.SuperiorSteed.commands.SummonHorse;
+import me.screescree.SuperiorSteed.commands.UpdateHorse;
 
 public class CommandHandler {
     public CommandHandler() {

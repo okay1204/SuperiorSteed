@@ -4,7 +4,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.screescree.SuperiorSteed.SuperiorHorse.SuperiorHorsesManager;
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
 
 public class SuperiorSteed extends JavaPlugin
 {
@@ -32,7 +32,7 @@ public class SuperiorSteed extends JavaPlugin
     
     @Override
     public void onDisable() {
-        getLogger().info("&cSuperiorSteed has been disabled!");
+        getLogger().info("SuperiorSteed has been disabled!");
     }
 
     public static SuperiorSteed getInstance() {

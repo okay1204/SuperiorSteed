@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.SuperiorHorse;
+package me.screescree.SuperiorSteed.superiorhorse;
 
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;

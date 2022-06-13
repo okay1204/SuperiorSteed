@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.Commands;
+package me.screescree.SuperiorSteed.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

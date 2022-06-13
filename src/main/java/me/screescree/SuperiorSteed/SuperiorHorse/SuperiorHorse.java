@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.SuperiorHorse;
+package me.screescree.SuperiorSteed.superiorhorse;
 
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;

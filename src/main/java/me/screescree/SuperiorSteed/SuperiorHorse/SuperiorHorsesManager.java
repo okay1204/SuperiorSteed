@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.SuperiorHorse;
+package me.screescree.SuperiorSteed.superiorhorse;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public class SuperiorHorsesManager implements Listener {
                 @Override
                 public void run() {
                     SuperiorSteed plugin = SuperiorSteed.getInstance();
-                    plugin.getLogger().info("Cleaning up cache...");
+                    plugin.getLogger().info("Cleaning up SuperiorHorse cache...");
                     cleanupCache();
                     plugin.getLogger().info("Cache cleaned up!");
                 }

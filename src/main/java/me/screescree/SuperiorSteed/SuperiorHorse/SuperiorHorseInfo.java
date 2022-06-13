@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.SuperiorHorse;
+package me.screescree.SuperiorSteed.superiorhorse;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class SuperiorHorseInfo {
 
     private boolean isMale;
 
-    SuperiorHorseInfo(double hunger, double hydration, double trust, double friendliness, double comfortability, double waterBravery, boolean isMale) {
+    public SuperiorHorseInfo(double hunger, double hydration, double trust, double friendliness, double comfortability, double waterBravery, boolean isMale) {
         this.hunger = hunger;
         this.hydration = hydration;
         this.trust = trust;
@@ -26,12 +26,12 @@ public class SuperiorHorseInfo {
 
     public String toString() {
         return "SuperiorHorseInfo{" +
-            "hunger=" + hunger +
-            ", trust=" + trust +
-            ", friendliness=" + friendliness +
-            ", comfortability=" + comfortability +
-            ", waterBravery=" + waterBravery +
-            ", isMale=" + isMale +
+            "hunger=" + getHunger() +
+            ", trust=" + getTrust() +
+            ", friendliness=" + getFriendliness() +
+            ", comfortability=" + getComfortability() +
+            ", waterBravery=" + getWaterBravery() +
+            ", isMale=" + isMale() +
             '}';
     }
 
@@ -51,27 +51,55 @@ public class SuperiorHorseInfo {
         return hunger;
     }
 
+    public void setHunger(double hunger) {
+        this.hunger = hunger;
+    }
+
     public double getHydration() {
         return hydration;
+    }
+
+    public void setHydration(double hydration) {
+        this.hydration = hydration;
     }
 
     public double getTrust() {
         return trust;
     }
 
+    public void setTrust(double trust) {
+        this.trust = trust;
+    }
+
     public double getFriendliness() {
         return friendliness;
+    }
+
+    public void setFriendliness(double friendliness) {
+        this.friendliness = friendliness;
     }
 
     public double getComfortability() {
         return comfortability;
     }
 
+    public void setComfortability(double comfortability) {
+        this.comfortability = comfortability;
+    }
+
     public double getWaterBravery() {
         return waterBravery;
     }
 
+    public void setWaterBravery(double waterBravery) {
+        this.waterBravery = waterBravery;
+    }
+
     public boolean isMale() {
         return isMale;
+    }
+
+    public void setMale(boolean isMale) {
+        this.isMale = isMale;
     }
 }

@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.Commands;
+package me.screescree.SuperiorSteed.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 
 public class SummonHorse implements CommandExecutor {
     @Override
@@ -22,8 +23,11 @@ public class SummonHorse implements CommandExecutor {
             return true;
         }
 
-        plugin.getHorseManager().newSuperiorHorse(player.getLocation());
-        player.sendMessage(Utils.colorize("&aYou have summoned a new horse."));
+        HorseEditor editor = new HorseEditor("Summon Horse");
+        editor.show(player);
+
+        // plugin.getHorseManager().newSuperiorHorse(player.getLocation());
+        // player.sendMessage(Utils.colorize("&aYou have summoned a new horse."));
                 
         return true;
     }

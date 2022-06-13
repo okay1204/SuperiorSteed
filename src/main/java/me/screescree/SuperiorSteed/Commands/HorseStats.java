@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.Commands;
+package me.screescree.SuperiorSteed.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
-import me.screescree.SuperiorSteed.SuperiorHorse.SuperiorHorse;
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 
 public class HorseStats implements CommandExecutor {
     @Override
