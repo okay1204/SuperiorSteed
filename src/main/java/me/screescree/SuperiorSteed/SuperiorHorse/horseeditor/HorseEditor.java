@@ -16,8 +16,8 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import me.screescree.SuperiorSteed.Utils;
-import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.StatsMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.looksmenu.LooksMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.statsmenu.StatsMenu;
 
 public class HorseEditor {
     HorseEditorInfo horseInfo;
@@ -25,26 +25,14 @@ public class HorseEditor {
     StaticPane backPane;
     ArrayList<SubMenu> submenus;
 
-    public static ItemStack customItem(Material material, String name, boolean colorize, boolean enchanted) {
+    public static ItemStack customItem(Material material, String name, boolean colorize) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(colorize ? Utils.colorize(name) : name);
-        if (enchanted) {
-            meta.addEnchant(org.bukkit.enchantments.Enchantment.DURABILITY, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        }
         item.setItemMeta(meta);
         return item;
     }
-
-    public static ItemStack customItem(Material material, String name, boolean colorize) {
-        return customItem(material, name, colorize, false);
-    }
-
-    public static GuiItem guiItem(Material material, String name, boolean colorize, boolean enchanted) {
-        return new GuiItem(customItem(material, name, colorize, enchanted));
-    }
-
+    
     public static GuiItem guiItem(Material material, String name, boolean colorize) {
         return new GuiItem(customItem(material, name, colorize));
     }
