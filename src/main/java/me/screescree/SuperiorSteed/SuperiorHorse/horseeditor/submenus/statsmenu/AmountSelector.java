@@ -71,7 +71,7 @@ class AmountSelector {
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(name + ": " + amount);
             item.setItemMeta(meta);
-            statSetter.setStat(amount / 100);
+            statSetter.setStat(amount / 100.0);
             gui.update();
         });
     }

@@ -23,11 +23,10 @@ public class SummonHorse implements CommandExecutor {
             return true;
         }
 
-        HorseEditor editor = new HorseEditor("Summon Horse");
-        editor.show(player);
-
-        // plugin.getHorseManager().newSuperiorHorse(player.getLocation());
-        // player.sendMessage(Utils.colorize("&aYou have summoned a new horse."));
+        new HorseEditor(player, "Summon Horse", horseInfo -> {
+            plugin.getHorseManager().newSuperiorHorse(player.getLocation(), horseInfo);
+            player.sendMessage(Utils.colorize("&aYou have summoned a new horse."));
+        });
                 
         return true;
     }

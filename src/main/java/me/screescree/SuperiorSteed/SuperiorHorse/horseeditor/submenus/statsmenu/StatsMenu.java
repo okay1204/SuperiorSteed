@@ -14,13 +14,13 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import me.screescree.SuperiorSteed.Utils;
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
-import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditorInfo;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
 
 public class StatsMenu extends SubMenu {
 
-    public StatsMenu(Gui gui, HorseEditorInfo horseInfo) {
+    public StatsMenu(Gui gui, SuperiorHorseInfo horseInfo) {
         super(gui, horseInfo);
 
         setSubmenuItem(HorseEditor.customItem(Material.LADDER, "&bStats", true));

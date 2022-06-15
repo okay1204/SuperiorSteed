@@ -14,8 +14,8 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.github.stefvanschie.inventoryframework.pane.util.Mask;
 
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
-import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditorInfo;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
 import net.md_5.bungee.api.ChatColor;
 
@@ -30,7 +30,7 @@ public class LooksMenu extends SubMenu {
     private SelectorHandler<Color> colorSelector;
     private SelectorHandler<Style> styleSelector;
     
-    public LooksMenu(Gui gui, HorseEditorInfo horseInfo) {
+    public LooksMenu(Gui gui, SuperiorHorseInfo horseInfo) {
         super(gui, horseInfo);
         setSubmenuItem(HorseEditor.customItem(Material.BROWN_DYE, ChatColor.of("#c59b7c") + "Looks", false));
         OutlinePane pane = new OutlinePane(0, 0, 7, 3, Priority.HIGH);

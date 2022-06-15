@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -16,11 +17,12 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import me.screescree.SuperiorSteed.Utils;
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.looksmenu.LooksMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.statsmenu.StatsMenu;
 
 public class HorseEditor {
-    HorseEditorInfo horseInfo;
+    SuperiorHorseInfo horseInfo;
     ChestGui gui;
     StaticPane backPane;
     ArrayList<SubMenu> submenus;
@@ -37,8 +39,8 @@ public class HorseEditor {
         return new GuiItem(customItem(material, name, colorize));
     }
     
-    public HorseEditor(String title) {
-        horseInfo = HorseEditorInfo.startingTemplate();
+    public HorseEditor(Player player, String title, SubmitCallback submitCallback) {
+        horseInfo = SuperiorHorseInfo.startingTemplate();
         
         // GUI
         gui = new ChestGui(5, title);
@@ -59,6 +61,10 @@ public class HorseEditor {
         StaticPane submitPane = new StaticPane(8, 4, 1, 1, Priority.NORMAL);
         GuiItem submitItem = guiItem(Material.LIME_CONCRETE, "&aSubmit", true);
         submitPane.addItem(submitItem, 0, 0);
+        submitPane.setOnClick(event -> {
+            player.closeInventory();
+            submitCallback.onSubmit(horseInfo);
+        });
         
         gui.addPane(submitPane);
         
@@ -96,9 +102,7 @@ public class HorseEditor {
 
         paginatedPane.setPage(0);
         gui.addPane(paginatedPane);
-    }
 
-    public void show(Player player) {
         gui.show(player);
     }
 }

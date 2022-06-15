@@ -1,6 +1,12 @@
 package me.screescree.SuperiorSteed.superiorhorse;
 
 import java.util.List;
+import java.util.Random;
+
+import org.bukkit.entity.Horse.Color;
+import org.bukkit.entity.Horse.Style;
+
+import io.netty.util.internal.ThreadLocalRandom;
 
 public class SuperiorHorseInfo {
     public static final List<String> STAT_NAMES = List.of("hunger", "hydration", "trust", "friendliness", "comfortability", "waterbravery");
@@ -11,22 +17,43 @@ public class SuperiorHorseInfo {
     private double friendliness;
     private double comfortability;
     private double waterBravery;
+    
+    private Color color;
+    private Style style;
 
     private boolean isMale;
 
-    public SuperiorHorseInfo(double hunger, double hydration, double trust, double friendliness, double comfortability, double waterBravery, boolean isMale) {
-        this.hunger = hunger;
-        this.hydration = hydration;
-        this.trust = trust;
-        this.friendliness = friendliness;
-        this.comfortability = comfortability;
-        this.waterBravery = waterBravery;
-        this.isMale = isMale;
+    public SuperiorHorseInfo() {
+        color = getRandom(Color.class);
+        style = getRandom(Style.class);
+        hunger = 1.0;
+        hydration = 1.0;
+        trust = 0.5;
+        friendliness = 0.3;
+        comfortability = 0.2;
+        waterBravery = 0.1;
+        isMale = Math.random() < 0.5;
+    }
+
+    private static <E extends Enum<E>> E getRandom(Class<E> enumClass) {
+        Random random = ThreadLocalRandom.current();
+        return enumClass.getEnumConstants()[random.nextInt(enumClass.getEnumConstants().length)];
+    }
+
+    public static SuperiorHorseInfo startingTemplate() {
+        SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
+        horseInfo.setColor(Color.WHITE);
+        horseInfo.setStyle(Style.NONE);
+        horseInfo.setMale(true);
+        return horseInfo;
     }
 
     public String toString() {
         return "SuperiorHorseInfo{" +
-            "hunger=" + getHunger() +
+            "color=" + color +
+            ", style=" + style +
+            ", hunger=" + getHunger() +
+            ", hydration=" + getHydration() +
             ", trust=" + getTrust() +
             ", friendliness=" + getFriendliness() +
             ", comfortability=" + getComfortability() +
@@ -35,16 +62,20 @@ public class SuperiorHorseInfo {
             '}';
     }
 
-    public static SuperiorHorseInfo generateNew() {
-        return new SuperiorHorseInfo(
-            1.0,
-            1.0,
-            0.5,
-            0.3,
-            0.2,
-            0.1,
-            Math.random() < 0.5
-        );
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public Style getStyle() {
+        return style;
+    }
+
+    public void setStyle(Style style) {
+        this.style = style;
     }
 
     public double getHunger() {

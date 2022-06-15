@@ -5,13 +5,15 @@ import org.bukkit.inventory.ItemStack;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
+
 public abstract class SubMenu {
     private Gui gui;
-    private HorseEditorInfo horseInfo;
+    private SuperiorHorseInfo horseInfo;
     private Pane pane;
     private ItemStack submenuItem;
 
-    public SubMenu(Gui gui, HorseEditorInfo horseInfo) {
+    public SubMenu(Gui gui, SuperiorHorseInfo horseInfo) {
         this.gui = gui;
         this.horseInfo = horseInfo;
     }
@@ -36,7 +38,7 @@ public abstract class SubMenu {
         return gui;
     }
 
-    protected HorseEditorInfo getHorseInfo() {
+    protected SuperiorHorseInfo getHorseInfo() {
         return horseInfo;
     }
 }

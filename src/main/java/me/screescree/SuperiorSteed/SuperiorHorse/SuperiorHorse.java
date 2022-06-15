@@ -49,8 +49,6 @@ public class SuperiorHorse {
         bukkitEntity.setJumpStrength(horse.getJumpStrength());
         bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
         bukkitEntity.setEatingHaystack(horse.isEatingHaystack());
-        bukkitEntity.setStyle(horse.getStyle());
-        bukkitEntity.setColor(horse.getColor());
         HorseInventory inventory = bukkitEntity.getInventory();
         inventory.setSaddle(horse.getInventory().getSaddle());
         inventory.setArmor(horse.getInventory().getArmor());
@@ -107,7 +105,7 @@ public class SuperiorHorse {
         
         
         PersistentDataContainer container = horse.getPersistentDataContainer();
-        SuperiorHorseInfo generatedInfo = SuperiorHorseInfo.generateNew();
+        SuperiorHorseInfo generatedInfo = new SuperiorHorseInfo();
         
         double hunger = containerValueOrDefault(container, "hunger", generatedInfo.getHunger());
         double hydration = containerValueOrDefault(container, "hydration", generatedInfo.getHydration());
@@ -118,14 +116,24 @@ public class SuperiorHorse {
 
         boolean isMale = containerValueOrDefault(container, "isMale", generatedInfo.isMale());
         
-        SuperiorHorseInfo horseInfo = new SuperiorHorseInfo(hunger, hydration, trust, friendliness, comfortability, waterBravery, isMale);
+        SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
+        horseInfo.setColor(horse.getColor());
+        horseInfo.setStyle(horse.getStyle());
+        horseInfo.setHunger(hunger);
+        horseInfo.setHydration(hydration);
+        horseInfo.setTrust(trust);
+        horseInfo.setFriendliness(friendliness);
+        horseInfo.setComfortability(comfortability);
+        horseInfo.setWaterBravery(waterBravery);
+
+        horseInfo.setMale(isMale);
         
         initializeInfo(horseInfo);
         horse.remove();
     }
     
     public SuperiorHorse(Location spawnLocation) {
-        this(spawnLocation, SuperiorHorseInfo.generateNew());
+        this(spawnLocation, new SuperiorHorseInfo());
     }
     
     public SuperiorHorse(Location spawnLocation, SuperiorHorseInfo horseInfo) {
@@ -162,6 +170,9 @@ public class SuperiorHorse {
         SuperiorSteed plugin = SuperiorSteed.getInstance();
         PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
 
+        bukkitEntity.setColor(horseInfo.getColor());
+        bukkitEntity.setStyle(horseInfo.getStyle());
+
         hunger = new Stat(horseInfo.getHunger(), container, new NamespacedKey(plugin, "hunger"));
         hydration = new Stat(horseInfo.getHydration(), container, new NamespacedKey(plugin, "hydration"));
         trust = new Stat(horseInfo.getTrust(), container, new NamespacedKey(plugin, "trust"));
@@ -182,7 +193,17 @@ public class SuperiorHorse {
     }
 
     public SuperiorHorseInfo getInfo() {
-        return new SuperiorHorseInfo(hunger.get(), hydration.get(), trust.get(), friendliness.get(), comfortability.get(), waterBravery.get(), isMale());
+        SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
+        horseInfo.setColor(bukkitEntity.getColor());
+        horseInfo.setStyle(bukkitEntity.getStyle());
+        horseInfo.setHunger(hunger.get());
+        horseInfo.setHydration(hydration.get());
+        horseInfo.setTrust(trust.get());
+        horseInfo.setFriendliness(friendliness.get());
+        horseInfo.setComfortability(comfortability.get());
+        horseInfo.setWaterBravery(waterBravery.get());
+        horseInfo.setMale(isMale);
+        return horseInfo;
     }
 
     public String getName() {
