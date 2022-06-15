@@ -1,16 +1,12 @@
 package me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.looksmenu;
 
-import java.util.ArrayList;
-
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;

@@ -1,9 +1,6 @@
 package me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus;
 
-import java.lang.reflect.Field;
-
 import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
