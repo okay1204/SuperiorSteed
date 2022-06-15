@@ -1,22 +1,26 @@
 package me.screescree.SuperiorSteed.superiorhorse.horseeditor;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import me.screescree.SuperiorSteed.Utils;
-import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.LooksMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.StatsMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.looksmenu.LooksMenu;
 
 public class HorseEditor {
     HorseEditorInfo horseInfo;
@@ -90,6 +94,7 @@ public class HorseEditor {
 
         submenus = new ArrayList<SubMenu>();
         submenus.add(new LooksMenu(gui, horseInfo));
+        submenus.add(new StatsMenu(gui, horseInfo));
 
         paginatedPane.addPane(0, mainMenu);
         for (int i = 0; i < submenus.size(); i++) {
