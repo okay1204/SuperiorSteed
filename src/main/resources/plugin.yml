@@ -12,12 +12,12 @@ commands:
     permission: "superiorsteed.horsestats"
   # admin commands
   summonhorse:
-    description: "Spawns a custom horse."
+    description: "Displays a GUI to summon a custom horse."
     usage: "§cUsage: /<command>" 
     permission: "superiorsteed.admin.summonhorse"
   updatehorse:
-    description: "Sets the information of the horse you are currently riding or looking at."
-    usage: "§cUsage: /<command> stat <stat_name> <value> §7or\n§c/<command> looks <color|style> <value>"
+    description: "Displays a GUI to modify the horse you are currently riding or looking at."
+    usage: "§cUsage: /<command>"
     permission: "superiorsteed.admin.updatehorse"
 
   # debug commands

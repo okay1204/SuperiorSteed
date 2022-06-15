@@ -1,13 +1,17 @@
 package me.screescree.SuperiorSteed.commands;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
 
-public class HorseCache implements CommandExecutor {
+public class HorseCache extends CustomCommand {
+    public HorseCache() {
+        super("horsecache");
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         SuperiorSteed plugin = SuperiorSteed.getInstance();

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -40,8 +38,10 @@ public class HorseEditor {
     }
     
     public HorseEditor(Player player, String title, SubmitCallback submitCallback) {
-        horseInfo = SuperiorHorseInfo.startingTemplate();
-        
+        this(SuperiorHorseInfo.startingTemplate(), player, title, submitCallback);
+    }    
+    
+    public HorseEditor(SuperiorHorseInfo horseInfo, Player player, String title, SubmitCallback submitCallback) {
         // GUI
         gui = new ChestGui(5, title);
         gui.setOnGlobalClick(event -> event.setCancelled(true));

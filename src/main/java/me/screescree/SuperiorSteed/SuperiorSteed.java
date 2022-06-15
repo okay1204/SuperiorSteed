@@ -1,6 +1,5 @@
 package me.screescree.SuperiorSteed;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,13 +11,11 @@ public class SuperiorSteed extends JavaPlugin
 
     private CommandHandler commandHandler;
     private SuperiorHorsesManager superiorHorsesManager;
-    private FileConfiguration config;
 
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        config = getConfig();
         
         commandHandler = new CommandHandler();
         
@@ -45,9 +42,5 @@ public class SuperiorSteed extends JavaPlugin
 
     public CommandHandler getCommandHandler() {
         return commandHandler;
-    }
-
-    public FileConfiguration getPluginConfig() {
-        return config;
     }
 }

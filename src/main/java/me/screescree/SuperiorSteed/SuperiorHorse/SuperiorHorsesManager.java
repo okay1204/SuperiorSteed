@@ -28,7 +28,7 @@ public class SuperiorHorsesManager implements Listener {
             }
         }
 
-        int cleanupCacheInterval = SuperiorSteed.getInstance().getPluginConfig().getInt("cleanupCacheInterval");
+        int cleanupCacheInterval = SuperiorSteed.getInstance().getConfig().getInt("cleanupCacheInterval");
         if (cleanupCacheInterval > 0) {
             long cleanupCacheIntervalTicks = cleanupCacheInterval * 1200;
             new BukkitRunnable() {
@@ -113,7 +113,7 @@ public class SuperiorHorsesManager implements Listener {
 
     @EventHandler
     public void onHorseDeath(EntityDeathEvent event) {
-        if (event.getEntity().getType().equals(EntityType.HORSE)) {
+        if (event.getEntity().getType() == EntityType.HORSE) {
             for (int i = 0; i < superiorHorses.size(); i++) {
                 if (superiorHorses.get(i).equals(event.getEntity())) {
                     superiorHorses.remove(i);

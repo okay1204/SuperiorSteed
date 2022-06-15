@@ -128,7 +128,7 @@ public class SuperiorHorse {
 
         horseInfo.setMale(isMale);
         
-        initializeInfo(horseInfo);
+        update(horseInfo);
         horse.remove();
     }
     
@@ -141,7 +141,7 @@ public class SuperiorHorse {
         bukkitEntity = ((CraftWorld) spawnLocation.getWorld()).addEntity(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         bukkitEntity.teleport(spawnLocation, TeleportCause.PLUGIN);
 
-        initializeInfo(horseInfo);
+        update(horseInfo);
     }
 
     private double containerValueOrDefault(PersistentDataContainer container, String keyName, double defaultValue) {
@@ -166,12 +166,14 @@ public class SuperiorHorse {
     }
 
     // bukkitEntity must be set before calling this method
-    private void initializeInfo(SuperiorHorseInfo horseInfo) {
+    public void update(SuperiorHorseInfo horseInfo) {
         SuperiorSteed plugin = SuperiorSteed.getInstance();
         PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
 
         bukkitEntity.setColor(horseInfo.getColor());
         bukkitEntity.setStyle(horseInfo.getStyle());
+        System.out.println(horseInfo.getColor());
+        System.out.println(horseInfo.getStyle());
 
         hunger = new Stat(horseInfo.getHunger(), container, new NamespacedKey(plugin, "hunger"));
         hydration = new Stat(horseInfo.getHydration(), container, new NamespacedKey(plugin, "hydration"));

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Horse;
@@ -12,12 +11,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.BooleanTagType;
 
-public class ReadPersistentData implements CommandExecutor, TabCompleter {
+public class ReadPersistentData extends CustomCommand implements TabCompleter {    
     private final List<String> PERSISTENT_TYPES = List.of("double", "boolean");
+
+    public ReadPersistentData() {
+        super("readpersistentdata");
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

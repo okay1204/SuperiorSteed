@@ -48,10 +48,10 @@ public class LooksMenu extends SubMenu {
 
         styleSelector = new SelectorHandler<Style>();
         styleSelector.add(new Selector<Style>(Style.NONE, Material.BARRIER, ChatColor.getByChar('c') + "None"));
-        styleSelector.add(new Selector<Style>(Style.WHITE, Material.WHITE_CONCRETE, ChatColor.WHITE + "White"));
-        styleSelector.add(new Selector<Style>(Style.WHITEFIELD, Material.WHITE_CANDLE, ChatColor.WHITE + "White Field"));
+        styleSelector.add(new Selector<Style>(Style.WHITE, Material.WHITE_CONCRETE, ChatColor.WHITE + "White Stockings/Blaze"));
+        styleSelector.add(new Selector<Style>(Style.WHITEFIELD, Material.WHITE_CANDLE, ChatColor.WHITE + "White Patches"));
         styleSelector.add(new Selector<Style>(Style.WHITE_DOTS, Material.BONE_MEAL, ChatColor.WHITE + "White Dots"));
-        styleSelector.add(new Selector<Style>(Style.BLACK_DOTS, Material.INK_SAC, ChatColor.of("#454545") + "Black Dots"));
+        styleSelector.add(new Selector<Style>(Style.BLACK_DOTS, Material.INK_SAC, ChatColor.of("#454545") + "Black Sooty"));
 
         for (Selector<Color> color : colorSelector.getSelectors()) {
             pane.addItem(new GuiItem(color.getItem()));

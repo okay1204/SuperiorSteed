@@ -1,16 +1,20 @@
 package me.screescree.SuperiorSteed.commands;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 
+import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 
-public class HorseStats implements CommandExecutor {
+public class HorseStats extends CustomCommand {
+    public HorseStats() {
+        super("horsestats");
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         SuperiorSteed plugin = SuperiorSteed.getInstance();
