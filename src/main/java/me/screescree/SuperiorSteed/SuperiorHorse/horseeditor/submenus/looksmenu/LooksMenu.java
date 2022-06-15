@@ -46,14 +46,13 @@ public class LooksMenu extends SubMenu {
         colorSelector.add(new Selector<Color>(Color.GRAY, Material.GRAY_CONCRETE, ChatColor.of("#3a3a3a") + "Gray"));
         colorSelector.add(new Selector<Color>(Color.DARK_BROWN, Material.BLACK_TERRACOTTA, ChatColor.of("#351e17") + "Dark Brown"));
 
-        styleSelector = new SelectorHandler<Style>(colorSelector.getSize());
+        styleSelector = new SelectorHandler<Style>();
         styleSelector.add(new Selector<Style>(Style.NONE, Material.BARRIER, ChatColor.getByChar('c') + "None"));
         styleSelector.add(new Selector<Style>(Style.WHITE, Material.WHITE_CONCRETE, ChatColor.WHITE + "White"));
         styleSelector.add(new Selector<Style>(Style.WHITEFIELD, Material.WHITE_CANDLE, ChatColor.WHITE + "White Field"));
         styleSelector.add(new Selector<Style>(Style.WHITE_DOTS, Material.BONE_MEAL, ChatColor.WHITE + "White Dots"));
         styleSelector.add(new Selector<Style>(Style.BLACK_DOTS, Material.INK_SAC, ChatColor.of("#454545") + "Black Dots"));
 
-        // activeColor = ColorSelector.getByHorseColor(horseInfo.getColor());
         for (Selector<Color> color : colorSelector.getSelectors()) {
             pane.addItem(new GuiItem(color.getItem()));
             if (color.getDefinedValue() == horseInfo.getColor()) {
