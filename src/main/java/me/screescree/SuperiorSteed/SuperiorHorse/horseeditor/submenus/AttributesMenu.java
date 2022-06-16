@@ -2,7 +2,6 @@ package me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus;
 
 import org.bukkit.Material;
 
-import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
