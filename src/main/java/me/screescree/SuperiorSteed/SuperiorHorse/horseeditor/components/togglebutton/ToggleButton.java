@@ -23,9 +23,6 @@ public class ToggleButton {
     private String enabledName;
     private String disabledName;
 
-    private Gui gui;
-    private ToggleCallback callback;
-
     private ItemStack item;
     private GuiItem guiItem;
 
@@ -37,9 +34,6 @@ public class ToggleButton {
 
         this.enabledName = enabledName;
         this.disabledName = disabledName;
-
-        this.gui = gui;
-        this.callback = callback;
 
         // placeholder material to initialize the item
         item = new ItemStack(Material.STRUCTURE_VOID);
