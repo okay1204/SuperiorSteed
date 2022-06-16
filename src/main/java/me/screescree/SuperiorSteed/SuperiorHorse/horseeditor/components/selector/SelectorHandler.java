@@ -1,10 +1,8 @@
-package me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.looksmenu;
+package me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.selector;
 
 import java.util.ArrayList;
 
 import org.bukkit.inventory.ItemStack;
-
-import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.selector.Selector;
 
 public class SelectorHandler<T> {
     private ArrayList<Selector<T>> selectors;

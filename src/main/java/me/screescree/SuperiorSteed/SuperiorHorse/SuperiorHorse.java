@@ -203,15 +203,22 @@ public class SuperiorHorse {
 
     public SuperiorHorseInfo getInfo() {
         SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
-        horseInfo.setColor(bukkitEntity.getColor());
-        horseInfo.setStyle(bukkitEntity.getStyle());
+
         horseInfo.setHunger(hunger.get());
         horseInfo.setHydration(hydration.get());
         horseInfo.setTrust(trust.get());
         horseInfo.setFriendliness(friendliness.get());
         horseInfo.setComfortability(comfortability.get());
         horseInfo.setWaterBravery(waterBravery.get());
+
         horseInfo.setMale(isMale);
+
+        horseInfo.setColor(bukkitEntity.getColor());
+        horseInfo.setStyle(bukkitEntity.getStyle());
+
+        horseInfo.setSpeed(bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
+        horseInfo.setJumpStrength(bukkitEntity.getJumpStrength());
+        horseInfo.setMaxHealth(bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
         return horseInfo;
     }
 

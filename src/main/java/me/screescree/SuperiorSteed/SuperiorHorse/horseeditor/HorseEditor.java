@@ -16,8 +16,9 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
-import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.selector.LooksMenu;
-import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.statsmenu.StatsMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.AttributesMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.LooksMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.StatsMenu;
 
 public class HorseEditor {
     SuperiorHorseInfo horseInfo;
@@ -86,6 +87,7 @@ public class HorseEditor {
         submenus = new ArrayList<SubMenu>();
         submenus.add(new LooksMenu(gui, horseInfo));
         submenus.add(new StatsMenu(gui, horseInfo));
+        submenus.add(new AttributesMenu(gui, horseInfo));
 
         paginatedPane.addPane(0, mainMenu);
         for (int i = 0; i < submenus.size(); i++) {
