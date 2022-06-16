@@ -3,6 +3,10 @@ package me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.amountp
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -70,14 +74,18 @@ public class AmountPicker {
             if (event.isLeftClick()) {
                 if (event.isShiftClick()) {
                     amount -= settings.getSmallStep();
+                    playSound(event, 1.2f);
                 } else {
                     amount -= settings.getLargeStep();
+                    playSound(event, 1f);
                 }
             } else {
                 if (event.isShiftClick()) {
                     amount += settings.getSmallStep();
+                    playSound(event, 1.2f);
                 } else {
                     amount += settings.getLargeStep();
+                    playSound(event, 1f);
                 }
             }
 
@@ -93,5 +101,12 @@ public class AmountPicker {
             amountSetter.setAmount(amount);
             gui.update();
         });
+    }
+
+    private void playSound(InventoryClickEvent event, float pitch) {
+        HumanEntity human = event.getWhoClicked();
+        if (human instanceof Player) {
+            ((Player) human).playSound(human.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1, pitch);
+        }
     }
 }

@@ -26,6 +26,7 @@ public class SuperiorHorse {
     private Stat waterBravery;
 
     private boolean isMale;
+    private boolean isStallion;
 
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
@@ -115,6 +116,7 @@ public class SuperiorHorse {
         double waterBravery = containerValueOrDefault(container, "waterBravery", generatedInfo.getWaterBravery());
 
         boolean isMale = containerValueOrDefault(container, "isMale", generatedInfo.isMale());
+        boolean isStallion = containerValueOrDefault(container, "isStallion", generatedInfo.isStallion());
         
         SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
         horseInfo.setHunger(hunger);
@@ -125,6 +127,7 @@ public class SuperiorHorse {
         horseInfo.setWaterBravery(waterBravery);
         
         horseInfo.setMale(isMale);
+        horseInfo.setStallion(isStallion);
 
         horseInfo.setColor(horse.getColor());
         horseInfo.setStyle(horse.getStyle());
@@ -175,8 +178,8 @@ public class SuperiorHorse {
         SuperiorSteed plugin = SuperiorSteed.getInstance();
         PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
 
-        isMale = horseInfo.isMale();
-        container.set(new NamespacedKey(plugin, "isMale"), new BooleanTagType(), isMale);
+        setMale(horseInfo.isMale());
+        setStallion(horseInfo.isStallion());
         
         hunger = new Stat(horseInfo.getHunger(), container, new NamespacedKey(plugin, "hunger"));
         hydration = new Stat(horseInfo.getHydration(), container, new NamespacedKey(plugin, "hydration"));
@@ -212,6 +215,7 @@ public class SuperiorHorse {
         horseInfo.setWaterBravery(waterBravery.get());
 
         horseInfo.setMale(isMale);
+        horseInfo.setStallion(isStallion);
 
         horseInfo.setColor(bukkitEntity.getColor());
         horseInfo.setStyle(bukkitEntity.getStyle());
@@ -281,6 +285,20 @@ public class SuperiorHorse {
 
     public boolean isMale() {
         return isMale;
+    }
+
+    public void setMale(boolean isMale) {
+        this.isMale = isMale;
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "isMale"), new BooleanTagType(), isMale);
+    }
+
+    public boolean isStallion() {
+        return isStallion;
+    }
+
+    public void setStallion(boolean isStallion) {
+        this.isStallion = isStallion;
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "isStallion"), new BooleanTagType(), isStallion);
     }
 
     public SuperiorHorseEntity getNMSEntity() {

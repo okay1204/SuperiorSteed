@@ -20,6 +20,8 @@ public class SuperiorHorseInfo {
     private double waterBravery;
     
     private boolean isMale;
+    // Male horses can either be a stallion or a gelding
+    private boolean isStallion;
     
     // Looks
     private Color color;
@@ -39,6 +41,7 @@ public class SuperiorHorseInfo {
         waterBravery = 0.1;
         
         isMale = Math.random() < 0.5;
+        isStallion = true;
         
         color = getRandomEnum(Color.class);
         style = getRandomEnum(Style.class);
@@ -55,9 +58,12 @@ public class SuperiorHorseInfo {
 
     public static SuperiorHorseInfo startingTemplate() {
         SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
+        // Override all random values with starting values
         horseInfo.setMale(true);
+
         horseInfo.setColor(Color.WHITE);
         horseInfo.setStyle(Style.NONE);
+
         horseInfo.setSpeed(0.225);
         horseInfo.setJumpStrength(0.7);
         horseInfo.setMaxHealth(22.5);
@@ -118,6 +124,14 @@ public class SuperiorHorseInfo {
 
     public void setMale(boolean isMale) {
         this.isMale = isMale;
+    }
+
+    public boolean isStallion() {
+        return isStallion;
+    }
+
+    public void setStallion(boolean isStallion) {
+        this.isStallion = isStallion;
     }
 
     public Color getColor() {

@@ -35,7 +35,7 @@ public class LooksMenu extends SubMenu {
     public LooksMenu(Gui gui, SuperiorHorseInfo horseInfo) {
         super(gui, horseInfo);
         setSubmenuItem(HorseEditor.customItem(Material.BROWN_DYE, ChatColor.of("#c59b7c") + "Looks", false));
-        OutlinePane pane = new OutlinePane(0, 0, 7, 3, Priority.HIGH);
+        OutlinePane pane = new OutlinePane(0, 0, 7, 3, Priority.NORMAL);
         pane.align(OutlinePane.Alignment.CENTER);
         pane.applyMask(MASK);
 

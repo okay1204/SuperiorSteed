@@ -48,12 +48,21 @@ public class HorseStats extends CustomCommand {
         player.sendMessage(stats);
         player.sendMessage("\n");
 
+        String horseType;
         if (superiorHorse.isMale()) {
-            player.sendMessage(Utils.colorize("&9♂ Male"));
+            horseType = Utils.colorize("&9♂ Male");
+
+            if (superiorHorse.isStallion()) {
+                horseType += " (Stallion)";
+            }
+            else {
+                horseType += " (Gelding)";
+            }
         }
         else {
-            player.sendMessage(Utils.colorize("&d♀ Female"));
+            horseType = Utils.colorize("&d♀ Female");
         }
+        player.sendMessage(horseType);
 
         return true;
     }

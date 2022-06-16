@@ -17,7 +17,7 @@ public class AttributesMenu extends SubMenu {
     public AttributesMenu(Gui gui, SuperiorHorseInfo horseInfo) {
         super(gui, horseInfo);
 
-        setSubmenuItem(HorseEditor.customItem(Material.CHAIN, "&cAttributes", true));
+        setSubmenuItem(HorseEditor.customItem(Material.CHAIN, "&7Attributes", true));
 
         StaticPane pane = new StaticPane(0, 0, 7, 3, Priority.NORMAL);
         setPane(pane);

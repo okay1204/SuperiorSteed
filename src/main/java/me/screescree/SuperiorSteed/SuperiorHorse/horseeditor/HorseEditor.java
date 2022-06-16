@@ -7,23 +7,26 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.github.stefvanschie.inventoryframework.font.util.Font;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
+import com.github.stefvanschie.inventoryframework.pane.component.Label;
 
 import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.AttributesMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.LooksMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.StatsMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.TypeMenu;
 
 public class HorseEditor {
     SuperiorHorseInfo horseInfo;
     ChestGui gui;
-    StaticPane backPane;
+    Label backLabel;
     ArrayList<SubMenu> submenus;
 
     public static ItemStack customItem(Material material, String name, boolean colorize) {
@@ -59,35 +62,45 @@ public class HorseEditor {
         gui.addPane(background);
         
         // Submit Pane (submit button)
-        StaticPane submitPane = new StaticPane(8, 4, 1, 1, Priority.NORMAL);
-        GuiItem submitItem = guiItem(Material.LIME_CONCRETE, "&aSubmit", true);
-        submitPane.addItem(submitItem, 0, 0);
-        submitPane.setOnClick(event -> {
+        Label submitLabel = new Label(8, 4, 1, 1, Font.LIME);
+        submitLabel.setText("✓", (character, item) -> {
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(Utils.colorize("&aSubmit"));
+            item.setItemMeta(meta);
+            return new GuiItem(item);
+        });
+        submitLabel.setOnClick(event -> {
             player.closeInventory();
             submitCallback.onSubmit(horseInfo);
         });
         
-        gui.addPane(submitPane);
+        gui.addPane(submitLabel);
         
         // Back Pane (back button)
-        backPane = new StaticPane(0, 4, 1, 1, Priority.NORMAL);
-        backPane.addItem(guiItem(Material.ARROW, "&aBack", true), 0, 0);
-        backPane.setVisible(false);
-        backPane.setOnClick(event -> {
+        backLabel = new Label(0, 4, 1, 1, Font.OAK_PLANKS);
+        backLabel.setText("←", (character, item) -> {
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(Utils.colorize("&eBack"));
+            item.setItemMeta(meta);
+            return new GuiItem(item);
+        });
+        backLabel.setVisible(false);
+        backLabel.setOnClick(event -> {
             paginatedPane.setPage(0);
-            backPane.setVisible(false);
+            backLabel.setVisible(false);
             gui.update();
         });
 
-        gui.addPane(backPane);
+        gui.addPane(backLabel);
 
         // Main Menu, to pick between each submenu
         OutlinePane mainMenu = new OutlinePane(0, 0, 7, 3, Priority.HIGH);
 
         submenus = new ArrayList<SubMenu>();
         submenus.add(new LooksMenu(gui, horseInfo));
-        submenus.add(new StatsMenu(gui, horseInfo));
         submenus.add(new AttributesMenu(gui, horseInfo));
+        submenus.add(new StatsMenu(gui, horseInfo));
+        submenus.add(new TypeMenu(gui, horseInfo));
 
         paginatedPane.addPane(0, mainMenu);
         for (int i = 0; i < submenus.size(); i++) {
@@ -96,7 +109,7 @@ public class HorseEditor {
             mainMenu.addItem(
                 new GuiItem(submenus.get(i).getSubmenuItem(), event -> {
                     paginatedPane.setPage(page);
-                    backPane.setVisible(true);
+                    backLabel.setVisible(true);
                     gui.update();
                 })
             );

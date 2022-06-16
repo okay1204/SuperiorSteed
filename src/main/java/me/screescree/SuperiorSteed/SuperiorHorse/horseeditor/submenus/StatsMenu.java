@@ -25,7 +25,7 @@ public class StatsMenu extends SubMenu {
     public StatsMenu(Gui gui, SuperiorHorseInfo horseInfo) {
         super(gui, horseInfo);
 
-        setSubmenuItem(HorseEditor.customItem(Material.LADDER, "&bStats", true));
+        setSubmenuItem(HorseEditor.customItem(Material.LADDER, "&eStats", true));
 
         StaticPane pane = new StaticPane(0, 0, 7, 3, Priority.NORMAL);
         setPane(pane);
