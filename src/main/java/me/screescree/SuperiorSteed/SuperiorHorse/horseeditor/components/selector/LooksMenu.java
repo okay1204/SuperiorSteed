@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.looksmenu;
+package me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.selector;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -17,6 +17,7 @@ import com.github.stefvanschie.inventoryframework.pane.util.Mask;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.looksmenu.SelectorHandler;
 import net.md_5.bungee.api.ChatColor;
 
 public class LooksMenu extends SubMenu {

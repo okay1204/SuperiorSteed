@@ -16,8 +16,6 @@ public class SummonHorse extends CustomCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        SuperiorSteed plugin = SuperiorSteed.getInstance();
-
         Player player;
         if (sender instanceof Player) {
             player = (Player) sender;
@@ -26,7 +24,8 @@ public class SummonHorse extends CustomCommand {
             sender.sendMessage(Utils.colorize("&cThis command can only be used by a player."));
             return true;
         }
-
+        
+        SuperiorSteed plugin = SuperiorSteed.getInstance();
         new HorseEditor(player, "Summon Horse", horseInfo -> {
             if (!player.hasPermission(getCommand().getPermission())) {
                 player.sendMessage(getNoPermissionMessage());

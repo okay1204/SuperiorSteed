@@ -18,10 +18,8 @@ public class UpdateHorse extends CustomCommand implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        SuperiorSteed plugin = SuperiorSteed.getInstance();
-        
         Player player;
-
+        
         if (sender instanceof Player) {
             player = (Player) sender;
         }
@@ -29,12 +27,13 @@ public class UpdateHorse extends CustomCommand implements Listener {
             sender.sendMessage(Utils.colorize("&cThis command can only be used by a player."));
             return true;
         }
-
+        
         Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
         if (targetHorse == null) {
             sender.sendMessage(Utils.colorize("&cYou must be riding or looking at a horse."));
             return true;
         }
+        SuperiorSteed plugin = SuperiorSteed.getInstance();
         SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
 
         new HorseEditor(superiorHorse.getInfo(), player, "Summon Horse", horseInfo -> {

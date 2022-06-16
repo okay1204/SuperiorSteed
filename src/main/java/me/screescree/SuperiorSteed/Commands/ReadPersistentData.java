@@ -68,6 +68,6 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
         if (args.length == 1)
             return PERSISTENT_TYPES;
 
-        return List.of();
+        return null;
     }
 }

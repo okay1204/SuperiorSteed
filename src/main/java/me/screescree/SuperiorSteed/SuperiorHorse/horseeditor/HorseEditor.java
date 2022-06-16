@@ -16,7 +16,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
-import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.looksmenu.LooksMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.selector.LooksMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.statsmenu.StatsMenu;
 
 public class HorseEditor {

@@ -17,8 +17,6 @@ public class HorseStats extends CustomCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        SuperiorSteed plugin = SuperiorSteed.getInstance();
-        
         Player player;
         if (sender instanceof Player) {
             player = (Player) sender;
@@ -27,12 +25,13 @@ public class HorseStats extends CustomCommand {
             sender.sendMessage(Utils.colorize("&cThis command can only be used by a player."));
             return true;
         }
-
+        
         Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
         if (targetHorse == null) {
             sender.sendMessage(Utils.colorize("&cYou must be riding or looking at a horse."));
             return true;
         }
+        SuperiorSteed plugin = SuperiorSteed.getInstance();
         SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
 
         player.sendMessage(Utils.colorize("&7---------------- &e" + superiorHorse.getName(20) + "'s stats &7----------------"));

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import org.bukkit.inventory.ItemStack;
 
-class SelectorHandler<T> {
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.selector.Selector;
+
+public class SelectorHandler<T> {
     private ArrayList<Selector<T>> selectors;
     private Selector<T> selected;
 

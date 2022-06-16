@@ -46,8 +46,6 @@ public class SuperiorHorse {
         
         bukkitEntity.setDomestication(horse.getDomestication());
         bukkitEntity.setMaxDomestication(horse.getMaxDomestication());
-        bukkitEntity.setJumpStrength(horse.getJumpStrength());
-        bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
         bukkitEntity.setEatingHaystack(horse.isEatingHaystack());
         HorseInventory inventory = bukkitEntity.getInventory();
         inventory.setSaddle(horse.getInventory().getSaddle());
@@ -58,6 +56,8 @@ public class SuperiorHorse {
         bukkitEntity.setBreed(horse.canBreed());
         bukkitEntity.setAgeLock(true);
         bukkitEntity.setAbsorptionAmount(horse.getAbsorptionAmount());;
+
+        // Copying max health is necessary here to prevent setHealth from erroring if the health is greater than the max health.
         bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
         bukkitEntity.setHealth(horse.getHealth());
 
@@ -103,7 +103,7 @@ public class SuperiorHorse {
         bukkitEntity.setRemainingAir(horse.getRemainingAir());
         bukkitEntity.setSwimming(horse.isSwimming());
         
-        
+        // Saving data
         PersistentDataContainer container = horse.getPersistentDataContainer();
         SuperiorHorseInfo generatedInfo = new SuperiorHorseInfo();
         
@@ -117,16 +117,21 @@ public class SuperiorHorse {
         boolean isMale = containerValueOrDefault(container, "isMale", generatedInfo.isMale());
         
         SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
-        horseInfo.setColor(horse.getColor());
-        horseInfo.setStyle(horse.getStyle());
         horseInfo.setHunger(hunger);
         horseInfo.setHydration(hydration);
         horseInfo.setTrust(trust);
         horseInfo.setFriendliness(friendliness);
         horseInfo.setComfortability(comfortability);
         horseInfo.setWaterBravery(waterBravery);
-
+        
         horseInfo.setMale(isMale);
+
+        horseInfo.setColor(horse.getColor());
+        horseInfo.setStyle(horse.getStyle());
+
+        horseInfo.setSpeed(horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
+        horseInfo.setJumpStrength(horse.getJumpStrength());
+        horseInfo.setMaxHealth(horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
         
         update(horseInfo);
         horse.remove();
@@ -170,20 +175,22 @@ public class SuperiorHorse {
         SuperiorSteed plugin = SuperiorSteed.getInstance();
         PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
 
-        bukkitEntity.setColor(horseInfo.getColor());
-        bukkitEntity.setStyle(horseInfo.getStyle());
-        System.out.println(horseInfo.getColor());
-        System.out.println(horseInfo.getStyle());
-
+        isMale = horseInfo.isMale();
+        container.set(new NamespacedKey(plugin, "isMale"), new BooleanTagType(), isMale);
+        
         hunger = new Stat(horseInfo.getHunger(), container, new NamespacedKey(plugin, "hunger"));
         hydration = new Stat(horseInfo.getHydration(), container, new NamespacedKey(plugin, "hydration"));
         trust = new Stat(horseInfo.getTrust(), container, new NamespacedKey(plugin, "trust"));
         friendliness = new Stat(horseInfo.getFriendliness(), container, new NamespacedKey(plugin, "friendliness"));
         comfortability = new Stat(horseInfo.getComfortability(), container, new NamespacedKey(plugin, "comfortability"));
         waterBravery = new Stat(horseInfo.getWaterBravery(), container, new NamespacedKey(plugin, "waterBravery"));
+        
+        bukkitEntity.setColor(horseInfo.getColor());
+        bukkitEntity.setStyle(horseInfo.getStyle());
 
-        isMale = horseInfo.isMale();
-        container.set(new NamespacedKey(plugin, "isMale"), new BooleanTagType(), isMale);
+        bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(horseInfo.getSpeed());
+        bukkitEntity.setJumpStrength(horseInfo.getJumpStrength());
+        bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(horseInfo.getMaxHealth());
     }
 
     public boolean equals(SuperiorHorse other) {

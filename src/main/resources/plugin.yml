@@ -29,6 +29,10 @@ commands:
     description: "Displays the persistent data of the horse you are currently riding or looking at."
     usage: "§cUsage: /<command> <type> <key>"
     permission: "superiorsteed.debug.readpersistentdata"
+  horsejumpandspeedtest:
+    description: "Spawns a horse with a set jump strength and movement speed. (Probably doesn't even work anymore)"
+    usage: "§cUsage: /<command> <jump_strength> <movement_speed>"
+    permission: "superiorsteed.debug.horsejumpandspeedtest"
 
 permissions:
   superiorsteed.horsestats:
@@ -53,9 +57,13 @@ permissions:
     children:
       superiorsteed.debug.horsecache: true
       superiorsteed.debug.readpersistentdata: true
+      superiorsteed.debug.horsejumpandspeedtest: true
   superiorsteed.debug.horsecache:
     description: "Allows the user to see the cache of all horses in the server."
     default: false
   superiorsteed.debug.readpersistentdata:
     description: "Allows the user to read the persistent data of a horse."
+    default: false
+  superiorsteed.debug.horsejumpandspeedtest:
+    description: "Allows the user to spawn a horse with a set jump strength and movement speed."
     default: false

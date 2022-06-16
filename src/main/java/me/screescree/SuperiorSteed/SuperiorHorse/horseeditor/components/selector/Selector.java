@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.looksmenu;
+package me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.selector;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.md_5.bungee.api.ChatColor;
 
-class Selector<T> {
+public class Selector<T> {
     private T definedValue;
     private String name;
     private ItemStack item;
