@@ -4,22 +4,20 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
+
 import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
-import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 
-public class UpdateHorse extends CustomCommand implements Listener {
-    public UpdateHorse() {
-        super("updatehorse");
+public class Geld extends CustomCommand {
+    public Geld() {
+        super("geld");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player;
-        
         if (sender instanceof Player) {
             player = (Player) sender;
         }
@@ -36,16 +34,13 @@ public class UpdateHorse extends CustomCommand implements Listener {
         SuperiorSteed plugin = SuperiorSteed.getInstance();
         SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
 
-        new HorseEditor(superiorHorse.getInfo(), player, "Summon Horse", horseInfo -> {
-            if (!player.hasPermission(getCommand().getPermission())) {
-                player.sendMessage(getNoPermissionMessage());
-                return;
-            }
+        if (!superiorHorse.isMale() || !superiorHorse.isStallion()) {
+            sender.sendMessage(Utils.colorize("&cThis horse is not a stallion."));
+            return true;
+        }
 
-            player.sendMessage(Utils.colorize("&aYou have updated ") + superiorHorse.getName(20) + Utils.colorize("&a."));
-            superiorHorse.update(horseInfo);
-        });
-
+        superiorHorse.setStallion(false);
+        sender.sendMessage(Utils.colorize("&aYou have gelded ") + superiorHorse.getName(20) + Utils.colorize("&a."));
         return true;
     }
 }

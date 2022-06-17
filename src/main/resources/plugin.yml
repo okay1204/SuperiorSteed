@@ -10,6 +10,10 @@ commands:
     description: "Displays the stats of the horse you are currently riding or looking at."
     usage: "§cUsage: /<command>"
     permission: "superiorsteed.horsestats"
+  geld:
+    description: "Gelds the stallion you are currently riding or looking at."
+    usage: "§cUsage: /<command>"
+    permission: "superiorsteed.geld"
   # admin commands
   summonhorse:
     description: "Displays a GUI to summon a custom horse."
@@ -36,8 +40,11 @@ commands:
 
 permissions:
   superiorsteed.horsestats:
-    description: "Allows the user to see the stats of the horse they are looking at."
+    description: "Allows the user to see the stats of horses."
     default: true
+  superiorsteed.geld:
+    description: "Allows the user to geld horses."
+    default: op
 
   superiorsteed.admin:
     description: "Allows the user to use the plugin's admin commands."
