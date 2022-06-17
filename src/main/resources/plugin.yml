@@ -14,6 +14,7 @@ commands:
     description: "Gelds the stallion you are currently riding or looking at."
     usage: "§cUsage: /<command>"
     permission: "superiorsteed.geld"
+
   # admin commands
   summonhorse:
     description: "Displays a GUI to summon a custom horse."
@@ -37,6 +38,10 @@ commands:
     description: "Spawns a horse with a set jump strength and movement speed. (Probably doesn't even work anymore)"
     usage: "§cUsage: /<command> <jump_strength> <movement_speed>"
     permission: "superiorsteed.debug.horsejumpandspeedtest"
+  forcedrink:
+    description: "Forces the horse to drink water from the nearest source."
+    usage: "§cUsage: /<command>"
+    permission: "superiorsteed.debug.forcedrink"
 
 permissions:
   superiorsteed.horsestats:
@@ -65,6 +70,7 @@ permissions:
       superiorsteed.debug.horsecache: true
       superiorsteed.debug.readpersistentdata: true
       superiorsteed.debug.horsejumpandspeedtest: true
+      superiorsteed.debug.forcedrink: true
   superiorsteed.debug.horsecache:
     description: "Allows the user to see the cache of all horses in the server."
     default: false
@@ -73,4 +79,7 @@ permissions:
     default: false
   superiorsteed.debug.horsejumpandspeedtest:
     description: "Allows the user to spawn a horse with a set jump strength and movement speed."
+    default: false
+  superiorsteed.debug.forcedrink:
+    description: "Allows the user to force a horse to drink water from its nearest source."
     default: false

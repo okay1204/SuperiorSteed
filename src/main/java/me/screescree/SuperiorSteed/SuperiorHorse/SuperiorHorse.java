@@ -226,6 +226,10 @@ public class SuperiorHorse {
         return horseInfo;
     }
 
+    public void drinkWater() {
+        getNMSEntity().pathfindToWater();
+    }
+
     public String getName() {
         return getBukkitEntity().getCustomName() != null ? getBukkitEntity().getCustomName() : "Horse";
     }
