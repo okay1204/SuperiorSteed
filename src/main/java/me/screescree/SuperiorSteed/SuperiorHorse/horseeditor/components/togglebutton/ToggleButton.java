@@ -62,7 +62,7 @@ public class ToggleButton {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         meta.setLore(List.of(lore));
-        item.setItemMeta(meta); 
+        item.setItemMeta(meta);
     }
 
     public GuiItem getGuiItem() {

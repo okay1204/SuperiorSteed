@@ -10,8 +10,7 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
 
 import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
@@ -22,50 +21,52 @@ import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.amountpi
 
 public class StatsMenu extends SubMenu {
 
+    private ArrayList<Pane> panes = new ArrayList<Pane>();
+
+    public ItemStack getSubmenuItem() {
+        return HorseEditor.customItem(Material.LADDER, "&eStats", true);
+    }
+
+    public ArrayList<Pane> getPanes() {
+        return panes;
+    }
+
     public StatsMenu(Gui gui, SuperiorHorseInfo horseInfo) {
-        super(gui, horseInfo);
-
-        setSubmenuItem(HorseEditor.customItem(Material.LADDER, "&eStats", true));
-
-        StaticPane pane = new StaticPane(0, 0, 7, 3, Priority.NORMAL);
-        setPane(pane);
-
-        ArrayList<AmountPicker> amountSelectors = new ArrayList<AmountPicker>();
-
         AmountPickerSettings amountPickerSettings = new AmountPickerSettings(0, 100, 1, 10, 0);
+
         // hunger
-        amountSelectors.add(new AmountPicker(Material.WHEAT, Utils.colorize("&6&lHunger"), null, (int) (horseInfo.getHunger() * 100), gui, amountPickerSettings, hunger -> {
+        panes.add(new AmountPicker(Material.WHEAT, Utils.colorize("&6&lHunger"), null, (int) (horseInfo.getHunger() * 100), 0, 0, gui, amountPickerSettings, hunger -> {
             horseInfo.setHunger(hunger / 100);
-        }));
+        }).getPane());
+
         // hydration
         ItemStack waterBottle = new ItemStack(Material.POTION);
         PotionMeta waterBottleMeta = (PotionMeta) waterBottle.getItemMeta();
         waterBottleMeta.setBasePotionData(new PotionData(PotionType.WATER));
         waterBottleMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         waterBottle.setItemMeta(waterBottleMeta);
-        amountSelectors.add(new AmountPicker(waterBottle, Utils.colorize("&c&lHydration"), null, (int) (horseInfo.getHydration() * 100), gui, amountPickerSettings, hydration -> {
+        panes.add(new AmountPicker(waterBottle, Utils.colorize("&c&lHydration"), null, (int) (horseInfo.getHydration() * 100), 3, 0, gui, amountPickerSettings, hydration -> {
             horseInfo.setHydration(hydration / 100);
-        }));
+        }).getPane());
+        
         // trust
-        amountSelectors.add(new AmountPicker(Material.DIAMOND, Utils.colorize("&b&lTrust"), null, (int) (horseInfo.getTrust() * 100), gui, amountPickerSettings, trust -> {
+        panes.add(new AmountPicker(Material.DIAMOND, Utils.colorize("&b&lTrust"), null, (int) (horseInfo.getTrust() * 100), 6, 0, gui, amountPickerSettings, trust -> {
             horseInfo.setTrust(trust / 100);
-        }));
+        }).getPane());
+
         // friendliness
-        amountSelectors.add(new AmountPicker(Material.EMERALD, Utils.colorize("&e&lFriendliness"), null,  (int) (horseInfo.getFriendliness() * 100), gui, amountPickerSettings, friendliness -> {
+        panes.add(new AmountPicker(Material.EMERALD, Utils.colorize("&e&lFriendliness"), null,  (int) (horseInfo.getFriendliness() * 100), 0, 2, gui, amountPickerSettings, friendliness -> {
             horseInfo.setFriendliness(friendliness / 100);
-        }));
+        }).getPane());
+
         // comfortability
-        amountSelectors.add(new AmountPicker(Material.AMETHYST_SHARD, Utils.colorize("&a&lComfortability"), null, (int) (horseInfo.getComfortability() * 100), gui, amountPickerSettings, comfortability -> {
+        panes.add(new AmountPicker(Material.AMETHYST_SHARD, Utils.colorize("&a&lComfortability"), null, (int) (horseInfo.getComfortability() * 100), 3, 2, gui, amountPickerSettings, comfortability -> {
             horseInfo.setComfortability(comfortability / 100);
-        }));
+        }).getPane());
+
         // water bravery
-        amountSelectors.add(new AmountPicker(Material.WATER_BUCKET, Utils.colorize("&9&lWater Bravery"), null, (int) (horseInfo.getWaterBravery() * 100), gui, amountPickerSettings, waterBravery -> {
+        panes.add(new AmountPicker(Material.WATER_BUCKET, Utils.colorize("&9&lWater Bravery"), null, (int) (horseInfo.getWaterBravery() * 100), 6, 2, gui, amountPickerSettings, waterBravery -> {
             horseInfo.setWaterBravery(waterBravery / 100);
-        }));
-
-        for (int i = 0; i < amountSelectors.size(); i++) {            
-            pane.addItem(amountSelectors.get(i).getGuiItem(), (i % 3) * 3, (i / 3) * 2);
-        }
-
+        }).getPane());
     }
 }

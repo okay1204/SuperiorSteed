@@ -12,10 +12,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class AmountPicker {
+    private StaticPane pane;
     private ItemStack item;
     private String name;
     private String units;
@@ -24,7 +27,9 @@ public class AmountPicker {
     private AmountPickerSettings settings;
     private SetAmountCallback amountSetter;
 
-    public AmountPicker(ItemStack item, String name, String units, double amount, Gui gui, AmountPickerSettings settings, SetAmountCallback statSetter) {
+    public AmountPicker(ItemStack item, String name, String units, double amount, int x, int y, Gui gui, AmountPickerSettings settings, SetAmountCallback statSetter) {
+        pane = new StaticPane(x, y, 1, 1, Priority.NORMAL);
+
         this.item = item;
         this.settings = settings;
         ItemMeta meta = item.getItemMeta();
@@ -43,10 +48,47 @@ public class AmountPicker {
         this.units = units;
         this.amountSetter = statSetter;
         this.gui = gui;
+
+        pane.addItem(new GuiItem(item), 0, 0);
+        pane.setOnClick(event -> {
+            onClick(event);
+        });
     }
 
-    public AmountPicker(Material material, String name, String units, double amount, Gui gui, AmountPickerSettings settings, SetAmountCallback statSetter) {
-        this(new ItemStack(material), name, units, amount, gui, settings, statSetter);
+    public AmountPicker(Material material, String name, String units, double amount, int x, int y, Gui gui, AmountPickerSettings settings, SetAmountCallback statSetter) {
+        this(new ItemStack(material), name, units, amount, x, y, gui, settings, statSetter);
+    }
+
+    private void onClick(InventoryClickEvent event) {
+        if (event.isLeftClick()) {
+            if (event.isShiftClick()) {
+                amount -= settings.getSmallStep();
+                playSound(event, 1.2f);
+            } else {
+                amount -= settings.getLargeStep();
+                playSound(event, 1f);
+            }
+        } else {
+            if (event.isShiftClick()) {
+                amount += settings.getSmallStep();
+                playSound(event, 1.2f);
+            } else {
+                amount += settings.getLargeStep();
+                playSound(event, 1f);
+            }
+        }
+
+        if (amount < settings.getMin()) {
+            amount = settings.getMin();
+        } else if (amount > settings.getMax()) {
+            amount = settings.getMax();
+        }
+        
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name + ": " + roundAndFormat(amount) + " " + (units == null ? "" : units));
+        item.setItemMeta(meta);
+        amountSetter.setAmount(amount);
+        gui.update();
     }
 
     private String roundAndFormat(double number)  {
@@ -69,38 +111,8 @@ public class AmountPicker {
         return numberString;
     }
 
-    public GuiItem getGuiItem() {
-        return new GuiItem(item, (event) -> {
-            if (event.isLeftClick()) {
-                if (event.isShiftClick()) {
-                    amount -= settings.getSmallStep();
-                    playSound(event, 1.2f);
-                } else {
-                    amount -= settings.getLargeStep();
-                    playSound(event, 1f);
-                }
-            } else {
-                if (event.isShiftClick()) {
-                    amount += settings.getSmallStep();
-                    playSound(event, 1.2f);
-                } else {
-                    amount += settings.getLargeStep();
-                    playSound(event, 1f);
-                }
-            }
-
-            if (amount < settings.getMin()) {
-                amount = settings.getMin();
-            } else if (amount > settings.getMax()) {
-                amount = settings.getMax();
-            }
-            
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(name + ": " + roundAndFormat(amount) + " " + (units == null ? "" : units));
-            item.setItemMeta(meta);
-            amountSetter.setAmount(amount);
-            gui.update();
-        });
+    public StaticPane getPane() {
+        return pane;
     }
 
     private void playSound(InventoryClickEvent event, float pitch) {

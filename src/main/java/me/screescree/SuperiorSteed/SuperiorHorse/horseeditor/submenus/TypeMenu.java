@@ -1,8 +1,12 @@
 package me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus;
 
+import java.util.ArrayList;
+
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
@@ -13,12 +17,19 @@ import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.togglebutton.ToggleButton;
 
 public class TypeMenu extends SubMenu {
-    public TypeMenu(Gui gui, SuperiorHorseInfo horseInfo) {
-        super(gui, horseInfo);
-        setSubmenuItem(HorseEditor.customItem(Material.SOUL_TORCH, "&bType", true));
 
+    private ArrayList<Pane> panes = new ArrayList<Pane>();
+
+    public ItemStack getSubmenuItem() {
+        return HorseEditor.customItem(Material.SOUL_TORCH, "&bType", true);
+    }
+
+    public ArrayList<Pane> getPanes() {
+        return panes;
+    }
+
+    public TypeMenu(Gui gui, SuperiorHorseInfo horseInfo) {
         StaticPane pane = new StaticPane(0, 0, 7, 3, Priority.NORMAL);
-        setPane(pane);
 
         ToggleButton stallionToggle = new ToggleButton(
             horseInfo.isStallion(),
@@ -35,7 +46,6 @@ public class TypeMenu extends SubMenu {
         if (horseInfo.isMale()) {
             pane.addItem(stallionToggle.getGuiItem(), 5, 1);
         }
-            
 
         pane.addItem(
             new ToggleButton(
@@ -60,5 +70,6 @@ public class TypeMenu extends SubMenu {
             1
         );
 
+        panes.add(pane);
     }
 }

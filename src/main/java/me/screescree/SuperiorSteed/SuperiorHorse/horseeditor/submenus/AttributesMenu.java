@@ -1,10 +1,12 @@
 package me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus;
 
+import java.util.ArrayList;
+
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
 
 import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
@@ -14,57 +16,63 @@ import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.amountpi
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.amountpicker.AmountPickerSettings;
 
 public class AttributesMenu extends SubMenu {
+    private ArrayList<Pane> panes = new ArrayList<>();
+
+    public ItemStack getSubmenuItem() {
+        return HorseEditor.customItem(Material.CHAIN, "&7Attributes", true);
+    }
+
+    public ArrayList<Pane> getPanes() {
+        return panes;
+    }
+
     public AttributesMenu(Gui gui, SuperiorHorseInfo horseInfo) {
-        super(gui, horseInfo);
-
-        setSubmenuItem(HorseEditor.customItem(Material.CHAIN, "&7Attributes", true));
-
-        StaticPane pane = new StaticPane(0, 0, 7, 3, Priority.NORMAL);
-        setPane(pane);
-
-        pane.addItem(
+        panes.add(
             new AmountPicker(
                 Material.SUGAR,
                 Utils.colorize("&b&lSpeed"),
                 "b/s",
                 horseInfo.getSpeed() * 43.17,
+                0,
+                1,
                 gui,
                 new AmountPickerSettings(4.86, 14.57, 0.01, 1.0, 2),
                 speed -> {
                     horseInfo.setSpeed(speed / 43.17);
-            }).getGuiItem(),
-            0,
-            1
+                }
+            ).getPane()
         );
 
-        pane.addItem(
+        panes.add(
             new AmountPicker(
                 Material.RABBIT_FOOT,
                 Utils.colorize("&a&lJump Strength"),
                 "blocks",
                 ((horseInfo.getJumpStrength() * 59.0) - 17.0) / 8.0,
+                3,
+                1,
                 gui,
                 new AmountPickerSettings(0.825, 5.25, 0.01, 0.5, 2),
                 jumpStrength -> {
                     horseInfo.setJumpStrength(((jumpStrength * 8.0) + 17.0) / 59.0);
-            }).getGuiItem(),
-            3,
-            1
+                }
+            ).getPane()
         );
 
-        pane.addItem(
+        panes.add(
             new AmountPicker(
                 Material.GLISTERING_MELON_SLICE,
                 Utils.colorize("&c&lMax Health"),
                 "hp",
                 horseInfo.getMaxHealth(),
+                6,
+                1,
                 gui,
                 new AmountPickerSettings(15, 30, 0.5, 5, 1),
                 maxHealth -> {
                     horseInfo.setMaxHealth(maxHealth);
-            }).getGuiItem(),
-            6,
-            1
+                }
+            ).getPane()
         );
     }
 }
