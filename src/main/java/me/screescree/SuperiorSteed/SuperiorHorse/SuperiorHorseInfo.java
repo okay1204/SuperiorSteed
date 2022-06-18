@@ -46,9 +46,12 @@ public class SuperiorHorseInfo {
         color = getRandomEnum(Color.class);
         style = getRandomEnum(Style.class);
 
-        speed = ThreadLocalRandom.current().nextDouble(0.1125, 0.3375);
-        jumpStrength = ThreadLocalRandom.current().nextDouble(0.4, 1.0);
-        maxHealth = ThreadLocalRandom.current().nextDouble(15.0, 30.0);
+        Random random = ThreadLocalRandom.current();
+
+        // These generators were copied from actual Minecraft code.
+        speed = (0.44999998807907104D + random.nextDouble() * 0.3D + random.nextDouble() * 0.3D + random.nextDouble() * 0.3D) * 0.25D;
+        jumpStrength = 0.4000000059604645D + random.nextDouble() * 0.2D + random.nextDouble() * 0.2D + random.nextDouble() * 0.2D;
+        maxHealth = 15.0F + (float) random.nextInt(8) + (float) random.nextInt(9);
     }
 
     private static <E extends Enum<E>> E getRandomEnum(Class<E> enumClass) {

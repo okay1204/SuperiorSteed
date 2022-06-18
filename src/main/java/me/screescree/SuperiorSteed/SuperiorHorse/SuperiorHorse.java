@@ -14,8 +14,10 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
+import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
 
 public class SuperiorHorse {
     private final String SPEED_LEVEL_KEY = "superiorsteed.speedlevel";
@@ -38,7 +40,7 @@ public class SuperiorHorse {
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
 
-        nmsEntity = new SuperiorHorseEntity(horse);
+        nmsEntity = new SuperiorHorseEntity(horse, this);
         bukkitEntity = ((CraftWorld) spawnLocation.getWorld()).addEntity(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         bukkitEntity.setRotation(spawnLocation.getYaw(), spawnLocation.getPitch());
         bukkitEntity.teleport(spawnLocation, TeleportCause.PLUGIN);
@@ -179,7 +181,7 @@ public class SuperiorHorse {
     }
     
     public SuperiorHorse(Location spawnLocation, SuperiorHorseInfo horseInfo) {
-        nmsEntity = new SuperiorHorseEntity(spawnLocation.getWorld());
+        nmsEntity = new SuperiorHorseEntity(spawnLocation.getWorld(), this);
         bukkitEntity = ((CraftWorld) spawnLocation.getWorld()).addEntity(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         bukkitEntity.teleport(spawnLocation, TeleportCause.PLUGIN);
 
@@ -262,6 +264,17 @@ public class SuperiorHorse {
 
     public void drinkWater() {
         getNMSEntity().pathfindToWater();
+        new BukkitRunnable() {
+            int times = 0;
+            @Override
+            public void run() {
+                String path = getNMSEntity().getNavigation().getPath() != null ? getNMSEntity().getNavigation().getPath().toString() : "null";
+                System.out.println(path); 
+                if (++times >= 10) {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(SuperiorSteed.getInstance(), 0, 20);
     }
 
     public String getName() {

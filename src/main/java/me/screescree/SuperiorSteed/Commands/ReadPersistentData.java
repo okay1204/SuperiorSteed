@@ -49,6 +49,11 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
         String key = args[1];
         Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
 
+        if (targetHorse == null) {
+            sender.sendMessage(Utils.colorize("&cYou must be looking at or riding a horse to use this command."));
+            return true;
+        }
+
         PersistentDataContainer container = targetHorse.getPersistentDataContainer();
 
         if (type.equals("double")) {

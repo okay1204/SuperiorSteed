@@ -40,5 +40,7 @@ public class Stat {
         this.value += value;
         limitBounds();
         container.set(key, PersistentDataType.DOUBLE, value);
+        System.out.println("Added " + value + " to " + key.toString());
+        System.out.println(this.value);
     }
 }
