@@ -33,14 +33,12 @@ public class Stat {
     public void set(double value) {
         this.value = value;
         limitBounds();
-        container.set(key, PersistentDataType.DOUBLE, value);
+        container.set(key, PersistentDataType.DOUBLE, this.value);
     }
 
     public void add(double value) {
         this.value += value;
         limitBounds();
-        container.set(key, PersistentDataType.DOUBLE, value);
-        System.out.println("Added " + value + " to " + key.toString());
-        System.out.println(this.value);
+        container.set(key, PersistentDataType.DOUBLE, this.value);
     }
 }
