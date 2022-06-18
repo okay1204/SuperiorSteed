@@ -111,7 +111,7 @@ public class SuperiorHorsesManager implements Listener {
         isSpawningCustomHorse = false;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onHorseDeath(EntityDeathEvent event) {
         if (event.getEntity().getType() == EntityType.HORSE) {
             for (int i = 0; i < superiorHorses.size(); i++) {

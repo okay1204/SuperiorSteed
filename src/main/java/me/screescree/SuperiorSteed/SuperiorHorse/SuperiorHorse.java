@@ -3,9 +3,12 @@ package me.screescree.SuperiorSteed.superiorhorse;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.HorseInventory;
@@ -15,6 +18,8 @@ import org.bukkit.persistence.PersistentDataType;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 
 public class SuperiorHorse {
+    private final String SPEED_LEVEL_KEY = "superiorsteed.speedlevel";
+
     private SuperiorHorseEntity nmsEntity;
     private Horse bukkitEntity;
     
@@ -27,6 +32,8 @@ public class SuperiorHorse {
 
     private boolean isMale;
     private boolean isStallion;
+
+    private SpeedLevel speedLevel = SpeedLevel.CANTER;;
 
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
@@ -62,9 +69,14 @@ public class SuperiorHorse {
         bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
         bukkitEntity.setHealth(horse.getHealth());
 
+        boolean isPlayerRidden = false;
         for (Entity passenger : horse.getPassengers()) {
             passenger.leaveVehicle();
             bukkitEntity.addPassenger(passenger);
+
+            if (passenger instanceof Player) {
+                isPlayerRidden = true;
+            }
         }
         for (String scoreboardTag : horse.getScoreboardTags()) {
             bukkitEntity.addScoreboardTag(scoreboardTag);
@@ -103,6 +115,28 @@ public class SuperiorHorse {
         bukkitEntity.setNoDamageTicks(horse.getNoDamageTicks());
         bukkitEntity.setRemainingAir(horse.getRemainingAir());
         bukkitEntity.setSwimming(horse.isSwimming());
+
+        // copy attribute modifiers
+        for (Attribute attribute : Attribute.values()) {
+            AttributeInstance attributeInstance = horse.getAttribute(attribute);
+            if (attributeInstance != null) {
+                for (AttributeModifier modifier : attributeInstance.getModifiers()) {
+                    
+                    if (modifier.getName().equals(SPEED_LEVEL_KEY)) {
+                        // If a player is not riding the horse, skip the speed level modifier.
+                        if (!isPlayerRidden) {
+                            continue;
+                        }
+                        else {
+                            // If the player is riding the horse, copy the speed level modifier and speed level
+                            speedLevel = SpeedLevel.getFromScalar(modifier.getAmount());
+                        }
+                    }
+
+                    bukkitEntity.getAttribute(attribute).addModifier(modifier);
+                }
+            }
+        }
         
         // Saving data
         PersistentDataContainer container = horse.getPersistentDataContainer();
@@ -311,6 +345,34 @@ public class SuperiorHorse {
 
     public Horse getBukkitEntity() {
         return bukkitEntity;
+    }
+
+    public SpeedLevel getSpeedLevel() {
+        return speedLevel;
+    }
+    
+    public void setSpeedLevel(SpeedLevel speedLevel) {
+        AttributeInstance attribute = bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+    
+        // delete the modifier if it already exists
+        for (AttributeModifier modifier : attribute.getModifiers()) {
+            if (modifier.getName().equals(SPEED_LEVEL_KEY)) {
+                attribute.removeModifier(modifier);
+                break;
+            }
+        }
+
+        this.speedLevel = speedLevel;
+        attribute.addModifier(new AttributeModifier(SPEED_LEVEL_KEY, speedLevel.getScalar(), AttributeModifier.Operation.MULTIPLY_SCALAR_1));
+    }
+
+    public SpeedLevel cycleSpeedLevel() {
+        setSpeedLevel(speedLevel.next());
+        return speedLevel;
+    }
+
+    public void resetSpeedLevel() {
+        setSpeedLevel(SpeedLevel.CANTER);
     }
 }
 

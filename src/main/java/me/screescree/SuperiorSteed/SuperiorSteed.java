@@ -3,13 +3,13 @@ package me.screescree.SuperiorSteed;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.screescree.SuperiorSteed.listeners.HorseSpeedChanger;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
 
 public class SuperiorSteed extends JavaPlugin
 {
     private static SuperiorSteed instance;
 
-    private CommandHandler commandHandler;
     private SuperiorHorsesManager superiorHorsesManager;
 
     @Override
@@ -17,12 +17,14 @@ public class SuperiorSteed extends JavaPlugin
         instance = this;
         saveDefaultConfig();
         
-        commandHandler = new CommandHandler();
+        new CommandHandler();
         
         // set up listeners
         PluginManager pm = getServer().getPluginManager();
         superiorHorsesManager = new SuperiorHorsesManager();
         pm.registerEvents(superiorHorsesManager, this);
+        
+        pm.registerEvents(new HorseSpeedChanger(), this);
         
         getLogger().info("SuperiorSteed has been enabled!");
     }
@@ -38,9 +40,5 @@ public class SuperiorSteed extends JavaPlugin
 
     public SuperiorHorsesManager getHorseManager() {
         return superiorHorsesManager;
-    }
-
-    public CommandHandler getCommandHandler() {
-        return commandHandler;
     }
 }

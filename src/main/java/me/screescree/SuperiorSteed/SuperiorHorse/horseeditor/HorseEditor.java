@@ -12,6 +12,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.github.stefvanschie.inventoryframework.pane.component.Label;
 
@@ -104,7 +105,9 @@ public class HorseEditor {
         paginatedPane.addPane(0, mainMenu);
         for (int i = 0; i < submenus.size(); i++) {
             int page = i + 1;
-            paginatedPane.addPane(page, submenus.get(i).getPane());
+            for (Pane pane : submenus.get(i).getPanes()) {
+                paginatedPane.addPane(page, pane);
+            }
             mainMenu.addItem(
                 new GuiItem(submenus.get(i).getSubmenuItem(), event -> {
                     paginatedPane.setPage(page);
