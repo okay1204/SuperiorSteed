@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
@@ -260,21 +259,6 @@ public class SuperiorHorse {
         horseInfo.setJumpStrength(bukkitEntity.getJumpStrength());
         horseInfo.setMaxHealth(bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
         return horseInfo;
-    }
-
-    public void drinkWater() {
-        getNMSEntity().pathfindToWater();
-        new BukkitRunnable() {
-            int times = 0;
-            @Override
-            public void run() {
-                String path = getNMSEntity().getNavigation().getPath() != null ? getNMSEntity().getNavigation().getPath().toString() : "null";
-                System.out.println(path); 
-                if (++times >= 10) {
-                    cancel();
-                }
-            }
-        }.runTaskTimer(SuperiorSteed.getInstance(), 0, 20);
     }
 
     public String getName() {
