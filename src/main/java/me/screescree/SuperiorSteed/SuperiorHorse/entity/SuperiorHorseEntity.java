@@ -5,6 +5,7 @@ import java.util.Random;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
+import me.screescree.SuperiorSteed.superiorhorse.entity.goals.DrinkWaterGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
