@@ -6,6 +6,7 @@ import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.DrinkWaterGoal;
+import me.screescree.SuperiorSteed.superiorhorse.entity.goals.EatSeedsGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
@@ -51,6 +52,7 @@ public class SuperiorHorseEntity extends Horse {
         this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, AbstractHorse.class));
         this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new DrinkWaterGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new EatSeedsGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));

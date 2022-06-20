@@ -2,17 +2,17 @@ package me.screescree.SuperiorSteed.superiorhorse.entity;
 
 import java.util.EnumSet;
 
+import me.screescree.SuperiorSteed.superiorhorse.Stat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 public abstract class ConsumeGoal extends Goal {
     protected final SuperiorHorseEntity mob;
-    protected final double speedModifier;
-    protected final GetStatPredicate statPredicate;
-    protected double posX;
-    protected double posY;
-    protected double posZ;
-    protected BlockPos targetPos;
+    private final double speedModifier;
+    private final GetStatPredicate statPredicate;
+    private double posX;
+    private double posY;
+    private double posZ;
     private double startConsumingLimit;
 
     public ConsumeGoal(SuperiorHorseEntity superiorHorse, GetStatPredicate statPredicate, double d0) {
@@ -20,7 +20,7 @@ public abstract class ConsumeGoal extends Goal {
         speedModifier = d0;
         this.statPredicate = statPredicate;
         setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
-        randomizeStartConsumingLimit();
+        startConsumingLimit = randomizeStartConsumingLimit();
     }
 
     @Override
@@ -54,14 +54,14 @@ public abstract class ConsumeGoal extends Goal {
     }
 
     public void tick() {
-        BlockPos sourcePos = getConsumableSourcePos(mob.blockPosition());
+        BlockPos sourcePos = getConsumableSourcePos();
         if (sourcePos == null) {
             mob.getNavigation().moveTo(posX, posY, posZ, speedModifier);
             mob.getWrapper().getBukkitEntity().setEatingHaystack(false);
         }
         else if (mob.getNavigation().isDone()) {
-            mob.getLookControl().setLookAt(sourcePos.getX(), sourcePos.getY() - 5, sourcePos.getZ());
-            statPredicate.getStat().add(0.01);
+            mob.getLookControl().setLookAt(sourcePos.getX(), sourcePos.getY() - 5, sourcePos.getZ(), 2000, 2000);
+            increaseStat(statPredicate.getStat(), sourcePos);
             mob.getWrapper().getBukkitEntity().setEatingHaystack(true);
         }
     }
@@ -71,14 +71,14 @@ public abstract class ConsumeGoal extends Goal {
     }
 
     public void stop() {
-        randomizeStartConsumingLimit();
+        startConsumingLimit = randomizeStartConsumingLimit();
     }
 
-    protected void randomizeStartConsumingLimit() {
-        startConsumingLimit = mob.getRandom().nextDouble(0.9, 0.98);
-    }
+    protected abstract double randomizeStartConsumingLimit();
 
     protected abstract BlockPos lookForSuitablePos();
 
-    protected abstract BlockPos getConsumableSourcePos(BlockPos blockPos);
+    protected abstract BlockPos getConsumableSourcePos();
+
+    protected abstract void increaseStat(Stat stat, BlockPos sourcePos);
 }

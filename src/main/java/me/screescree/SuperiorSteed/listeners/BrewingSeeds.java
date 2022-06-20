@@ -1,6 +1,6 @@
 package me.screescree.SuperiorSteed.listeners;
 
-import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -10,7 +10,8 @@ import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;;
 
 public class BrewingSeeds implements Listener {
-    private final List<Material> SEEDS = List.of(Material.WHEAT_SEEDS, Material.PUMPKIN_SEEDS, Material.MELON_SEEDS, Material.BEETROOT_SEEDS);
+    // if updating this, be sure to update EatSeedsGoal.java as well
+    public static final Set<Material> SEEDS = Set.of(Material.WHEAT_SEEDS, Material.PUMPKIN_SEEDS, Material.MELON_SEEDS, Material.BEETROOT_SEEDS);
 
     @EventHandler
     @SuppressWarnings( "deprecation" )

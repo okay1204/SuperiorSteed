@@ -2,6 +2,7 @@ package me.screescree.SuperiorSteed.superiorhorse.entity.goals;
 
 import java.util.ArrayList;
 
+import me.screescree.SuperiorSteed.superiorhorse.Stat;
 import me.screescree.SuperiorSteed.superiorhorse.entity.ConsumeGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
 import net.minecraft.core.BlockPos;
@@ -43,11 +44,13 @@ public class DrinkWaterGoal extends ConsumeGoal {
 
     // checks if nearby blocks are water, and returns the water block if so. Returns null if not.
     @Override
-    protected BlockPos getConsumableSourcePos(BlockPos blockPos) {
+    protected BlockPos getConsumableSourcePos() {
+        BlockPos mobBlockPos = mob.blockPosition();
+
         ArrayList<BlockPos> waterPosList = new ArrayList<BlockPos>();
         for (double xOffset = -2; xOffset <= 2; xOffset++) {
             for (double zOffset = -2; zOffset <= 2; zOffset++) {
-                BlockPos waterPos = blockPos.offset(xOffset, -1, zOffset);
+                BlockPos waterPos = mobBlockPos.offset(xOffset, -1, zOffset);
                 if (mob.level.getBlockState(waterPos).getMaterial() == Material.WATER) {
                     waterPosList.add(waterPos);
                 }
@@ -60,18 +63,26 @@ public class DrinkWaterGoal extends ConsumeGoal {
         else {
             // return water pos that is closest to the horse
             BlockPos closestWaterPos = waterPosList.get(0);
-            Vec3 closestWarVec = new Vec3(closestWaterPos.getX(), closestWaterPos.getY(), closestWaterPos.getZ());
+            Vec3 closestVec = new Vec3(closestWaterPos.getX(), closestWaterPos.getY(), closestWaterPos.getZ());
             Vec3 mobPos = mob.position();
             // iterate through water pos list except for the first one, and find the closest one to the horse
             for (int i = 1; i < waterPosList.size(); i++) {
                 BlockPos waterPos = waterPosList.get(i);
-                if (mobPos.distanceTo(new Vec3(waterPos.getX(), waterPos.getY(), waterPos.getZ())) < mobPos.distanceTo(closestWarVec)) {
+                if (mobPos.distanceTo(new Vec3(waterPos.getX(), waterPos.getY(), waterPos.getZ())) < mobPos.distanceTo(closestVec)) {
                     closestWaterPos = waterPos;
-                    closestWarVec = new Vec3(closestWaterPos.getX(), closestWaterPos.getY(), closestWaterPos.getZ());
+                    closestVec = new Vec3(closestWaterPos.getX(), closestWaterPos.getY(), closestWaterPos.getZ());
                 }
             }
 
             return closestWaterPos;
         }
+    }
+
+    protected double randomizeStartConsumingLimit() {
+        return mob.getRandom().nextDouble(0.9, 0.98);
+    }
+
+    protected void increaseStat(Stat stat, BlockPos sourcePos) {
+        stat.add(0.01);
     }
 }
