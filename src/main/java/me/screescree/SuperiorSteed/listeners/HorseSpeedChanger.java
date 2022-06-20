@@ -48,6 +48,11 @@ public class HorseSpeedChanger implements Listener {
         }
         
         SuperiorHorse superiorHorse = SuperiorSteed.getInstance().getHorseManager().getSuperiorHorse((Horse) vehicle);
+
+        if (!superiorHorse.getBukkitEntity().isTamed()) {
+            return;
+        }
+        
         superiorHorse.cycleSpeedLevel();
         sendHorseSpeedActionBar(event.getPlayer());
     }
@@ -70,6 +75,11 @@ public class HorseSpeedChanger implements Listener {
             return;
         }
         SuperiorHorse superiorHorse = SuperiorSteed.getInstance().getHorseManager().getSuperiorHorse((Horse) vehicle);
+
+        if (!superiorHorse.getBukkitEntity().isTamed()) {
+            return;
+        }
+
         SpeedLevel speedLevel = superiorHorse.getSpeedLevel();
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(speedLevel.getColor() + "Speed: " + speedLevel.getName()));
     }
