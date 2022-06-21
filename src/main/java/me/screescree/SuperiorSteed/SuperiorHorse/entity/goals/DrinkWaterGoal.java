@@ -6,6 +6,9 @@ import me.screescree.SuperiorSteed.superiorhorse.entity.ConsumeGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
 import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 
@@ -25,19 +28,29 @@ public class DrinkWaterGoal extends ConsumeGoal {
                 return false;
             }
 
-            // Check if block underneath is water
-            if (mob.level.getBlockState(blockPos.offset(0, -1, 0)).getMaterial() != Material.WATER) {
-                return false;
+            // Check if block underneath is drinkable and one block around it is solid
+            BlockState blockStatBelow = mob.level.getBlockState(blockPos.below());
+            if (isDrinkable(blockStatBelow)) {
+                for (int xOffset = -1; xOffset <= 1; xOffset++) {
+                    for (int zOffset = -1; zOffset <= 1; zOffset++) {
+                        if (mob.level.getBlockState(blockPos.offset(xOffset, -1, zOffset)).getMaterial().isSolid()) {
+                            return true;
+                        }
+                    }
+                }
             }
 
-            // Check if at least one block around the water is solid
+            // Check if drinkable source is directly next to the block
             for (int xOffset = -1; xOffset <= 1; xOffset++) {
                 for (int zOffset = -1; zOffset <= 1; zOffset++) {
-                    if (mob.level.getBlockState(blockPos.offset(xOffset, -1, zOffset)).getMaterial().isSolid()) {
+                    BlockState blockState = mob.level.getBlockState(blockPos.offset(xOffset, 0, zOffset));
+                    // check if the block is water, waterlogged, or a water cauldron
+                    if (isDrinkable(blockState)) {
                         return true;
                     }
                 }
             }
+
             return false;
         }).orElse(null);
     }
@@ -48,11 +61,16 @@ public class DrinkWaterGoal extends ConsumeGoal {
         BlockPos mobBlockPos = mob.blockPosition();
 
         ArrayList<BlockPos> waterPosList = new ArrayList<BlockPos>();
-        for (double xOffset = -2; xOffset <= 2; xOffset++) {
-            for (double zOffset = -2; zOffset <= 2; zOffset++) {
-                BlockPos waterPos = mobBlockPos.offset(xOffset, -1, zOffset);
-                if (mob.level.getBlockState(waterPos).getMaterial() == Material.WATER) {
-                    waterPosList.add(waterPos);
+
+        // Checks for a drinkable source within a radius of 2 blocks underneath or around the horse
+        for (int xOffset = -3; xOffset <= 3; xOffset++) {
+            for (int yOffset = -1; yOffset <= 0; yOffset++) {
+                for (int zOffset = -3; zOffset <= 3; zOffset++) {
+                    BlockPos waterPos = mobBlockPos.offset(xOffset, yOffset, zOffset);
+                    BlockState blockState = mob.level.getBlockState(waterPos);
+                    if (isDrinkable(blockState)) {
+                        waterPosList.add(waterPos);
+                    }
                 }
             }
         }
@@ -84,5 +102,9 @@ public class DrinkWaterGoal extends ConsumeGoal {
 
     protected void increaseStat(Stat stat, BlockPos sourcePos) {
         stat.add(0.01);
+    }
+
+    private boolean isDrinkable(BlockState blockState) {
+        return blockState.getMaterial() == Material.WATER || blockState.getFluidState().is(FluidTags.WATER) || blockState.is(Blocks.WATER_CAULDRON);
     }
 }
