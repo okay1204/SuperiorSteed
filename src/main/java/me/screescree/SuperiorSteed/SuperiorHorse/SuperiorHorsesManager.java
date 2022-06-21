@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
+import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 
 public class SuperiorHorsesManager implements Listener {
     // cache of all superior horses, to retain NMS horse instances

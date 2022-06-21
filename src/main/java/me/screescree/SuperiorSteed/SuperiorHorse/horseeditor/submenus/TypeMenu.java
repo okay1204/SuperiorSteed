@@ -11,10 +11,10 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import me.screescree.SuperiorSteed.Utils;
-import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.togglebutton.ToggleButton;
+import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 
 public class TypeMenu extends SubMenu {
 

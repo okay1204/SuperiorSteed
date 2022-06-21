@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import me.screescree.SuperiorSteed.listeners.BrewingSeeds;
-import me.screescree.SuperiorSteed.superiorhorse.Stat;
 import me.screescree.SuperiorSteed.superiorhorse.entity.ConsumeGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
+import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
@@ -14,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class EatSeedsGoal extends ConsumeGoal {
     // if updating this, be sure to update BrewingSeeds.java as well
-    public final Set<String> SEEDS = Set.of("wheat_seeds", "pumpkin_seeds", "melon_seeds", "beetroot_seeds");
+    public final Set<String> SEEDS = Set.of("wheat_seeds", "pumpkin_seeds", "melon_seeds", "beetroot_seeds", "nether_wart");
 
     private final int MAX_DISTANCE = 20;
 
@@ -104,11 +104,11 @@ public class EatSeedsGoal extends ConsumeGoal {
     }
 
     protected double randomizeStartConsumingLimit() {
-        return mob.getRandom().nextDouble(0.85, 0.9);
+        return mob.getRandom().nextDouble(0.9, 0.95);
     }
 
     protected void increaseStat(Stat stat, BlockPos sourcePos) {
-        stat.add(0.1);
+        stat.add(0.05);
 
         org.bukkit.block.Block block = ((org.bukkit.World) mob.level.getWorld()).getBlockAt(sourcePos.getX(), sourcePos.getY(), sourcePos.getZ());
         org.bukkit.inventory.BrewerInventory inventory = ((org.bukkit.block.BrewingStand) block.getState()).getInventory();

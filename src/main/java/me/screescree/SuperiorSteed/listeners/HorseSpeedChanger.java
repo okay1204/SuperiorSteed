@@ -13,8 +13,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
-import me.screescree.SuperiorSteed.superiorhorse.SpeedLevel;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
+import me.screescree.SuperiorSteed.superiorhorse.info.SpeedLevel;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 

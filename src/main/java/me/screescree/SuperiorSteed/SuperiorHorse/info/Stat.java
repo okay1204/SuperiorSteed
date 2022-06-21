@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.superiorhorse;
+package me.screescree.SuperiorSteed.superiorhorse.info;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataContainer;

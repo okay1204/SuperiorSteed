@@ -1,18 +1,18 @@
-package me.screescree.SuperiorSteed.superiorhorse;
+package me.screescree.SuperiorSteed.superiorhorse.info;
 
 import org.bukkit.ChatColor;
 
 public enum SpeedLevel {
-    WALK(0.50 - 1, ChatColor.RED),
-    TROT(0.75 - 1, ChatColor.GOLD),
-    CANTER(1.0 - 1, ChatColor.YELLOW),
-    GALLOP(1.25 - 1, ChatColor.GREEN);
+    WALK(0.50, ChatColor.RED),
+    TROT(0.75, ChatColor.GOLD),
+    CANTER(1.0, ChatColor.YELLOW),
+    GALLOP(1.25, ChatColor.GREEN);
 
     private double scalar;
     private ChatColor color;
 
-    SpeedLevel(double scalar, ChatColor color) {
-        this.scalar = scalar;
+    SpeedLevel(double multiplier, ChatColor color) {
+        this.scalar = multiplier - 1;
         this.color = color;
     }
 

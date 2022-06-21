@@ -12,20 +12,15 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
-import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.selector.Selector;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.selector.SelectorHandler;
+import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 import net.md_5.bungee.api.ChatColor;
 
 public class LooksMenu extends SubMenu {
 
-    private SelectorHandler<Color> colorSelector;
-    private SelectorHandler<Style> styleSelector;
-
-    private OutlinePane colorPane;
-    private OutlinePane stylePane;
     private ArrayList<Pane> panes = new ArrayList<>();
 
     public ItemStack getSubmenuItem() {
@@ -37,10 +32,10 @@ public class LooksMenu extends SubMenu {
     }
     
     public LooksMenu(Gui gui, SuperiorHorseInfo horseInfo) {
-        colorPane = new OutlinePane(0, 0, 7, 1, Priority.NORMAL);
+        OutlinePane colorPane = new OutlinePane(0, 0, 7, 1, Priority.NORMAL);
         colorPane.align(OutlinePane.Alignment.CENTER);
 
-        colorSelector = new SelectorHandler<Color>(gui, colorPane, horseInfo.getColor(), (color) -> {
+        SelectorHandler<Color> colorSelector = new SelectorHandler<Color>(gui, colorPane, horseInfo.getColor(), (color) -> {
             horseInfo.setColor(color);
         });
         colorSelector.add(new Selector<Color>(Color.WHITE, Material.WHITE_CONCRETE, ChatColor.of("#e1d2cb") + "White"));
@@ -51,10 +46,10 @@ public class LooksMenu extends SubMenu {
         colorSelector.add(new Selector<Color>(Color.GRAY, Material.GRAY_CONCRETE, ChatColor.of("#3a3a3a") + "Gray"));
         colorSelector.add(new Selector<Color>(Color.DARK_BROWN, Material.BLACK_TERRACOTTA, ChatColor.of("#351e17") + "Dark Brown"));
 
-        stylePane = new OutlinePane(0, 2, 7, 1, Priority.NORMAL);
+        OutlinePane stylePane = new OutlinePane(0, 2, 7, 1, Priority.NORMAL);
         stylePane.align(OutlinePane.Alignment.CENTER);
 
-        styleSelector = new SelectorHandler<Style>(gui, stylePane, horseInfo.getStyle(), (style) -> {
+        SelectorHandler<Style> styleSelector = new SelectorHandler<Style>(gui, stylePane, horseInfo.getStyle(), (style) -> {
             horseInfo.setStyle(style);
         });
         styleSelector.add(new Selector<Style>(Style.NONE, Material.BARRIER, ChatColor.getByChar('c') + "None"));

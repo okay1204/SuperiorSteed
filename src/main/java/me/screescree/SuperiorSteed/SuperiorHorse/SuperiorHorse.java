@@ -1,5 +1,7 @@
 package me.screescree.SuperiorSteed.superiorhorse;
 
+import java.util.HashSet;
+
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -17,6 +19,10 @@ import org.bukkit.persistence.PersistentDataType;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
+import me.screescree.SuperiorSteed.superiorhorse.info.SpeedLevel;
+import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
+import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
+import me.screescree.SuperiorSteed.superiorhorse.info.Trait;
 
 public class SuperiorHorse {
     private final String SPEED_LEVEL_KEY = "superiorsteed.speedlevel";
@@ -34,7 +40,9 @@ public class SuperiorHorse {
     private boolean isMale;
     private boolean isStallion;
 
-    private SpeedLevel speedLevel = SpeedLevel.CANTER;;
+    private HashSet<Trait> traits;
+
+    private SpeedLevel speedLevel = SpeedLevel.CANTER;
 
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
@@ -152,6 +160,11 @@ public class SuperiorHorse {
 
         boolean isMale = containerValueOrDefault(container, "isMale", generatedInfo.isMale());
         boolean isStallion = containerValueOrDefault(container, "isStallion", generatedInfo.isStallion());
+
+        HashSet<Trait> traits = new HashSet<Trait>();
+        for (Trait trait : containerValueOrDefault(container, "traits", generatedInfo.getTraits())) {
+            traits.add(trait);
+        }
         
         SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
         horseInfo.setHunger(hunger);
@@ -170,6 +183,8 @@ public class SuperiorHorse {
         horseInfo.setSpeed(horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
         horseInfo.setJumpStrength(horse.getJumpStrength());
         horseInfo.setMaxHealth(horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+
+        horseInfo.setTraits(traits);
         
         update(horseInfo);
         horse.remove();
@@ -208,27 +223,58 @@ public class SuperiorHorse {
         }
     }
 
+    public HashSet<Trait> containerValueOrDefault(PersistentDataContainer container, String keyName, HashSet<Trait> defaultValue) {
+        NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
+        if (container.has(key, PersistentDataType.STRING)) {
+            String[] traitStrings = container.get(key, PersistentDataType.STRING).split(",");
+
+            HashSet<Trait> traits = new HashSet<Trait>();
+            if (traitStrings[0].length() > 0) {
+                for (String traitString : traitStrings) {
+                    traits.add(Trait.valueOf(traitString));
+                }
+            }
+            return traits;
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
     // bukkitEntity must be set before calling this method
     public void update(SuperiorHorseInfo horseInfo) {
-        SuperiorSteed plugin = SuperiorSteed.getInstance();
-        PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
-
+        
+        if (hunger == null) {
+            SuperiorSteed plugin = SuperiorSteed.getInstance();
+            PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
+        
+            hunger = new Stat(horseInfo.getHunger(), container, new NamespacedKey(plugin, "hunger"));
+            hydration = new Stat(horseInfo.getHydration(), container, new NamespacedKey(plugin, "hydration"));
+            trust = new Stat(horseInfo.getTrust(), container, new NamespacedKey(plugin, "trust"));
+            friendliness = new Stat(horseInfo.getFriendliness(), container, new NamespacedKey(plugin, "friendliness"));
+            comfortability = new Stat(horseInfo.getComfortability(), container, new NamespacedKey(plugin, "comfortability"));
+            waterBravery = new Stat(horseInfo.getWaterBravery(), container, new NamespacedKey(plugin, "waterBravery"));
+        }
+        else {
+            hunger.set(horseInfo.getHunger());
+            hydration.set(horseInfo.getHydration());
+            trust.set(horseInfo.getTrust());
+            friendliness.set(horseInfo.getFriendliness());
+            comfortability.set(horseInfo.getComfortability());
+            waterBravery.set(horseInfo.getWaterBravery());
+        }
+        
         setMale(horseInfo.isMale());
         setStallion(horseInfo.isStallion());
         
-        hunger = new Stat(horseInfo.getHunger(), container, new NamespacedKey(plugin, "hunger"));
-        hydration = new Stat(horseInfo.getHydration(), container, new NamespacedKey(plugin, "hydration"));
-        trust = new Stat(horseInfo.getTrust(), container, new NamespacedKey(plugin, "trust"));
-        friendliness = new Stat(horseInfo.getFriendliness(), container, new NamespacedKey(plugin, "friendliness"));
-        comfortability = new Stat(horseInfo.getComfortability(), container, new NamespacedKey(plugin, "comfortability"));
-        waterBravery = new Stat(horseInfo.getWaterBravery(), container, new NamespacedKey(plugin, "waterBravery"));
-        
         bukkitEntity.setColor(horseInfo.getColor());
         bukkitEntity.setStyle(horseInfo.getStyle());
-
+        
         bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(horseInfo.getSpeed());
         bukkitEntity.setJumpStrength(horseInfo.getJumpStrength());
         bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(horseInfo.getMaxHealth());
+        
+        setTraits(horseInfo.getTraits());
     }
 
     public boolean equals(SuperiorHorse other) {
@@ -258,6 +304,8 @@ public class SuperiorHorse {
         horseInfo.setSpeed(bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
         horseInfo.setJumpStrength(bukkitEntity.getJumpStrength());
         horseInfo.setMaxHealth(bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+
+        horseInfo.setTraits(getTraits());
         return horseInfo;
     }
 
@@ -334,6 +382,19 @@ public class SuperiorHorse {
     public void setStallion(boolean isStallion) {
         this.isStallion = isStallion;
         bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "isStallion"), new BooleanTagType(), isStallion);
+    }
+
+    public HashSet<Trait> getTraits() {
+        return traits;
+    }
+
+    public void setTraits(HashSet<Trait> traits) {
+        this.traits = traits;
+        String traitString = "";
+        for (Trait trait : traits) {
+            traitString += trait.name() + ",";
+        }
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "traits"), PersistentDataType.STRING, traitString);
     }
 
     public SuperiorHorseEntity getNMSEntity() {

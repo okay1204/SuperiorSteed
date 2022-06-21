@@ -9,11 +9,11 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 
 import me.screescree.SuperiorSteed.Utils;
-import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.amountpicker.AmountPicker;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.amountpicker.AmountPickerSettings;
+import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 
 public class AttributesMenu extends SubMenu {
     private ArrayList<Pane> panes = new ArrayList<>();

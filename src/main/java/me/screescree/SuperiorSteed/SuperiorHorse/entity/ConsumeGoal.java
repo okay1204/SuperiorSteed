@@ -2,7 +2,7 @@ package me.screescree.SuperiorSteed.superiorhorse.entity;
 
 import java.util.EnumSet;
 
-import me.screescree.SuperiorSteed.superiorhorse.Stat;
+import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 
@@ -25,6 +25,10 @@ public abstract class ConsumeGoal extends Goal {
 
     @Override
     public boolean canUse() {
+        if (statPredicate.getStat() == null) {
+            return false;
+        }
+
         if (statPredicate.getStat().get() > startConsumingLimit) {
             return false;
         }

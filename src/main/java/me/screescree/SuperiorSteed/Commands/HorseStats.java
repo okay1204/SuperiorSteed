@@ -1,5 +1,8 @@
 package me.screescree.SuperiorSteed.commands;
 
+import java.util.HashSet;
+
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Horse;
@@ -9,6 +12,7 @@ import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
+import me.screescree.SuperiorSteed.superiorhorse.info.Trait;
 
 public class HorseStats extends CustomCommand {
     public HorseStats() {
@@ -63,6 +67,22 @@ public class HorseStats extends CustomCommand {
             horseType = Utils.colorize("&d♀ Female");
         }
         player.sendMessage(horseType);
+
+        HashSet<Trait> traits = superiorHorse.getTraits();
+        String traitString = Utils.colorize("&3Traits: ");
+        if (!traits.isEmpty()) {
+            for (Trait trait : traits) {
+                traitString += (trait.isPositive() ? ChatColor.GREEN : ChatColor.RED) + trait.getFormalName() + ChatColor.GRAY + ", ";
+            }
+
+            // remove last comma
+            traitString = traitString.substring(0, traitString.length() - 4);
+        }
+        else {
+            traitString += Utils.colorize("&7None");
+        }
+
+        player.sendMessage(traitString);
 
         return true;
     }

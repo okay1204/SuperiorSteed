@@ -7,7 +7,6 @@ import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.DrinkWaterGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.EatSeedsGoal;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -24,7 +23,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.pathfinder.Path;
 
 public class SuperiorHorseEntity extends Horse {
     private final SuperiorHorse superiorHorseWrapper;
@@ -62,13 +60,5 @@ public class SuperiorHorseEntity extends Horse {
     protected void addBehaviourGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.25D, Ingredient.of(new ItemLike[]{Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE}), false));
-    }
-
-    public void pathfindToWater() {
-        BlockPos blockPos = new BlockPos(getX() + 10, getY(), getZ());
-        Path path = getNavigation().createPath(blockPos, 1);
-        getNavigation().moveTo(path, 1);
-    }
-
-    
+    }    
 }

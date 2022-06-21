@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;;
 
 public class BrewingSeeds implements Listener {
     // if updating this, be sure to update EatSeedsGoal.java as well
-    public static final Set<Material> SEEDS = Set.of(Material.WHEAT_SEEDS, Material.PUMPKIN_SEEDS, Material.MELON_SEEDS, Material.BEETROOT_SEEDS);
+    public static final Set<Material> SEEDS = Set.of(Material.WHEAT_SEEDS, Material.PUMPKIN_SEEDS, Material.MELON_SEEDS, Material.BEETROOT_SEEDS, Material.NETHER_WART);
 
     @EventHandler
     @SuppressWarnings( "deprecation" )

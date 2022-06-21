@@ -9,6 +9,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.md_5.bungee.api.ChatColor;
 
 public class Selector<T> {
+    public final String SELECTED_PREFIX = ChatColor.AQUA + "" + ChatColor.BOLD + "Selected: ";
+
     private T definedValue;
     private String name;
     private ItemStack item;
@@ -42,7 +44,7 @@ public class Selector<T> {
         
         if (selected) {
             meta.addEnchant(Enchantment.DURABILITY, 1, true);
-            meta.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "Selected: " + ChatColor.RESET + name);
+            meta.setDisplayName(SELECTED_PREFIX + name);
         } else {
             meta.removeEnchant(Enchantment.DURABILITY);
             meta.setDisplayName(name);
@@ -51,6 +53,12 @@ public class Selector<T> {
     }
 
     public boolean equals(ItemStack item) {
-        return getItem().getType() == item.getType() && getName().toLowerCase().equals(item.getItemMeta().getDisplayName().toLowerCase());
+        String itemName = item.getItemMeta().getDisplayName().toLowerCase();
+        // remove selected prefix if it exists
+        if (itemName.startsWith(SELECTED_PREFIX.toLowerCase())) {
+            itemName = itemName.substring(SELECTED_PREFIX.length());
+        }
+
+        return getItem().getType() == item.getType() && getName().toLowerCase().equals(itemName);
     }
 }

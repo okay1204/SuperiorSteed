@@ -15,12 +15,12 @@ public class SelectorHandler<T> {
     private ArrayList<Selector<T>> selectors;
     private Selector<T> selected;
     private OutlinePane pane;
-    private T intialValue;
+    private T initialValue;
 
     public SelectorHandler(Gui gui, OutlinePane pane, T initialValue, SelectorCallback<T> callback) {
         selectors = new ArrayList<Selector<T>>();
         this.pane = pane;
-        this.intialValue = initialValue;
+        this.initialValue = initialValue;
 
         pane.setOnClick(event -> {
             Selector<T> newSelector = getByItem(event.getCurrentItem());
@@ -41,17 +41,13 @@ public class SelectorHandler<T> {
         selectors.add(selector);
 
         pane.addItem(new GuiItem(selector.getItem()));
-        if (selector.getDefinedValue() == intialValue) {
+        if (selector.getDefinedValue() == initialValue) {
             setSelected(selector);
         }
     }
 
     public ArrayList<Selector<T>> getSelectors() {
         return selectors;
-    }
-
-    public int getSize() {
-        return selectors.size();
     }
 
     public Selector<T> getByItem(ItemStack item) {

@@ -2,9 +2,9 @@ package me.screescree.SuperiorSteed.superiorhorse.entity.goals;
 
 import java.util.ArrayList;
 
-import me.screescree.SuperiorSteed.superiorhorse.Stat;
 import me.screescree.SuperiorSteed.superiorhorse.entity.ConsumeGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
+import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;

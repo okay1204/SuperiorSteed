@@ -1,6 +1,6 @@
-package me.screescree.SuperiorSteed.superiorhorse;
+package me.screescree.SuperiorSteed.superiorhorse.info;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Random;
 
 import org.bukkit.entity.Horse.Color;
@@ -9,49 +9,57 @@ import org.bukkit.entity.Horse.Style;
 import io.netty.util.internal.ThreadLocalRandom;
 
 public class SuperiorHorseInfo {
-    public static final List<String> STAT_NAMES = List.of("hunger", "hydration", "trust", "friendliness", "comfortability", "waterbravery");
-    
     // Stats
-    private double hunger;
-    private double hydration;
-    private double trust;
-    private double friendliness;
-    private double comfortability;
-    private double waterBravery;
+    private double hunger = 1.0;
+    private double hydration = 1.0;
+    private double trust = 0.5;
+    private double friendliness = 0.3;
+    private double comfortability = 0.2;
+    private double waterBravery = 0.1;
     
-    private boolean isMale;
+    private boolean isMale = Math.random() < 0.5;
     // Male horses can either be a stallion or a gelding
-    private boolean isStallion;
+    private boolean isStallion = true;
     
     // Looks
-    private Color color;
-    private Style style;
+    private Color color = getRandomEnum(Color.class);;
+    private Style style = getRandomEnum(Style.class);
 
     // Attributes
     private double speed;
     private double jumpStrength;
     private double maxHealth;
 
-    public SuperiorHorseInfo() {
-        hunger = 1.0;
-        hydration = 1.0;
-        trust = 0.5;
-        friendliness = 0.3;
-        comfortability = 0.2;
-        waterBravery = 0.1;
-        
-        isMale = Math.random() < 0.5;
-        isStallion = true;
-        
-        color = getRandomEnum(Color.class);
-        style = getRandomEnum(Style.class);
+    // Traits
+    private HashSet<Trait> traits = new HashSet<>();
 
+    public SuperiorHorseInfo() {
         Random random = ThreadLocalRandom.current();
 
         // These generators were copied from actual Minecraft code.
         speed = (0.44999998807907104D + random.nextDouble() * 0.3D + random.nextDouble() * 0.3D + random.nextDouble() * 0.3D) * 0.25D;
         jumpStrength = 0.4000000059604645D + random.nextDouble() * 0.2D + random.nextDouble() * 0.2D + random.nextDouble() * 0.2D;
         maxHealth = 15.0F + (float) random.nextInt(8) + (float) random.nextInt(9);
+
+        // Random traits
+
+        // randomize order of values from Trait enum
+        Trait[] randomizedTraits = Trait.values();
+        for (int i = 0; i < randomizedTraits.length; i++) {
+            int j = random.nextInt(randomizedTraits.length);
+            Trait temp = randomizedTraits[i];
+            randomizedTraits[i] = randomizedTraits[j];
+            randomizedTraits[j] = temp;
+        }
+
+        // for each trait, 5% chance of adding it to the horse (if it's compatible with traits already on the horse)
+        for (Trait trait : randomizedTraits) {
+            if (random.nextDouble() < 0.05) {
+                if (trait.isCompatible(traits)) {
+                    traits.add(trait);
+                }
+            }
+        }
     }
 
     private static <E extends Enum<E>> E getRandomEnum(Class<E> enumClass) {
@@ -70,6 +78,9 @@ public class SuperiorHorseInfo {
         horseInfo.setSpeed(0.225);
         horseInfo.setJumpStrength(0.7);
         horseInfo.setMaxHealth(22.5);
+
+        horseInfo.clearTraits();
+
         return horseInfo;
     }
 
@@ -175,5 +186,35 @@ public class SuperiorHorseInfo {
 
     public void setMaxHealth(double maxHealth) {
         this.maxHealth = maxHealth;
+    }
+
+    public HashSet<Trait> getTraits() {
+        return traits;
+    }
+
+    public void setTraits(HashSet<Trait> traits) {
+        this.traits = traits;
+    }
+
+    // Returns true if the trait was compatible with the horse's traits
+    public boolean addTrait(Trait trait) {
+        if (trait.isCompatible(traits)) {
+            traits.add(trait);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void removeTrait(Trait trait) {
+        traits.remove(trait);
+    }
+
+    public void clearTraits() {
+        traits.clear();
+    }
+
+    public boolean hasTrait(Trait trait) {
+        return traits.contains(trait);
     }
 }
