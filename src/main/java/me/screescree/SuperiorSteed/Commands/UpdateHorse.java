@@ -36,7 +36,7 @@ public class UpdateHorse extends CustomCommand implements Listener {
         SuperiorSteed plugin = SuperiorSteed.getInstance();
         SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
 
-        new HorseEditor(superiorHorse.getInfo(), player, "Summon Horse", horseInfo -> {
+        new HorseEditor(superiorHorse.getInfo(), player, "Update Horse", horseInfo -> {
             if (!player.hasPermission(getCommand().getPermission())) {
                 player.sendMessage(getNoPermissionMessage());
                 return;
