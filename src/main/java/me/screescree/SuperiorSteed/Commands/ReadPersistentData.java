@@ -14,7 +14,7 @@ import org.bukkit.persistence.PersistentDataType;
 import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
-import me.screescree.SuperiorSteed.superiorhorse.BooleanTagType;
+import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_BOOLEAN;
 
 public class ReadPersistentData extends CustomCommand implements TabCompleter {    
     private final List<String> PERSISTENT_TYPES = List.of("double", "integer", "boolean", "string");
@@ -65,7 +65,7 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
             sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
         }
         else if (type.equals("boolean")) {
-            Boolean value = container.get(new NamespacedKey(plugin, key), new BooleanTagType());
+            Boolean value = container.get(new NamespacedKey(plugin, key), new PersistentDataType_BOOLEAN());
             sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
         }
         else if (type.equals("string")) {

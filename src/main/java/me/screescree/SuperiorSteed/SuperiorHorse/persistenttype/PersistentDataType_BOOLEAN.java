@@ -1,9 +1,9 @@
-package me.screescree.SuperiorSteed.superiorhorse;
+package me.screescree.SuperiorSteed.superiorhorse.persistenttype;
 
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 
-public class BooleanTagType implements PersistentDataType<Byte, Boolean> {
+public class PersistentDataType_BOOLEAN implements PersistentDataType<Byte, Boolean> {
     @Override
     public Class<Byte> getPrimitiveType() {
         return Byte.class;
@@ -15,12 +15,12 @@ public class BooleanTagType implements PersistentDataType<Byte, Boolean> {
     }
 
     @Override
-    public Boolean fromPrimitive(Byte primitive, PersistentDataAdapterContext arg1) {
+    public Boolean fromPrimitive(Byte primitive, PersistentDataAdapterContext context) {
         return primitive == 1;
     }
 
     @Override
-    public Byte toPrimitive(Boolean complex, PersistentDataAdapterContext arg1) {
+    public Byte toPrimitive(Boolean complex, PersistentDataAdapterContext context) {
         return complex ? (byte) 1 : (byte) 0;
     }
 }

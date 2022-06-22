@@ -24,6 +24,7 @@ import me.screescree.SuperiorSteed.superiorhorse.info.SpeedLevel;
 import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.info.Trait;
+import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_BOOLEAN;
 
 public class SuperiorHorse {
     private final String SPEED_LEVEL_KEY = "superiorsteed.speedlevel";
@@ -137,7 +138,7 @@ public class SuperiorHorse {
                     if (modifier.getName().startsWith("effect.minecraft")) {
                         continue;
                     }
-                    
+
                     else if (modifier.getName().equals(SPEED_LEVEL_KEY)) {
                         // If a player is not riding the horse, skip the speed level modifier.
                         if (!isPlayerRidden) {
@@ -233,7 +234,7 @@ public class SuperiorHorse {
 
     public boolean containerValueOrDefault(PersistentDataContainer container, String keyName, boolean defaultValue) {
         NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
-        BooleanTagType type = new BooleanTagType();
+        PersistentDataType_BOOLEAN type = new PersistentDataType_BOOLEAN();
         if (container.has(key, type)) {
             return container.get(key, type);
         }
@@ -393,7 +394,7 @@ public class SuperiorHorse {
 
     public void setMale(boolean isMale) {
         this.isMale = isMale;
-        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "isMale"), new BooleanTagType(), isMale);
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "isMale"), new PersistentDataType_BOOLEAN(), isMale);
     }
 
     public boolean isStallion() {
@@ -402,7 +403,7 @@ public class SuperiorHorse {
 
     public void setStallion(boolean isStallion) {
         this.isStallion = isStallion;
-        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "isStallion"), new BooleanTagType(), isStallion);
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "isStallion"), new PersistentDataType_BOOLEAN(), isStallion);
     }
 
     public HashSet<Trait> getTraits() {
