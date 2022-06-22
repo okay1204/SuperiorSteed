@@ -133,7 +133,12 @@ public class SuperiorHorse {
             if (attributeInstance != null) {
                 for (AttributeModifier modifier : attributeInstance.getModifiers()) {
                     
-                    if (modifier.getName().equals(SPEED_LEVEL_KEY)) {
+                    // skip any potion effect modifiers since we've already copied them
+                    if (modifier.getName().startsWith("effect.minecraft")) {
+                        continue;
+                    }
+                    
+                    else if (modifier.getName().equals(SPEED_LEVEL_KEY)) {
                         // If a player is not riding the horse, skip the speed level modifier.
                         if (!isPlayerRidden) {
                             continue;
@@ -148,7 +153,6 @@ public class SuperiorHorse {
                 }
             }
         }
-        
         
         // Saving data
         PersistentDataContainer container = horse.getPersistentDataContainer();
