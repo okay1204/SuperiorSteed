@@ -19,6 +19,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
+import me.screescree.SuperiorSteed.superiorhorse.info.Seed;
 import me.screescree.SuperiorSteed.superiorhorse.info.SpeedLevel;
 import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
@@ -41,6 +42,7 @@ public class SuperiorHorse {
     private boolean isStallion;
 
     private HashSet<Trait> traits;
+    private Seed favoriteSeed;
 
     private SpeedLevel speedLevel = SpeedLevel.CANTER;
 
@@ -147,6 +149,7 @@ public class SuperiorHorse {
             }
         }
         
+        
         // Saving data
         PersistentDataContainer container = horse.getPersistentDataContainer();
         SuperiorHorseInfo generatedInfo = new SuperiorHorseInfo();
@@ -165,6 +168,7 @@ public class SuperiorHorse {
         for (Trait trait : containerValueOrDefault(container, "traits", generatedInfo.getTraits())) {
             traits.add(trait);
         }
+        int favoriteSeedId = containerValueOrDefault(container, "favoriteSeed", generatedInfo.getFavoriteSeed() != null ? generatedInfo.getFavoriteSeed().getId() : -1);
         
         SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
         horseInfo.setHunger(hunger);
@@ -185,6 +189,7 @@ public class SuperiorHorse {
         horseInfo.setMaxHealth(horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 
         horseInfo.setTraits(traits);
+        horseInfo.setFavoriteSeed(Seed.getFromId(favoriteSeedId));
         
         update(horseInfo);
         horse.remove();
@@ -206,6 +211,16 @@ public class SuperiorHorse {
         NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
         if (container.has(key, PersistentDataType.DOUBLE)) {
             return container.get(key, PersistentDataType.DOUBLE);
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
+    private int containerValueOrDefault(PersistentDataContainer container, String keyName, int defaultValue) {
+        NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
+        if (container.has(key, PersistentDataType.INTEGER)) {
+            return container.get(key, PersistentDataType.INTEGER);
         }
         else {
             return defaultValue;
@@ -275,6 +290,7 @@ public class SuperiorHorse {
         bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(horseInfo.getMaxHealth());
         
         setTraits(horseInfo.getTraits());
+        setFavoriteSeed(horseInfo.getFavoriteSeed());
     }
 
     public boolean equals(SuperiorHorse other) {
@@ -306,6 +322,7 @@ public class SuperiorHorse {
         horseInfo.setMaxHealth(bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 
         horseInfo.setTraits(getTraits());
+        horseInfo.setFavoriteSeed(getFavoriteSeed());
         return horseInfo;
     }
 
@@ -395,6 +412,17 @@ public class SuperiorHorse {
             traitString += trait.name() + ",";
         }
         bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "traits"), PersistentDataType.STRING, traitString);
+    }
+
+    public Seed getFavoriteSeed() {
+        return favoriteSeed;
+    }
+
+    public void setFavoriteSeed(Seed favoriteSeed) {
+        this.favoriteSeed = favoriteSeed;
+
+        int seedId = favoriteSeed != null ? favoriteSeed.getId() : -1;
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "favoriteSeed"), PersistentDataType.INTEGER, seedId);
     }
 
     public SuperiorHorseEntity getNMSEntity() {

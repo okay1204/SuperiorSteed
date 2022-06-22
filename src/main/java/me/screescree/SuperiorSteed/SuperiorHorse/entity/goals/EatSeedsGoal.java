@@ -1,22 +1,23 @@
 package me.screescree.SuperiorSteed.superiorhorse.entity.goals;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.HashSet;
 
-import me.screescree.SuperiorSteed.listeners.BrewingSeeds;
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.ConsumeGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
+import me.screescree.SuperiorSteed.superiorhorse.info.Seed;
 import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
+import me.screescree.SuperiorSteed.superiorhorse.info.Trait;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class EatSeedsGoal extends ConsumeGoal {
-    // if updating this, be sure to update BrewingSeeds.java as well
-    public final Set<String> SEEDS = Set.of("wheat_seeds", "pumpkin_seeds", "melon_seeds", "beetroot_seeds", "nether_wart");
-
     private final int MAX_DISTANCE = 20;
+    private HashSet<String> edibleSeedNames;
+    private HashSet<org.bukkit.Material> edibleSeedMaterials;
 
     public EatSeedsGoal(SuperiorHorseEntity superiorHorse, double d0) {
         super(superiorHorse, () -> superiorHorse.getWrapper().hungerStat(), d0);
@@ -24,6 +25,24 @@ public class EatSeedsGoal extends ConsumeGoal {
 
     @Override
     protected BlockPos lookForSuitablePos() {
+        SuperiorHorse wrapper = mob.getWrapper();
+
+        edibleSeedNames = new HashSet<>();
+        edibleSeedMaterials = new HashSet<>();
+        if (!wrapper.getTraits().contains(Trait.PICKY_EATER)) {
+            for (Seed seed : Seed.values()) {
+                edibleSeedNames.add(seed.getName());
+                edibleSeedMaterials.add(seed.getMaterial());
+            }
+        }
+        else {
+            edibleSeedNames.add(Seed.ALWAYS_LIKED.getName());
+            edibleSeedMaterials.add(Seed.ALWAYS_LIKED.getMaterial());
+
+            edibleSeedNames.add(wrapper.getFavoriteSeed().getName());
+            edibleSeedMaterials.add(wrapper.getFavoriteSeed().getMaterial());
+        }
+
         BlockPos blockposition = mob.blockPosition();
         return !mob.level.getBlockState(blockposition).getCollisionShape(mob.level, blockposition).isEmpty() ? null : BlockPos.findClosestMatch(blockposition, MAX_DISTANCE, 1, blockPos -> {
             // check if the block is a brewing stand
@@ -31,7 +50,7 @@ public class EatSeedsGoal extends ConsumeGoal {
                 // check if the brewing stand has seeds in it
                 BrewingStandBlockEntity brewingStandEntity = (BrewingStandBlockEntity) mob.level.getBlockEntity(blockPos);
                 for (int i = 0; i <= 2; i++) {
-                    if (SEEDS.contains(brewingStandEntity.getItem(i).getItem().toString())) {
+                    if (edibleSeedNames.contains(brewingStandEntity.getItem(i).getItem().toString())) {
                         return true;
                     }
                 }
@@ -115,7 +134,7 @@ public class EatSeedsGoal extends ConsumeGoal {
         for (int i = 0; i <= 2; i++) {
             org.bukkit.inventory.ItemStack item = inventory.getItem(i);
             if (item != null) {
-                if (BrewingSeeds.SEEDS.contains(inventory.getItem(i).getType())) {
+                if (edibleSeedMaterials.contains(inventory.getItem(i).getType())) {
                     inventory.setItem(i, null);
                     break;
                 }

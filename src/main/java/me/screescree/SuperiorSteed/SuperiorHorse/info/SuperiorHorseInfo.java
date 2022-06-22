@@ -32,6 +32,8 @@ public class SuperiorHorseInfo {
 
     // Traits
     private HashSet<Trait> traits = new HashSet<>();
+    // Trait attributes
+    private Seed favoriteSeed;
 
     public SuperiorHorseInfo() {
         Random random = ThreadLocalRandom.current();
@@ -57,6 +59,10 @@ public class SuperiorHorseInfo {
             if (random.nextDouble() < 0.05) {
                 if (trait.isCompatible(traits)) {
                     traits.add(trait);
+
+                    if (trait.equals(Trait.PICKY_EATER)) {
+                        favoriteSeed = getRandomEnum(Seed.class);
+                    }
                 }
             }
         }
@@ -194,6 +200,11 @@ public class SuperiorHorseInfo {
 
     public void setTraits(HashSet<Trait> traits) {
         this.traits = traits;
+
+        // If the horse has the PICKY_EATER trait, set the favorite seed
+        if (traits.contains(Trait.PICKY_EATER)) {
+            favoriteSeed = getRandomEnum(Seed.class);
+        }
     }
 
     // Returns true if the trait was compatible with the horse's traits
@@ -201,6 +212,10 @@ public class SuperiorHorseInfo {
         if (trait.isCompatible(traits)) {
             traits.add(trait);
             return true;
+        }
+
+        if (trait.equals(Trait.PICKY_EATER)) {
+            favoriteSeed = getRandomEnum(Seed.class);
         }
 
         return false;
@@ -216,5 +231,13 @@ public class SuperiorHorseInfo {
 
     public boolean hasTrait(Trait trait) {
         return traits.contains(trait);
+    }
+
+    public Seed getFavoriteSeed() {
+        return favoriteSeed;
+    }
+
+    public void setFavoriteSeed(Seed favoriteSeed) {
+        this.favoriteSeed = favoriteSeed;
     }
 }

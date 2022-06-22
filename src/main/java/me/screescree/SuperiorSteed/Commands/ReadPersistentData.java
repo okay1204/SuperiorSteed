@@ -17,7 +17,7 @@ import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.BooleanTagType;
 
 public class ReadPersistentData extends CustomCommand implements TabCompleter {    
-    private final List<String> PERSISTENT_TYPES = List.of("double", "boolean", "string");
+    private final List<String> PERSISTENT_TYPES = List.of("double", "integer", "boolean", "string");
 
     public ReadPersistentData() {
         super("readpersistentdata");
@@ -60,6 +60,10 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
             Double value = container.get(new NamespacedKey(plugin, key), PersistentDataType.DOUBLE);
             sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
         }
+        else if (type.equals("integer")) {
+            Integer value = container.get(new NamespacedKey(plugin, key), PersistentDataType.INTEGER);
+            sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
+        }
         else if (type.equals("boolean")) {
             Boolean value = container.get(new NamespacedKey(plugin, key), new BooleanTagType());
             sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
@@ -77,6 +81,6 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
         if (args.length == 1)
             return PERSISTENT_TYPES;
 
-        return null;
+        return List.of();
     }
 }
