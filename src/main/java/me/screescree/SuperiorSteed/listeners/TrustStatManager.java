@@ -30,9 +30,9 @@ public class TrustStatManager implements Listener {
             double trust = superiorHorse.trustStat().get();
             double rejectChance = rejectChance(trust);
             if (ThreadLocalRandom.current().nextDouble() < rejectChance) {
+                event.setCancelled(true);
                 player.sendMessage(Utils.colorize("&c" + superiorHorse.getName(20) + " resisted your attempt to leash it. &7(Trust: " + (int) Math.ceil(trust * 100) + "%)"));
                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-                event.setCancelled(true);
             }
         }
     }
