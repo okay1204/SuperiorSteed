@@ -14,12 +14,14 @@ public class SuperiorSteed extends JavaPlugin
     private static SuperiorSteed instance;
 
     private SuperiorHorsesManager superiorHorsesManager;
+    private Database database;
 
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
         
+        database = new Database();
         new CommandHandler();
         
         // set up listeners
@@ -31,13 +33,11 @@ public class SuperiorSteed extends JavaPlugin
         pm.registerEvents(new BrewingSeeds(), this);
         pm.registerEvents(new HorseNoFallDamage(), this);
         pm.registerEvents(new TrustStatManager(), this);
-        
-        getLogger().info("SuperiorSteed has been enabled!");
     }
     
     @Override
     public void onDisable() {
-        getLogger().info("SuperiorSteed has been disabled!");
+        database.safeDisconnect();
     }
 
     public static SuperiorSteed getInstance() {
@@ -46,5 +46,9 @@ public class SuperiorSteed extends JavaPlugin
 
     public SuperiorHorsesManager getHorseManager() {
         return superiorHorsesManager;
+    }
+
+    public Database getDatabase() {
+        return database;
     }
 }
