@@ -11,7 +11,7 @@ import me.screescree.SuperiorSteed.superiorhorse.info.Seed;;
 
 public class BrewingSeeds implements Listener {
     @EventHandler
-    @SuppressWarnings( "deprecation" )
+    @SuppressWarnings("deprecation")
     public void onClickBrewingSlot(InventoryClickEvent event) {
         if (event.getInventory() instanceof BrewerInventory && event.getView().getTopInventory().equals(event.getClickedInventory())) {
             BrewerInventory inventory = (BrewerInventory) event.getInventory();

@@ -50,8 +50,6 @@ public class TrustStatManager implements Listener {
         double rejectChance = rejectChance(trust);
 
         if (ThreadLocalRandom.current().nextDouble() < rejectChance) {
-
-            
             Player player = (Player) superiorHorse.getBukkitEntity().getPassengers().get(0);
             player.sendMessage(Utils.colorize("&c" + superiorHorse.getName(20) + " refused to jump. &7(Trust: " + (int) Math.ceil(trust * 100) + "%)"));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);

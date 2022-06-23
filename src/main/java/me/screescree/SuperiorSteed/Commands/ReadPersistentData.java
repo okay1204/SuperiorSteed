@@ -25,7 +25,6 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        SuperiorSteed plugin = SuperiorSteed.getInstance();
         
         Player player;
         if (sender instanceof Player) {
@@ -35,27 +34,28 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
             sender.sendMessage(Utils.colorize("&cThis command can only be used by a player."));
             return true;
         }
-
+        
         if (args.length < 2) {
             return false;
         }
-
+        
         String type = args[0];
         if (!PERSISTENT_TYPES.contains(type)) {
             sender.sendMessage(Utils.colorize("&cInvalid type."));
             return true;
         }
-
+        
         String key = args[1];
         Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
-
+        
         if (targetHorse == null) {
             sender.sendMessage(Utils.colorize("&cYou must be looking at or riding a horse to use this command."));
             return true;
         }
-
+        
         PersistentDataContainer container = targetHorse.getPersistentDataContainer();
-
+        SuperiorSteed plugin = SuperiorSteed.getInstance();
+        
         if (type.equals("double")) {
             Double value = container.get(new NamespacedKey(plugin, key), PersistentDataType.DOUBLE);
             sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));

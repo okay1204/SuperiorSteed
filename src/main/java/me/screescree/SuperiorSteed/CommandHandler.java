@@ -3,6 +3,7 @@ package me.screescree.SuperiorSteed;
 import me.screescree.SuperiorSteed.commands.Geld;
 import me.screescree.SuperiorSteed.commands.HorseCache;
 import me.screescree.SuperiorSteed.commands.HorseJumpAndSpeedTest;
+import me.screescree.SuperiorSteed.commands.HorsePerms;
 import me.screescree.SuperiorSteed.commands.HorseStats;
 import me.screescree.SuperiorSteed.commands.ReadPersistentData;
 import me.screescree.SuperiorSteed.commands.SummonHorse;
@@ -17,5 +18,6 @@ public class CommandHandler {
         new ReadPersistentData();
         new HorseJumpAndSpeedTest();
         new Geld();
+        new HorsePerms();
     }
 }

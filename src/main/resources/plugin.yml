@@ -10,10 +10,10 @@ commands:
     description: "Displays the stats of the horse you are currently riding or looking at."
     usage: "§cUsage: /<command>"
     permission: "superiorsteed.horsestats"
-  geld:
-    description: "Gelds the stallion you are currently riding or looking at."
-    usage: "§cUsage: /<command>"
-    permission: "superiorsteed.geld"
+  horseperms:
+    description: "Add, remove, and list players who can ride your horses."
+    usage: "§cUsage: /<command> <add|remove> <player> §7OR §c/<command> <list> [page]"
+    permission: "superiorsteed.horseperms"
 
   # admin commands
   summonhorse:
@@ -24,6 +24,10 @@ commands:
     description: "Displays a GUI to modify the horse you are currently riding or looking at."
     usage: "§cUsage: /<command>"
     permission: "superiorsteed.admin.updatehorse"
+  geld:
+    description: "Gelds the stallion you are currently riding or looking at."
+    usage: "§cUsage: /<command>"
+    permission: "superiorsteed.geld"
 
   # debug commands
   horsecache:
@@ -43,20 +47,29 @@ permissions:
   superiorsteed.horsestats:
     description: "Allows the user to see the stats of horses."
     default: true
-  superiorsteed.geld:
-    description: "Allows the user to geld horses."
-    default: op
+  superiorsteed.horseperms:
+    description: "Allows the player to add, remove, and list players who can ride their horses."
+    default: true
 
   superiorsteed.admin:
     description: "Allows the user to use the plugin's admin commands."
     default: op
     children:
+      superiorsteed.admin.rideallhorses: true
       superiorsteed.admin.summonhorse: true
+      superiorsteed.admin.updatehorse: true
+      superiorsteed.admin.geld: true
+  superiorsteed.admin.rideallhorses:
+    description: "Allows the user to ride all horses, regardless of the owner's permission."
+    default: op
   superiorsteed.admin.summonhorse:
     description: "Allows the user to summon in a custom horse."
     default: op
-  superiorsteed.admin.sethorsestats:
+  superiorsteed.admin.updatehorse:
     description: "Allows the user to set information about a horse."
+    default: op
+  superiorsteed.geld:
+    description: "Allows the user to geld horses."
     default: op
   
   superiorsteed.debug:

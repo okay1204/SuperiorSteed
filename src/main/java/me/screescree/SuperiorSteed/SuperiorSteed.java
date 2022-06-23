@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.screescree.SuperiorSteed.listeners.BrewingSeeds;
 import me.screescree.SuperiorSteed.listeners.HorseNoFallDamage;
+import me.screescree.SuperiorSteed.listeners.HorseRidePermissions;
 import me.screescree.SuperiorSteed.listeners.HorseSpeedChanger;
 import me.screescree.SuperiorSteed.listeners.TrustStatManager;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
@@ -33,6 +34,7 @@ public class SuperiorSteed extends JavaPlugin
         pm.registerEvents(new BrewingSeeds(), this);
         pm.registerEvents(new HorseNoFallDamage(), this);
         pm.registerEvents(new TrustStatManager(), this);
+        pm.registerEvents(new HorseRidePermissions(), this);
     }
     
     @Override
