@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
@@ -345,23 +346,8 @@ public class SuperiorHorse {
         return horseName;
     }
 
-    public Stat getStat(String statName) {
-        switch (statName.toLowerCase()) {
-            case "hunger":
-                return hunger;
-            case "hydration":
-                return hydration;
-            case "trust":
-                return trust;
-            case "friendliness":
-                return friendliness;
-            case "comfortability":
-                return comfortability;
-            case "waterbravery":
-                return waterBravery;
-            default:
-                return null;
-        }
+    public OfflinePlayer getOwner() {
+        return (OfflinePlayer) bukkitEntity.getOwner();
     }
     
     public Stat hungerStat() {
