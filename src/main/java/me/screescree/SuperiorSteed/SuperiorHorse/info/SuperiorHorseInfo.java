@@ -17,7 +17,7 @@ public class SuperiorHorseInfo {
     private double comfortability = 0.2;
     private double waterBravery = 0.1;
     
-    private boolean isMale = Math.random() < 0.5;
+    private boolean isMale = ThreadLocalRandom.current().nextDouble() < 0.5;
     // Male horses can either be a stallion or a gelding
     private boolean isStallion = true;
     

@@ -72,14 +72,14 @@ public class SuperiorHorsesManager implements Listener {
     }
 
     public SuperiorHorse getSuperiorHorse(Horse horse) {
-        for (SuperiorHorse superiorHorse : superiorHorses) {
-            if (superiorHorse.equals(horse)) {
-                return superiorHorse;
-            }
+        SuperiorHorse superiorHorse = getCachedHorse(horse);
+        if (superiorHorse != null) {
+            return superiorHorse;
         }
+        
         // if horse is not found, create a new one
         isSpawningCustomHorse = true;
-        SuperiorHorse superiorHorse = new SuperiorHorse(horse);
+        superiorHorse = new SuperiorHorse(horse);
         isSpawningCustomHorse = false;
         superiorHorses.add(superiorHorse);
         return superiorHorse;
