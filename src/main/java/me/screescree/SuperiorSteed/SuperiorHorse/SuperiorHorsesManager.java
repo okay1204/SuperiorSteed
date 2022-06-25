@@ -12,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
@@ -32,17 +31,13 @@ public class SuperiorHorsesManager implements Listener {
         int cleanupCacheInterval = SuperiorSteed.getInstance().getConfig().getInt("cleanupCacheInterval");
         if (cleanupCacheInterval > 0) {
             long cleanupCacheIntervalTicks = cleanupCacheInterval * 1200;
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    SuperiorSteed plugin = SuperiorSteed.getInstance();
-                    plugin.getLogger().info("Cleaning up SuperiorHorse cache...");
-                    cleanupCache();
-                    plugin.getLogger().info("Cache cleaned up!");
-                }
-            }.runTaskTimer(SuperiorSteed.getInstance(), cleanupCacheIntervalTicks, cleanupCacheIntervalTicks);
+            Bukkit.getScheduler().runTaskTimer(SuperiorSteed.getInstance(), () -> {
+                SuperiorSteed plugin = SuperiorSteed.getInstance();
+                plugin.getLogger().info("Cleaning up SuperiorHorse cache...");
+                cleanupCache();
+                plugin.getLogger().info("Cache cleaned up!");
+            }, cleanupCacheIntervalTicks, cleanupCacheIntervalTicks);
         }
-
     }
 
     public void cleanupCache() {
