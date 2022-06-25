@@ -1,6 +1,7 @@
 package me.screescree.SuperiorSteed;
 
 import me.screescree.SuperiorSteed.commands.Geld;
+import me.screescree.SuperiorSteed.commands.GetTicksLived;
 import me.screescree.SuperiorSteed.commands.HorseCache;
 import me.screescree.SuperiorSteed.commands.HorseJumpAndSpeedTest;
 import me.screescree.SuperiorSteed.commands.HorsePerms;
@@ -21,5 +22,6 @@ public class CommandHandler {
         new Geld();
         new HorsePerms();
         new ShavingTimer();
+        new GetTicksLived();
     }
 }

@@ -46,6 +46,10 @@ commands:
     description: "Displays the current timer of the shavings block you are currently looking at."
     usage: "§cUsage: /<command>"
     permission: "superiorsteed.debug.shavingtimer"
+  gettickslived:
+    description: "Displays the number of ticks the entity you are looking at has lived for."
+    usage: "§cUsage: /<command>"
+    permission: "superiorsteed.debug.gettickslived"
 
 permissions:
   superiorsteed.horsestats:
@@ -84,6 +88,7 @@ permissions:
       superiorsteed.debug.readpersistentdata: true
       superiorsteed.debug.horsejumpandspeedtest: true
       superiorsteed.debug.shavingtimer: true
+      superiorsteed.debug.gettickslived: true
   superiorsteed.debug.horsecache:
     description: "Allows the user to see the cache of all horses in the server."
     default: false
@@ -95,4 +100,7 @@ permissions:
     default: false
   superiorsteed.debug.shavingtimer:
     description: "Allows the user to see the current timer of the shavings block."
+    default: false
+  superiorsteed.debug.gettickslived:
+    description: "Allows the user to see the number of ticks an entity has lived for."
     default: false
