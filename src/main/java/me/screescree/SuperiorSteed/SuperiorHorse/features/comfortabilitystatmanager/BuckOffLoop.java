@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.superiorhorse.features.nearbyplayercomfortable;
+package me.screescree.SuperiorSteed.superiorhorse.features.comfortabilitystatmanager;
 
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;

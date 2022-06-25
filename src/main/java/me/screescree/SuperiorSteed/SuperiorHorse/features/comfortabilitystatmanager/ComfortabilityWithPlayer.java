@@ -1,8 +1,7 @@
-package me.screescree.SuperiorSteed.superiorhorse.features.nearbyplayercomfortable;
+package me.screescree.SuperiorSteed.superiorhorse.features.comfortabilitystatmanager;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
 
 import me.screescree.SuperiorSteed.LoopingTask;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
@@ -18,9 +17,8 @@ public class ComfortabilityWithPlayer implements LoopingTask<SuperiorHorse> {
     public void runLoopingTask(SuperiorHorse superiorHorse) {
         // check if there is a player in a 5 block radius of the horse
         boolean isPlayerNearby = false;
-        Horse horse = superiorHorse.getBukkitEntity();
         
-        for (Entity entity : horse.getNearbyEntities(5, 5, 5)) {
+        for (Entity entity : superiorHorse.getBukkitEntity().getNearbyEntities(5, 5, 5)) {
             if (entity.getType() == EntityType.PLAYER) {
                 isPlayerNearby = true;
                 break;

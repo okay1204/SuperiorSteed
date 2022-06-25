@@ -38,7 +38,8 @@ public class HorseStats extends CustomCommand {
         SuperiorSteed plugin = SuperiorSteed.getInstance();
         SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
 
-        player.sendMessage(Utils.colorize("&7---------------- &e" + superiorHorse.getName(20) + "'s stats &6(owned by " + superiorHorse.getOwner().getName() + ") &7----------------"));
+        String ownerText = superiorHorse.getOwner() != null ? "&6(owned by " + superiorHorse.getOwner().getName() + ")" : "&6(unowned)";
+        player.sendMessage(Utils.colorize("&7---------------- &e" + superiorHorse.getName(20) + "'s stats " + ownerText +  " &7----------------"));
         String stats = "";
         stats += addStatMessage("Hunger", superiorHorse.hungerStat().get());
         stats += addStatMessage("Hydration", superiorHorse.hydrationStat().get());
