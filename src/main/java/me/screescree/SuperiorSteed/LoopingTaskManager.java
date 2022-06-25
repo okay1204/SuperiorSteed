@@ -14,6 +14,7 @@ import me.screescree.SuperiorSteed.superiorhorse.features.comfortabilitystatmana
 import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SendActionBarLoop;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.AngelHandler;
+import me.screescree.SuperiorSteed.superiorhorse.features.traits.FriendlyHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.LonerHandler;
 
 public class LoopingTaskManager {
@@ -31,6 +32,7 @@ public class LoopingTaskManager {
         horseTasks.add(new ShavingsUseHorseTracker());
         horseTasks.add(new LonerHandler());
         horseTasks.add(new AngelHandler());
+        horseTasks.add(new FriendlyHandler());
     }
 
     public void start() {
