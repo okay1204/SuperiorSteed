@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 
@@ -90,11 +91,13 @@ public class HorsePerms extends CustomCommand implements TabCompleter {
 
                 if (reciever.isOnline()) {
                     Player onlineReciever = reciever.getPlayer();
-                    if (
-                        onlineReciever.isInsideVehicle() &&
-                        onlineReciever.getVehicle() instanceof Horse &&
-                        ((Horse) onlineReciever.getVehicle()).getOwner().getUniqueId().equals(player.getUniqueId())
-                    ) {
+                    if (onlineReciever.isInsideVehicle() && onlineReciever.getVehicle() instanceof Horse) {
+                        AnimalTamer owner = ((Horse) onlineReciever.getVehicle()).getOwner();
+                        if (owner == null || !owner.getName().equals(player.getName())) {
+                            return true;
+                        }
+
+
                         onlineReciever.leaveVehicle();
                         onlineReciever.sendMessage(Utils.colorize("&e" + player.getName() + " &chas just removed you from their horse permissions, and you were kicked off their horse."));
                         onlineReciever.playSound(onlineReciever.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);

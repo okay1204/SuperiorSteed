@@ -15,14 +15,19 @@ public class RidePermissionsListener implements Listener {
     @EventHandler
     public void onHorseRide(EntityMountEvent event) {
         if (event.getMount() instanceof Horse && event.getEntity() instanceof Player) {
+            AnimalTamer owner = ((Horse) event.getMount()).getOwner();
+            // ignore if the horse is unowned
+            if (owner == null) {
+                return;
+            }
+
             Player player = (Player) event.getEntity();
 
             // allow if the player has admin permissions
             if (player.hasPermission("superiorsteed.admin.rideallhorses")) {
                 return;
             }
-
-            AnimalTamer owner = ((Horse) event.getMount()).getOwner();
+            
             // allow if the horse is owned the by the player
             if (owner.getUniqueId().equals(player.getUniqueId())) {
                 return;
