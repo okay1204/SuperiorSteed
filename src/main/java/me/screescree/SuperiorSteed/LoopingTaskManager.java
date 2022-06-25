@@ -13,6 +13,7 @@ import me.screescree.SuperiorSteed.superiorhorse.features.comfortabilitystatmana
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortabilitystatmanager.ComfortabilityWithPlayer;
 import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SendActionBarLoop;
+import me.screescree.SuperiorSteed.superiorhorse.features.traits.AngelHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.LonerHandler;
 
 public class LoopingTaskManager {
@@ -29,6 +30,7 @@ public class LoopingTaskManager {
         horseTasks.add(new ComfortabilityWithPlayer());
         horseTasks.add(new ShavingsUseHorseTracker());
         horseTasks.add(new LonerHandler());
+        horseTasks.add(new AngelHandler());
     }
 
     public void start() {
