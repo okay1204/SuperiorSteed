@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.features.nearbyplayercomfortable.ComfortabilityWithPlayer;
-import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.WatchHorsePos;
+import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SendActionBarLoop;
 import me.screescree.SuperiorSteed.superiorhorse.features.nearbyplayercomfortable.BuckOffLoop;
 
@@ -26,7 +26,7 @@ public class LoopingTaskManager {
         playerTasks.add(new BuckOffLoop());
         
         horseTasks.add(new ComfortabilityWithPlayer());
-        horseTasks.add(new WatchHorsePos());
+        horseTasks.add(new ShavingsUseHorseTracker());
     }
 
     public void start() {

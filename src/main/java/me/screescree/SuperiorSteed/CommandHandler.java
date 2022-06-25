@@ -6,6 +6,7 @@ import me.screescree.SuperiorSteed.commands.HorseJumpAndSpeedTest;
 import me.screescree.SuperiorSteed.commands.HorsePerms;
 import me.screescree.SuperiorSteed.commands.HorseStats;
 import me.screescree.SuperiorSteed.commands.ReadPersistentData;
+import me.screescree.SuperiorSteed.commands.ShavingTimer;
 import me.screescree.SuperiorSteed.commands.SummonHorse;
 import me.screescree.SuperiorSteed.commands.UpdateHorse;
 
@@ -19,5 +20,6 @@ public class CommandHandler {
         new HorseJumpAndSpeedTest();
         new Geld();
         new HorsePerms();
+        new ShavingTimer();
     }
 }

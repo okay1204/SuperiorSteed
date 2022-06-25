@@ -12,8 +12,8 @@ import me.screescree.SuperiorSteed.LoopingTask;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 
-public class WatchHorsePos implements LoopingTask<SuperiorHorse> {
-    private static final NamespacedKey SHAVINGS_TIMER_KEY = new NamespacedKey(SuperiorSteed.getInstance(), "shavingUseTimer");
+public class ShavingsUseHorseTracker implements LoopingTask<SuperiorHorse> {
+    public static final NamespacedKey SHAVINGS_TIMER_KEY = new NamespacedKey(SuperiorSteed.getInstance(), "shavingUseTimer");
 
     @Override
     public int getIntervalTicks() {
