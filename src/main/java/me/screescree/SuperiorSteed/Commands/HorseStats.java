@@ -94,10 +94,10 @@ public class HorseStats extends CustomCommand {
 
     private String addStatMessage(String name, double value, int trailingSpaces) {
         String colorCode;
-        if (value < 0.2) {
+        if (value <= 0.19) {
             colorCode = "&c";
         }
-        else if (value < 0.6) {
+        else if (value <= 0.59) {
             colorCode = "&e";
         }
         else {
