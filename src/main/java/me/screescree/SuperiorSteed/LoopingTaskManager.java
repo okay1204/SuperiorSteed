@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortabilitystatmanager.BuckOffLoop;
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortabilitystatmanager.ComfortabilityWithPlayer;
 import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
@@ -72,11 +73,23 @@ public class LoopingTaskManager {
 
         for (Map.Entry<Integer, HashSet<LoopingTask<SuperiorHorse>>> entry : horseLoops.entrySet()) {
             Bukkit.getScheduler().runTaskTimer(SuperiorSteed.getInstance(), () -> {
-                for (SuperiorHorse horse : SuperiorSteed.getInstance().getHorseManager().getCache()) {
+                SuperiorHorsesManager manager = SuperiorSteed.getInstance().getHorseManager();
+                HashSet<SuperiorHorse> toRemove = new HashSet<>();
+                for (SuperiorHorse horse : manager.getCache()) {
+                    if (!manager.checkValidity(horse)) {
+                        toRemove.add(horse);
+                        continue;
+                    }
+
                     for (LoopingTask<SuperiorHorse> task : entry.getValue()) {
                         task.runLoopingTask(horse);
                     }
                 }
+
+                for (SuperiorHorse horse : toRemove) {
+                    manager.removeHorse(horse);
+                }
+
             }, entry.getKey(), entry.getKey());
         }
     }

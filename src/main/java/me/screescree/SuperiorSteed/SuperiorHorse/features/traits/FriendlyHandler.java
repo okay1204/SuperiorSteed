@@ -35,5 +35,5 @@ public class FriendlyHandler implements LoopingTask<SuperiorHorse> {
             superiorHorse.trustStat().add(0.1);
             superiorHorse.friendlinessStat().add(0.1);
         }
-    }    
+    }
 }

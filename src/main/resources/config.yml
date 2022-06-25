@@ -1,4 +1,4 @@
-# The plugin will clear all excess cache on a regular interval, potentially freeing up some memory.
+# The plugin will check to see if any horses are left out from the cache on a regular interval, potentially fixing any issues.
 # This is the amount of time in minutes between each cache clear. Note that this may cause a little lag.
 # You may set this to 0 or a negative number to disable the cache clear (not recommended).
-cleanupCacheInterval: 60
+verifyCacheInterval: 60

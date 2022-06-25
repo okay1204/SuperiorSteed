@@ -1,6 +1,6 @@
 package me.screescree.SuperiorSteed.superiorhorse;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,7 +18,7 @@ import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 
 public class SuperiorHorsesManager implements Listener {
     // cache of all superior horses, to retain NMS horse instances
-    private ArrayList<SuperiorHorse> superiorHorses = new ArrayList<SuperiorHorse>();
+    private HashSet<SuperiorHorse> superiorHorses = new HashSet<SuperiorHorse>();
     private boolean isSpawningCustomHorse = false;
 
     public SuperiorHorsesManager() {
@@ -28,32 +28,41 @@ public class SuperiorHorsesManager implements Listener {
             }
         }
 
-        int cleanupCacheInterval = SuperiorSteed.getInstance().getConfig().getInt("cleanupCacheInterval");
-        if (cleanupCacheInterval > 0) {
-            long cleanupCacheIntervalTicks = cleanupCacheInterval * 1200;
-            Bukkit.getScheduler().runTaskTimer(SuperiorSteed.getInstance(), () -> {
-                SuperiorSteed plugin = SuperiorSteed.getInstance();
-                plugin.getLogger().info("Cleaning up SuperiorHorse cache...");
-                cleanupCache();
-                plugin.getLogger().info("Cache cleaned up!");
-            }, cleanupCacheIntervalTicks, cleanupCacheIntervalTicks);
+        int verifyCacheInterval = SuperiorSteed.getInstance().getConfig().getInt("verifyCacheInterval") * 1200;
+        if (verifyCacheInterval > 0) {
+            Bukkit.getScheduler().runTaskTimer(SuperiorSteed.getInstance(), this::verifyCache, verifyCacheInterval, verifyCacheInterval);
         }
     }
 
-    public void cleanupCache() {
-        int i = 0;
-        while (i < superiorHorses.size()) {
-            if (!superiorHorses.get(i).getBukkitEntity().isValid()) {
-                superiorHorses.remove(i);
-            }
-            else {
-                i++;
+    public void verifyCache() {
+        SuperiorSteed plugin = SuperiorSteed.getInstance();
+        plugin.getLogger().info("Verifying SuperiorHorse cache...");
+
+        // adds any unregistered horses to the cache
+        int added = 0;
+        for (World world : Bukkit.getWorlds()) {
+            for (Entity entity : world.getEntitiesByClass(Horse.class)) {
+                if (getCachedHorse((Horse) entity) == null) {
+                    superiorHorses.add(new SuperiorHorse((Horse) entity));
+                    added++;
+                }
             }
         }
+
+        plugin.getLogger().info("Cache verified! Added " + added + " new horses to cache.");
     }
 
-    public ArrayList<SuperiorHorse> getCache() {
+    public HashSet<SuperiorHorse> getCache() {
         return superiorHorses;
+    }
+
+    public boolean checkValidity(SuperiorHorse superiorHorse) {
+        if (!superiorHorse.getBukkitEntity().isValid()) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     public SuperiorHorse getCachedHorse(Horse horse) {
@@ -64,6 +73,10 @@ public class SuperiorHorsesManager implements Listener {
         }
 
         return null;
+    }
+
+    public void removeHorse(SuperiorHorse horse) {
+        superiorHorses.remove(horse);
     }
 
     public SuperiorHorse getSuperiorHorse(Horse horse) {
@@ -110,12 +123,7 @@ public class SuperiorHorsesManager implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onHorseDeath(EntityDeathEvent event) {
         if (event.getEntity().getType() == EntityType.HORSE) {
-            for (int i = 0; i < superiorHorses.size(); i++) {
-                if (superiorHorses.get(i).equals(event.getEntity())) {
-                    superiorHorses.remove(i);
-                    break;
-                }
-            }
+            superiorHorses.remove(getCachedHorse((Horse) event.getEntity()));
         }
     }
 }
