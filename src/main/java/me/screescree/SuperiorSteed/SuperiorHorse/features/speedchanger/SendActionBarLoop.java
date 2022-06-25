@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.superiorhorse.features.horsespeedchanger;
+package me.screescree.SuperiorSteed.superiorhorse.features.speedchanger;
 
 import org.bukkit.entity.Player;
 

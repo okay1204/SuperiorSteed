@@ -3,11 +3,13 @@ package me.screescree.SuperiorSteed;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.jeff_media.customblockdata.CustomBlockData;
+
 import me.screescree.SuperiorSteed.listeners.BrewingSeeds;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
 import me.screescree.SuperiorSteed.superiorhorse.features.horsenofalldamage.HorseNoFallDamageListener;
-import me.screescree.SuperiorSteed.superiorhorse.features.horseridepermissions.HorseRidePermissionsListener;
-import me.screescree.SuperiorSteed.superiorhorse.features.horsespeedchanger.HorseSpeedChangerListener;
+import me.screescree.SuperiorSteed.superiorhorse.features.ridepermissions.RidePermissionsListener;
+import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SpeedChangerListener;
 import me.screescree.SuperiorSteed.superiorhorse.features.truststatmanager.TrustStatManagerListener;
 
 public class SuperiorSteed extends JavaPlugin
@@ -24,6 +26,9 @@ public class SuperiorSteed extends JavaPlugin
         
         database = new Database();
         new CommandHandler();
+
+        // custom block data
+        CustomBlockData.registerListener(this);
         
         // set up listeners
         PluginManager pm = getServer().getPluginManager();
@@ -34,10 +39,10 @@ public class SuperiorSteed extends JavaPlugin
         pm.registerEvents(new BrewingSeeds(), this);
 
         // superiorhorse features
-        pm.registerEvents(new HorseSpeedChangerListener(), this);
+        pm.registerEvents(new SpeedChangerListener(), this);
         pm.registerEvents(new HorseNoFallDamageListener(), this);
         pm.registerEvents(new TrustStatManagerListener(), this);
-        pm.registerEvents(new HorseRidePermissionsListener(), this);
+        pm.registerEvents(new RidePermissionsListener(), this);
 
         new LoopingTaskManager().start();
     }

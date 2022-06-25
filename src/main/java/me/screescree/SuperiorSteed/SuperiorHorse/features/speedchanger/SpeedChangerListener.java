@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.superiorhorse.features.horsespeedchanger;
+package me.screescree.SuperiorSteed.superiorhorse.features.speedchanger;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -13,7 +13,7 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 
-public class HorseSpeedChangerListener implements Listener {
+public class SpeedChangerListener implements Listener {
     @EventHandler
     public void onPlayerChangeSpeed(PlayerInteractEvent event) {
         // ignore if the item is not a stick

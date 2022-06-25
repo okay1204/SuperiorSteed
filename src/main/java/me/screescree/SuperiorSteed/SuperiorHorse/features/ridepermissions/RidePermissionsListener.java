@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.superiorhorse.features.horseridepermissions;
+package me.screescree.SuperiorSteed.superiorhorse.features.ridepermissions;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.AnimalTamer;
@@ -11,7 +11,7 @@ import org.spigotmc.event.entity.EntityMountEvent;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
 
-public class HorseRidePermissionsListener implements Listener {
+public class RidePermissionsListener implements Listener {
     @EventHandler
     public void onHorseRide(EntityMountEvent event) {
         if (event.getMount() instanceof Horse && event.getEntity() instanceof Player) {
