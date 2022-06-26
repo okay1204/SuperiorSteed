@@ -2,6 +2,7 @@ package me.screescree.SuperiorSteed.superiorhorse;
 
 import java.util.HashSet;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
@@ -56,8 +57,6 @@ public class SuperiorHorse {
         bukkitEntity.setRotation(spawnLocation.getYaw(), spawnLocation.getPitch());
         bukkitEntity.teleport(spawnLocation, TeleportCause.PLUGIN);
         bukkitEntity.setAI(horse.hasAI());
-        bukkitEntity.setTamed(horse.isTamed());
-        bukkitEntity.setOwner(horse.getOwner());
         if (horse.isAdult()) {
             bukkitEntity.setAdult();
         }
@@ -175,7 +174,7 @@ public class SuperiorHorse {
             traits.add(trait);
         }
         int favoriteSeedId = containerValueOrDefault(container, "favoriteSeed", generatedInfo.getFavoriteSeed() != null ? generatedInfo.getFavoriteSeed().getId() : -1);
-        
+
         SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
         horseInfo.setHunger(hunger);
         horseInfo.setHydration(hydration);
@@ -189,6 +188,8 @@ public class SuperiorHorse {
 
         horseInfo.setColor(horse.getColor());
         horseInfo.setStyle(horse.getStyle());
+
+        horseInfo.setOwnerUuid(horse.getOwner() != null ? horse.getOwner().getUniqueId() : null);
 
         horseInfo.setSpeed(horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
         horseInfo.setJumpStrength(horse.getJumpStrength());
@@ -290,6 +291,8 @@ public class SuperiorHorse {
         
         bukkitEntity.setColor(horseInfo.getColor());
         bukkitEntity.setStyle(horseInfo.getStyle());
+
+        setOwner(horseInfo.getOwnerUuid() != null ? Bukkit.getOfflinePlayer(horseInfo.getOwnerUuid()) : null);
         
         bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(horseInfo.getSpeed());
         bukkitEntity.setJumpStrength(horseInfo.getJumpStrength());
@@ -323,6 +326,8 @@ public class SuperiorHorse {
         horseInfo.setColor(bukkitEntity.getColor());
         horseInfo.setStyle(bukkitEntity.getStyle());
 
+        horseInfo.setOwnerUuid(bukkitEntity.getOwner() != null ? bukkitEntity.getOwner().getUniqueId() : null);
+
         horseInfo.setSpeed(bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
         horseInfo.setJumpStrength(bukkitEntity.getJumpStrength());
         horseInfo.setMaxHealth(bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
@@ -347,7 +352,18 @@ public class SuperiorHorse {
     }
 
     public OfflinePlayer getOwner() {
-        return (OfflinePlayer) bukkitEntity.getOwner();
+        return bukkitEntity.getOwner() != null ? (OfflinePlayer) bukkitEntity.getOwner() : null;
+    }
+
+    public void setOwner(OfflinePlayer owner) {
+        bukkitEntity.setOwner(owner);
+
+        if (owner != null) {
+            bukkitEntity.setTamed(true);
+        }
+        else {
+            bukkitEntity.setTamed(false);
+        }
     }
     
     public Stat hungerStat() {

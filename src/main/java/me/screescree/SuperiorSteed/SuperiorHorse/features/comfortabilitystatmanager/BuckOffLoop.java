@@ -16,7 +16,7 @@ public class BuckOffLoop implements LoopingTask<Player> {
 
     @Override
     public void runLoopingTask(Player player) {
-        if (!player.isInsideVehicle() || !(player.getVehicle() instanceof Horse)) {
+        if (!player.isInsideVehicle() || !(player.getVehicle() instanceof Horse) || !((Horse) player.getVehicle()).isTamed()) {
             return;
         }
 

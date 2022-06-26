@@ -2,6 +2,7 @@ package me.screescree.SuperiorSteed.superiorhorse.info;
 
 import java.util.HashSet;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
@@ -24,6 +25,9 @@ public class SuperiorHorseInfo {
     // Looks
     private Color color = getRandomEnum(Color.class);;
     private Style style = getRandomEnum(Style.class);
+
+    // Owner
+    private UUID ownerUuid = null;
 
     // Attributes
     private double speed;
@@ -168,6 +172,14 @@ public class SuperiorHorseInfo {
 
     public void setStyle(Style style) {
         this.style = style;
+    }
+
+    public UUID getOwnerUuid() {
+        return ownerUuid;
+    }
+
+    public void setOwnerUuid(UUID ownerUuid) {
+        this.ownerUuid = ownerUuid;
     }
 
     public double getSpeed() {
