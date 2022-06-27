@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import me.screescree.SuperiorSteed.CustomCommand;
-import me.screescree.SuperiorSteed.Utils;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class HorseJumpAndSpeedTest extends CustomCommand {
     public HorseJumpAndSpeedTest() {
@@ -24,7 +24,7 @@ public class HorseJumpAndSpeedTest extends CustomCommand {
             player = (Player) sender;
         }
         else {
-            sender.sendMessage(Utils.colorize("&cThis command can only be used by a player."));
+            sender.sendMessage(Format.colorize("&cThis command can only be used by a player."));
             return true;
         }
 
@@ -38,7 +38,7 @@ public class HorseJumpAndSpeedTest extends CustomCommand {
             jumpStrength = Double.parseDouble(args[0]);
             movementSpeed = Double.parseDouble(args[1]);
         } catch (NumberFormatException e) {
-            sender.sendMessage(Utils.colorize("&cJump strength and movement speed must be doubles."));
+            sender.sendMessage(Format.colorize("&cJump strength and movement speed must be doubles."));
             return true;
         }
 

@@ -10,20 +10,22 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
-import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.togglebutton.ToggleButton;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class TypeMenu extends SubMenu {
 
     private ArrayList<Pane> panes = new ArrayList<Pane>();
 
+    @Override
     public ItemStack getSubmenuItem() {
         return HorseEditor.customItem(Material.SOUL_TORCH, "&bType", true);
     }
 
+    @Override
     public ArrayList<Pane> getPanes() {
         return panes;
     }
@@ -34,9 +36,9 @@ public class TypeMenu extends SubMenu {
         ToggleButton stallionToggle = new ToggleButton(
             horseInfo.isStallion(),
             Material.GRASS_BLOCK,
-            Utils.colorize("&2&lStallion"),
+            Format.colorize("&2&lStallion"),
             Material.OAK_SAPLING,
-            Utils.colorize("&a&lGelding"),
+            Format.colorize("&a&lGelding"),
             gui,
             enabled -> {
                 horseInfo.setStallion(enabled);
@@ -51,9 +53,9 @@ public class TypeMenu extends SubMenu {
             new ToggleButton(
                 horseInfo.isMale(),
                 Material.BLUE_CONCRETE,
-                Utils.colorize("&9&lMale"),
+                Format.colorize("&9&lMale"),
                 Material.PINK_CONCRETE,
-                Utils.colorize("&d&lFemale"),
+                Format.colorize("&d&lFemale"),
                 gui,
                 enabled -> {
                     horseInfo.setMale(enabled);

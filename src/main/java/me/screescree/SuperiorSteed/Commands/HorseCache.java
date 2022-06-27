@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 
 import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
-import me.screescree.SuperiorSteed.Utils;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class HorseCache extends CustomCommand {
     public HorseCache() {
@@ -16,7 +16,7 @@ public class HorseCache extends CustomCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         SuperiorSteed plugin = SuperiorSteed.getInstance();
         
-        sender.sendMessage(Utils.colorize("&aHorse cache:"));
+        sender.sendMessage(Format.colorize("&aHorse cache:"));
         String cacheString = plugin.getHorseManager().getCache().toString();
         if (cacheString.length() > 255) {
             cacheString = cacheString.substring(0, 255);

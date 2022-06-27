@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 
 import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
-import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class SummonHorse extends CustomCommand {
     public SummonHorse() {
@@ -21,7 +21,7 @@ public class SummonHorse extends CustomCommand {
             player = (Player) sender;
         }
         else {
-            sender.sendMessage(Utils.colorize("&cThis command can only be used by a player."));
+            sender.sendMessage(Format.colorize("&cThis command can only be used by a player."));
             return true;
         }
         
@@ -32,7 +32,7 @@ public class SummonHorse extends CustomCommand {
                 return;
             }
             plugin.getHorseManager().newSuperiorHorse(player.getLocation(), horseInfo);
-            player.sendMessage(Utils.colorize("&aYou have summoned a new horse."));
+            player.sendMessage(Format.colorize("&aYou have summoned a new horse."));
         });
                 
         return true;

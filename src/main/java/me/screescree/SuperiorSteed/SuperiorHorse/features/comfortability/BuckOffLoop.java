@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 import io.netty.util.internal.ThreadLocalRandom;
 import me.screescree.SuperiorSteed.LoopingTask;
 import me.screescree.SuperiorSteed.SuperiorSteed;
-import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class BuckOffLoop implements LoopingTask<Player> {
     private static double buckChance(double comfortability) {
@@ -28,7 +28,7 @@ public class BuckOffLoop implements LoopingTask<Player> {
         if (ThreadLocalRandom.current().nextDouble() < buckChance(comfortability)) {
             superiorHorse.getBukkitEntity().eject();
 
-            player.sendMessage(Utils.colorize("&c" + superiorHorse.getName(20) + " bucked you off. &7(Comfortability: " + (int) Math.ceil(comfortability * 100) + "%)"));
+            player.sendMessage(Format.colorize("&c" + superiorHorse.getName(20) + " bucked you off. &7(Comfortability: " + (int) Math.ceil(comfortability * 100) + "%)"));
             superiorHorse.getNMSEntity().makeMad();
         }
     }

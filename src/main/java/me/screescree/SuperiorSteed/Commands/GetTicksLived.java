@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.RayTraceResult;
 
 import me.screescree.SuperiorSteed.CustomCommand;
-import me.screescree.SuperiorSteed.Utils;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class GetTicksLived extends CustomCommand {
     public GetTicksLived() {
@@ -22,7 +22,7 @@ public class GetTicksLived extends CustomCommand {
             player = (Player) sender;
         }
         else {
-            sender.sendMessage(Utils.colorize("&cThis command can only be used by a player."));
+            sender.sendMessage(Format.colorize("&cThis command can only be used by a player."));
             return true;
         }
 
@@ -34,14 +34,14 @@ public class GetTicksLived extends CustomCommand {
         );
 
         if (raytraceResult == null) {
-            sender.sendMessage(Utils.colorize("&cYou must be looking at an entity."));
+            sender.sendMessage(Format.colorize("&cYou must be looking at an entity."));
             return true;
         }
 
         Entity entity = raytraceResult.getHitEntity();
 
         // send message
-        sender.sendMessage(Utils.colorize("&aThis entity's ticks lived is &e" + entity.getTicksLived() + "&a ticks."));
+        sender.sendMessage(Format.colorize("&aThis entity's ticks lived is &e" + entity.getTicksLived() + "&a ticks."));
 
         return true;
     }

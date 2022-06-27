@@ -13,8 +13,8 @@ import org.bukkit.util.Vector;
 
 import io.netty.util.internal.ThreadLocalRandom;
 import me.screescree.SuperiorSteed.SuperiorSteed;
-import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class NoLeadAndJump implements Listener {
     // Returns the chance of refusing to jump or be lead by a player
@@ -35,7 +35,7 @@ public class NoLeadAndJump implements Listener {
             double rejectChance = rejectChance(trust);
             if (ThreadLocalRandom.current().nextDouble() < rejectChance) {
                 event.setCancelled(true);
-                player.sendMessage(Utils.colorize("&c" + superiorHorse.getName(20) + " resisted your attempt to leash it. &7(Trust: " + (int) Math.ceil(trust * 100) + "%)"));
+                player.sendMessage(Format.colorize("&c" + superiorHorse.getName(20) + " resisted your attempt to leash it. &7(Trust: " + (int) Math.ceil(trust * 100) + "%)"));
                 player.getWorld().playSound(superiorHorse.getBukkitEntity(), Sound.ENTITY_HORSE_ANGRY, 1, 1);
             }
         }
@@ -55,7 +55,7 @@ public class NoLeadAndJump implements Listener {
 
         if (ThreadLocalRandom.current().nextDouble() < rejectChance) {
             Player player = (Player) superiorHorse.getBukkitEntity().getPassengers().get(0);
-            player.sendMessage(Utils.colorize("&c" + superiorHorse.getName(20) + " refused to jump. &7(Trust: " + (int) Math.ceil(trust * 100) + "%)"));
+            player.sendMessage(Format.colorize("&c" + superiorHorse.getName(20) + " refused to jump. &7(Trust: " + (int) Math.ceil(trust * 100) + "%)"));
             player.getWorld().playSound(superiorHorse.getBukkitEntity(), Sound.ENTITY_HORSE_ANGRY, 1, 1);
             
             // cancel the jump by forcing the horse downward

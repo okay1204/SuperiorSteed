@@ -43,6 +43,8 @@ public class SuperiorHorse {
     private Stat comfortability;
     private Stat waterBravery;
 
+    private long age;
+
     private boolean isMale;
     private boolean isStallion;
 
@@ -59,12 +61,6 @@ public class SuperiorHorse {
         bukkitEntity.setRotation(spawnLocation.getYaw(), spawnLocation.getPitch());
         bukkitEntity.teleport(spawnLocation, TeleportCause.PLUGIN);
         bukkitEntity.setAI(horse.hasAI());
-        if (horse.isAdult()) {
-            bukkitEntity.setAdult();
-        }
-        else {
-            bukkitEntity.setBaby();
-        }
         
         bukkitEntity.setDomestication(horse.getDomestication());
         bukkitEntity.setMaxDomestication(horse.getMaxDomestication());
@@ -168,6 +164,8 @@ public class SuperiorHorse {
         double comfortability = containerValueOrDefault(container, "comfortability", generatedInfo.getComfortability());
         double waterBravery = containerValueOrDefault(container, "waterBravery", generatedInfo.getWaterBravery());
 
+        long age = containerValueOrDefault(container, "age", generatedInfo.getAge());
+
         boolean isMale = containerValueOrDefault(container, "isMale", generatedInfo.isMale());
         boolean isStallion = containerValueOrDefault(container, "isStallion", generatedInfo.isStallion());
 
@@ -184,6 +182,8 @@ public class SuperiorHorse {
         horseInfo.setFriendliness(friendliness);
         horseInfo.setComfortability(comfortability);
         horseInfo.setWaterBravery(waterBravery);
+
+        horseInfo.setAge(age);
         
         horseInfo.setMale(isMale);
         horseInfo.setStallion(isStallion);
@@ -212,6 +212,7 @@ public class SuperiorHorse {
         nmsEntity = new SuperiorHorseEntity(spawnLocation.getWorld(), this);
         bukkitEntity = ((CraftWorld) spawnLocation.getWorld()).addEntity(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         bukkitEntity.teleport(spawnLocation, TeleportCause.PLUGIN);
+        bukkitEntity.setAgeLock(true);
 
         update(horseInfo);
     }
@@ -230,6 +231,16 @@ public class SuperiorHorse {
         NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
         if (container.has(key, PersistentDataType.INTEGER)) {
             return container.get(key, PersistentDataType.INTEGER);
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
+    private long containerValueOrDefault(PersistentDataContainer container, String keyName, long defaultValue) {
+        NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
+        if (container.has(key, PersistentDataType.LONG)) {
+            return container.get(key, PersistentDataType.LONG);
         }
         else {
             return defaultValue;
@@ -287,6 +298,14 @@ public class SuperiorHorse {
             comfortability.set(horseInfo.getComfortability());
             waterBravery.set(horseInfo.getWaterBravery());
         }
+
+        setAge(horseInfo.getAge());
+        if (age >= SuperiorHorseInfo.AGE_ADULT) {
+            bukkitEntity.setAdult();
+        }
+        else {
+            bukkitEntity.setBaby();
+        }
         
         setMale(horseInfo.isMale());
         setStallion(horseInfo.isStallion());
@@ -321,6 +340,8 @@ public class SuperiorHorse {
         horseInfo.setFriendliness(friendliness.get());
         horseInfo.setComfortability(comfortability.get());
         horseInfo.setWaterBravery(waterBravery.get());
+
+        horseInfo.setAge(age);
 
         horseInfo.setMale(isMale);
         horseInfo.setStallion(isStallion);
@@ -390,6 +411,26 @@ public class SuperiorHorse {
 
     public Stat waterBraveryStat() {
         return waterBravery;
+    }
+    
+    public long getAge() {
+        return age;
+    }
+
+    public void setAge(long age) {
+        this.age = age;
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "age"), PersistentDataType.LONG, age);
+        
+        if (age >= SuperiorHorseInfo.AGE_ADULT) {
+            bukkitEntity.setAdult();
+        }
+        else {
+            bukkitEntity.setBaby();
+        }
+    }
+
+    public void incrementAge() {
+        setAge(age + 1);
     }
 
     public boolean isMale() {

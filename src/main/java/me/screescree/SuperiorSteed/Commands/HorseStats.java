@@ -10,9 +10,12 @@ import org.bukkit.entity.Player;
 
 import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
-import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
+import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.info.Trait;
+import me.screescree.SuperiorSteed.utils.AgeTimeSplitter;
+import me.screescree.SuperiorSteed.utils.Format;
+import me.screescree.SuperiorSteed.utils.RayTraceUtils;
 
 public class HorseStats extends CustomCommand {
     public HorseStats() {
@@ -26,20 +29,35 @@ public class HorseStats extends CustomCommand {
             player = (Player) sender;
         }
         else {
-            sender.sendMessage(Utils.colorize("&cThis command can only be used by a player."));
+            sender.sendMessage(Format.colorize("&cThis command can only be used by a player."));
             return true;
         }
         
-        Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
+        Horse targetHorse = RayTraceUtils.getRiddenOrLookedAtHorse(player);
         if (targetHorse == null) {
-            sender.sendMessage(Utils.colorize("&cYou must be riding or looking at a horse."));
+            sender.sendMessage(Format.colorize("&cYou must be riding or looking at a horse."));
             return true;
         }
         SuperiorSteed plugin = SuperiorSteed.getInstance();
         SuperiorHorse superiorHorse = plugin.getHorseManager().getSuperiorHorse(targetHorse);
 
         String ownerText = superiorHorse.getOwner() != null ? "&6(owned by " + superiorHorse.getOwner().getName() + ")" : "&6(unowned)";
-        player.sendMessage(Utils.colorize("&7---------------- &e" + superiorHorse.getName(20) + "'s stats " + ownerText +  " &7----------------"));
+        player.sendMessage(Format.colorize("&7---------------- &e" + superiorHorse.getName(20) + "'s stats " + ownerText +  " &7----------------"));
+
+        String ageType;
+        if (superiorHorse.getAge() < SuperiorHorseInfo.AGE_ADULT) {
+            ageType = "Foal";
+        }
+        else if (superiorHorse.getAge() < SuperiorHorseInfo.AGE_SENIOR) {
+            ageType = "Adult";
+        }
+        else {
+            ageType = "Senior";
+        }
+
+        player.sendMessage(Format.colorize("&5Age: &d" + ageType));
+        player.sendMessage(ChatColor.LIGHT_PURPLE + new AgeTimeSplitter(superiorHorse.getAge()).formatString());
+
         String stats = "";
         stats += addStatMessage("Hunger", superiorHorse.hungerStat().get());
         stats += addStatMessage("Hydration", superiorHorse.hydrationStat().get());
@@ -55,7 +73,7 @@ public class HorseStats extends CustomCommand {
 
         String horseType;
         if (superiorHorse.isMale()) {
-            horseType = Utils.colorize("&9♂ Male");
+            horseType = Format.colorize("&9♂ Male");
 
             if (superiorHorse.isStallion()) {
                 horseType += " (Stallion)";
@@ -65,12 +83,12 @@ public class HorseStats extends CustomCommand {
             }
         }
         else {
-            horseType = Utils.colorize("&d♀ Female");
+            horseType = Format.colorize("&d♀ Female");
         }
         player.sendMessage(horseType);
 
         HashSet<Trait> traits = superiorHorse.getTraits();
-        String traitString = Utils.colorize("&3Traits: ");
+        String traitString = Format.colorize("&3Traits: ");
         if (!traits.isEmpty()) {
             for (Trait trait : traits) {
                 traitString += (trait.isPositive() ? ChatColor.GREEN : ChatColor.RED) + trait.getFormalName() + ChatColor.GRAY + ", ";
@@ -80,7 +98,7 @@ public class HorseStats extends CustomCommand {
             traitString = traitString.substring(0, traitString.length() - 4);
         }
         else {
-            traitString += Utils.colorize("&7None");
+            traitString += Format.colorize("&7None");
         }
 
         player.sendMessage(traitString);
@@ -105,7 +123,7 @@ public class HorseStats extends CustomCommand {
         }
 
         int percentValue = (int) Math.ceil(value * 100);
-        String outputString = Utils.colorize(colorCode + name + ": &f" + percentValue + "%");
+        String outputString = Format.colorize(colorCode + name + ": &f" + percentValue + "%");
         
         String meterString = colorCode;
         for (int i = 0; i < percentValue / 10; i++) {
@@ -116,7 +134,7 @@ public class HorseStats extends CustomCommand {
             meterString += "░";
         }
 
-        outputString += " " + Utils.colorize(meterString);
+        outputString += " " + Format.colorize(meterString);
         for (int i = 0; i < trailingSpaces; i++) {
             outputString += " ";
         }

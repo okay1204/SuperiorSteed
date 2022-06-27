@@ -12,8 +12,8 @@ import com.jeff_media.customblockdata.CustomBlockData;
 
 import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
-import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class ShavingTimer extends CustomCommand {
     public ShavingTimer() {
@@ -27,18 +27,18 @@ public class ShavingTimer extends CustomCommand {
             player = (Player) sender;
         }
         else {
-            sender.sendMessage(Utils.colorize("&cThis command can only be used by a player."));
+            sender.sendMessage(Format.colorize("&cThis command can only be used by a player."));
             return true;
         }
 
         // get block player is looking at
         Block block = player.getTargetBlockExact(5);
         if (block == null) {
-            sender.sendMessage(Utils.colorize("&cYou must be looking at a block."));
+            sender.sendMessage(Format.colorize("&cYou must be looking at a block."));
             return true;
         }
         else if (!(block.getType() == Material.YELLOW_GLAZED_TERRACOTTA)) {
-            sender.sendMessage(Utils.colorize("&cYou must be looking at a yellow glazed terracotta."));
+            sender.sendMessage(Format.colorize("&cYou must be looking at a yellow glazed terracotta."));
             return true;
         }
 
@@ -50,7 +50,7 @@ public class ShavingTimer extends CustomCommand {
         }
 
         // send message
-        sender.sendMessage(Utils.colorize("&aThe current shaving timer for this block is &e" + seconds + "&a seconds."));
+        sender.sendMessage(Format.colorize("&aThe current shaving timer for this block is &e" + seconds + "&a seconds."));
 
         return true;
     }

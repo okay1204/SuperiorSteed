@@ -23,10 +23,12 @@ public class LooksMenu extends SubMenu {
 
     private ArrayList<Pane> panes = new ArrayList<>();
 
+    @Override
     public ItemStack getSubmenuItem() {
         return HorseEditor.customItem(Material.BROWN_DYE, ChatColor.of("#c59b7c") + "Looks", false);
     }
 
+    @Override
     public ArrayList<Pane> getPanes() {
         return panes;
     }

@@ -8,6 +8,7 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import me.screescree.SuperiorSteed.listeners.BrewingSeeds;
 import me.screescree.SuperiorSteed.listeners.HorseWarp;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
+import me.screescree.SuperiorSteed.superiorhorse.features.ageing.StopFeedGrowth;
 import me.screescree.SuperiorSteed.superiorhorse.features.horsenofalldamage.HorseNoFallDamageListener;
 import me.screescree.SuperiorSteed.superiorhorse.features.ridepermissions.RidePermissionsListener;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SpeedChangerListener;
@@ -47,6 +48,7 @@ public class SuperiorSteed extends JavaPlugin
         pm.registerEvents(new NoLeadAndJump(), this);
         pm.registerEvents(new RidePermissionsListener(), this);
         pm.registerEvents(new HurtInWater(), this);
+        pm.registerEvents(new StopFeedGrowth(), this);
 
         new LoopingTaskManager().start();
     }

@@ -1,18 +1,12 @@
-package me.screescree.SuperiorSteed;
+package me.screescree.SuperiorSteed.utils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.util.RayTraceResult;
 
-public class Utils {
-    // returns the string colored by &
-    public static String colorize(String string) {
-        return ChatColor.translateAlternateColorCodes('&', string);
-    }
-
+public class RayTraceUtils {
     public static Horse getRiddenOrLookedAtHorse(Player player) {
 
         Entity vehicle = player.getVehicle();

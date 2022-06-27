@@ -13,11 +13,12 @@ import org.bukkit.persistence.PersistentDataType;
 
 import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
-import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_BOOLEAN;
+import me.screescree.SuperiorSteed.utils.Format;
+import me.screescree.SuperiorSteed.utils.RayTraceUtils;
 
 public class ReadPersistentData extends CustomCommand implements TabCompleter {    
-    private final List<String> PERSISTENT_TYPES = List.of("double", "integer", "boolean", "string");
+    private final List<String> PERSISTENT_TYPES = List.of("double", "integer", "long", "boolean", "string");
 
     public ReadPersistentData() {
         super("readpersistentdata");
@@ -31,7 +32,7 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
             player = (Player) sender;
         }
         else {
-            sender.sendMessage(Utils.colorize("&cThis command can only be used by a player."));
+            sender.sendMessage(Format.colorize("&cThis command can only be used by a player."));
             return true;
         }
         
@@ -41,15 +42,15 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
         
         String type = args[0];
         if (!PERSISTENT_TYPES.contains(type)) {
-            sender.sendMessage(Utils.colorize("&cInvalid type."));
+            sender.sendMessage(Format.colorize("&cInvalid type."));
             return true;
         }
         
         String key = args[1];
-        Horse targetHorse = Utils.getRiddenOrLookedAtHorse(player);
+        Horse targetHorse = RayTraceUtils.getRiddenOrLookedAtHorse(player);
         
         if (targetHorse == null) {
-            sender.sendMessage(Utils.colorize("&cYou must be looking at or riding a horse to use this command."));
+            sender.sendMessage(Format.colorize("&cYou must be looking at or riding a horse to use this command."));
             return true;
         }
         
@@ -58,19 +59,23 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
         
         if (type.equals("double")) {
             Double value = container.get(new NamespacedKey(plugin, key), PersistentDataType.DOUBLE);
-            sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
+            sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
         }
         else if (type.equals("integer")) {
             Integer value = container.get(new NamespacedKey(plugin, key), PersistentDataType.INTEGER);
-            sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
+            sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
+        }
+        else if (type.equals("long")) {
+            Long value = container.get(new NamespacedKey(plugin, key), PersistentDataType.LONG);
+            sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
         }
         else if (type.equals("boolean")) {
             Boolean value = container.get(new NamespacedKey(plugin, key), new PersistentDataType_BOOLEAN());
-            sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
+            sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
         }
         else if (type.equals("string")) {
             String value = container.get(new NamespacedKey(plugin, key), PersistentDataType.STRING);
-            sender.sendMessage(Utils.colorize("&a" + key + ": &f" + (value != null ? value : "null")));
+            sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value : "null")));
         }
 
         return true;

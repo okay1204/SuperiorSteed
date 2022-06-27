@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
+import me.screescree.SuperiorSteed.superiorhorse.features.ageing.NaturalAge;
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.BuckOffLoop;
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.ComfortabilityWithPlayer;
 import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
@@ -40,6 +41,7 @@ public class LoopingTaskManager {
         horseTasks.add(new ExtrovertHandler());
         horseTasks.add(new WaterCheck());
         horseTasks.add(new WaterScare());
+        horseTasks.add(new NaturalAge());
     }
 
     public void start() {

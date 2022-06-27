@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 
-import me.screescree.SuperiorSteed.Utils;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class ToggleButton {
     private boolean enabled;
@@ -56,7 +56,7 @@ public class ToggleButton {
     private void setItemStack(boolean enabled) {
         Material material = enabled ? enabledMaterial : disabledMaterial;
         String name = enabled ? enabledName : disabledName;
-        String lore = Utils.colorize("&7&oClick to switch to " + (enabled ? disabledName : enabledName));
+        String lore = Format.colorize("&7&oClick to switch to " + (enabled ? disabledName : enabledName));
 
         item.setType(material);
         ItemMeta meta = item.getItemMeta();

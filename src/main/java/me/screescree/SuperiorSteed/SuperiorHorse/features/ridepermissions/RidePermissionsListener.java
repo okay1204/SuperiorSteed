@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
-import me.screescree.SuperiorSteed.Utils;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class RidePermissionsListener implements Listener {
     @EventHandler
@@ -40,7 +40,7 @@ public class RidePermissionsListener implements Listener {
 
             // deny if all else fails
             event.setCancelled(true);
-            player.sendMessage(Utils.colorize("&cYou do not have permission from &e" + owner.getName() + " &cto ride their horse."));
+            player.sendMessage(Format.colorize("&cYou do not have permission from &e" + owner.getName() + " &cto ride their horse."));
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
         }
     }

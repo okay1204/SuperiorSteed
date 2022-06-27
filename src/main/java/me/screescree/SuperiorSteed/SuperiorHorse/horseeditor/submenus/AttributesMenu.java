@@ -8,20 +8,22 @@ import org.bukkit.inventory.ItemStack;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 
-import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.amountpicker.AmountPicker;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.amountpicker.AmountPickerSettings;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class AttributesMenu extends SubMenu {
     private ArrayList<Pane> panes = new ArrayList<>();
 
+    @Override
     public ItemStack getSubmenuItem() {
         return HorseEditor.customItem(Material.CHAIN, "&7Attributes", true);
     }
 
+    @Override
     public ArrayList<Pane> getPanes() {
         return panes;
     }
@@ -30,7 +32,7 @@ public class AttributesMenu extends SubMenu {
         panes.add(
             new AmountPicker(
                 Material.SUGAR,
-                Utils.colorize("&b&lSpeed"),
+                Format.colorize("&b&lSpeed"),
                 "b/s",
                 horseInfo.getSpeed() * 43.17,
                 0,
@@ -46,7 +48,7 @@ public class AttributesMenu extends SubMenu {
         panes.add(
             new AmountPicker(
                 Material.RABBIT_FOOT,
-                Utils.colorize("&a&lJump Strength"),
+                Format.colorize("&a&lJump Strength"),
                 "blocks",
                 ((horseInfo.getJumpStrength() * 59.0) - 17.0) / 8.0,
                 3,
@@ -62,7 +64,7 @@ public class AttributesMenu extends SubMenu {
         panes.add(
             new AmountPicker(
                 Material.GLISTERING_MELON_SLICE,
-                Utils.colorize("&c&lMax Health"),
+                Format.colorize("&c&lMax Health"),
                 "hp",
                 horseInfo.getMaxHealth(),
                 6,

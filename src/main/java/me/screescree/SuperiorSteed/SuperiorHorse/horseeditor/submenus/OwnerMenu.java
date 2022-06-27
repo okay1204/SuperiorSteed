@@ -18,10 +18,10 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
-import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
+import me.screescree.SuperiorSteed.utils.Format;
 
 public class OwnerMenu extends SubMenu {
     private ArrayList<Pane> panes = new ArrayList<>();
@@ -32,10 +32,12 @@ public class OwnerMenu extends SubMenu {
     private ItemStack ownerItem = new ItemStack(Material.BAMBOO);
     private GuiItem removeOwner;
 
+    @Override
     public ItemStack getSubmenuItem() {
         return HorseEditor.customItem(Material.PLAYER_HEAD, "&6Owner", true);
     }
 
+    @Override
     public ArrayList<Pane> getPanes() {
         return panes;
     }
@@ -105,7 +107,7 @@ public class OwnerMenu extends SubMenu {
 
             SkullMeta ownerSkullMeta = (SkullMeta) ownerItem.getItemMeta();
             OfflinePlayer ownerPlayer = Bukkit.getOfflinePlayer(ownerUuid);
-            ownerSkullMeta.setDisplayName(Utils.colorize("&6Owned by: &r" + ownerPlayer.getName()));
+            ownerSkullMeta.setDisplayName(Format.colorize("&6Owned by: &r" + ownerPlayer.getName()));
             ownerSkullMeta.setOwningPlayer(ownerPlayer);
             
             ownerItem.setItemMeta(ownerSkullMeta);
@@ -118,7 +120,7 @@ public class OwnerMenu extends SubMenu {
             ownerItem.setType(Material.BARRIER);
             
             ItemMeta noOwnerMeta = ownerItem.getItemMeta();
-            noOwnerMeta.setDisplayName(Utils.colorize("&cNo Owner"));
+            noOwnerMeta.setDisplayName(Format.colorize("&cNo Owner"));
             ownerItem.setItemMeta(noOwnerMeta);
             
             if (mainPane.getItems().contains(removeOwner)) {

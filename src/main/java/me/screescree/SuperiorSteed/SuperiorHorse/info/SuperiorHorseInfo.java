@@ -17,6 +17,12 @@ public class SuperiorHorseInfo {
     private double friendliness = 0.3;
     private double comfortability = 0.2;
     private double waterBravery = 0.1;
+
+    // 5184000 is 72 hours- when a foal turns into an adult.
+    public static final long AGE_ADULT = 5184000;
+    // 311040000 is 6 months- when an adult is labelled as a senior.
+    public static final long AGE_SENIOR = 311040000;
+    private long age = AGE_ADULT;
     
     private boolean isMale = ThreadLocalRandom.current().nextDouble() < 0.5;
     // Male horses can either be a stallion or a gelding
@@ -140,6 +146,14 @@ public class SuperiorHorseInfo {
 
     public void setWaterBravery(double waterBravery) {
         this.waterBravery = waterBravery;
+    }
+
+    public long getAge() {
+        return age;
+    }
+
+    public void setAge(long age) {
+        this.age = age;
     }
 
     public boolean isMale() {
