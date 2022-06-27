@@ -19,9 +19,11 @@ public class HorseWarp implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onWarpCommand(PlayerCommandPreprocessEvent event) {
-        if (!event.getMessage().split(" ")[0].substring(1).equals("warp")) {
+        String commandName = event.getMessage().split(" ")[0].substring(1);
+        if (!commandName.equals("warp") && !commandName.equals("essentials:warp")) {
             return;
         }
+        
         if (event.getPlayer().isInsideVehicle() && event.getPlayer().getVehicle().getType() == EntityType.HORSE) {
             Player player = event.getPlayer();
             Horse horse = (Horse) player.getVehicle();
@@ -48,12 +50,9 @@ public class HorseWarp implements Listener {
 
         horse.eject();
         horse.teleport(event.getTo());
-        player.teleport(event.getTo());
 
         Bukkit.getScheduler().runTaskLater(SuperiorSteed.getInstance(), () -> {
             horse.addPassenger(player);
         }, 10);
-
-        event.setCancelled(true);
     }
 }

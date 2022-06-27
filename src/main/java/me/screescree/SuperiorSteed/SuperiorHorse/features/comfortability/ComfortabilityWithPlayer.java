@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.superiorhorse.features.comfortabilitystatmanager;
+package me.screescree.SuperiorSteed.superiorhorse.features.comfortability;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;

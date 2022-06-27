@@ -10,14 +10,15 @@ import org.bukkit.entity.Player;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
-import me.screescree.SuperiorSteed.superiorhorse.features.comfortabilitystatmanager.BuckOffLoop;
-import me.screescree.SuperiorSteed.superiorhorse.features.comfortabilitystatmanager.ComfortabilityWithPlayer;
+import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.BuckOffLoop;
+import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.ComfortabilityWithPlayer;
 import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SendActionBarLoop;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.AngelHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.ExtrovertHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.FriendlyHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.LonerHandler;
+import me.screescree.SuperiorSteed.superiorhorse.features.waterbravery.WaterCheck;
 
 public class LoopingTaskManager {
     private ArrayList<LoopingTask<Player>> playerTasks = new ArrayList<>();
@@ -36,6 +37,7 @@ public class LoopingTaskManager {
         horseTasks.add(new AngelHandler());
         horseTasks.add(new FriendlyHandler());
         horseTasks.add(new ExtrovertHandler());
+        horseTasks.add(new WaterCheck());
     }
 
     public void start() {

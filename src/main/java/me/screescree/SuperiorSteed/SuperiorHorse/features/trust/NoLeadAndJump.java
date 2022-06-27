@@ -1,4 +1,4 @@
-package me.screescree.SuperiorSteed.superiorhorse.features.truststatmanager;
+package me.screescree.SuperiorSteed.superiorhorse.features.trust;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,7 +16,7 @@ import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.Utils;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 
-public class TrustStatManagerListener implements Listener {
+public class NoLeadAndJump implements Listener {
     // Returns the chance of refusing to jump or be lead by a player
     private double rejectChance(double trust) {
         return Math.max(0, (-0.54 * trust) + 0.5);

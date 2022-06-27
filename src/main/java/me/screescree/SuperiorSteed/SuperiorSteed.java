@@ -11,7 +11,8 @@ import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
 import me.screescree.SuperiorSteed.superiorhorse.features.horsenofalldamage.HorseNoFallDamageListener;
 import me.screescree.SuperiorSteed.superiorhorse.features.ridepermissions.RidePermissionsListener;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SpeedChangerListener;
-import me.screescree.SuperiorSteed.superiorhorse.features.truststatmanager.TrustStatManagerListener;
+import me.screescree.SuperiorSteed.superiorhorse.features.trust.NoLeadAndJump;
+import me.screescree.SuperiorSteed.superiorhorse.features.waterbravery.HurtInWater;
 
 public class SuperiorSteed extends JavaPlugin
 {
@@ -43,8 +44,9 @@ public class SuperiorSteed extends JavaPlugin
         // superiorhorse features
         pm.registerEvents(new SpeedChangerListener(), this);
         pm.registerEvents(new HorseNoFallDamageListener(), this);
-        pm.registerEvents(new TrustStatManagerListener(), this);
+        pm.registerEvents(new NoLeadAndJump(), this);
         pm.registerEvents(new RidePermissionsListener(), this);
+        pm.registerEvents(new HurtInWater(), this);
 
         new LoopingTaskManager().start();
     }
