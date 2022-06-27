@@ -30,6 +30,8 @@ import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataTy
 
 public class SuperiorHorse {
     private final String SPEED_LEVEL_KEY = "superiorsteed.speedlevel";
+    private final String WATER_BRAVERY_KEY = "superiorsteed.waterbravery";
+    private double lastWaterBraveryMultiplier;
 
     private SuperiorHorseEntity nmsEntity;
     private Horse bukkitEntity;
@@ -192,7 +194,7 @@ public class SuperiorHorse {
         horseInfo.setOwnerUuid(horse.getOwner() != null ? horse.getOwner().getUniqueId() : null);
 
         horseInfo.setSpeed(horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
-        horseInfo.setJumpStrength(horse.getJumpStrength());
+        horseInfo.setJumpStrength(horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue());
         horseInfo.setMaxHealth(horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 
         horseInfo.setTraits(traits);
@@ -295,7 +297,7 @@ public class SuperiorHorse {
         setOwner(horseInfo.getOwnerUuid() != null ? Bukkit.getOfflinePlayer(horseInfo.getOwnerUuid()) : null);
         
         bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(horseInfo.getSpeed());
-        bukkitEntity.setJumpStrength(horseInfo.getJumpStrength());
+        bukkitEntity.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(horseInfo.getJumpStrength());
         bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(horseInfo.getMaxHealth());
         
         setTraits(horseInfo.getTraits());
@@ -329,7 +331,7 @@ public class SuperiorHorse {
         horseInfo.setOwnerUuid(bukkitEntity.getOwner() != null ? bukkitEntity.getOwner().getUniqueId() : null);
 
         horseInfo.setSpeed(bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
-        horseInfo.setJumpStrength(bukkitEntity.getJumpStrength());
+        horseInfo.setJumpStrength(bukkitEntity.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue());
         horseInfo.setMaxHealth(bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 
         horseInfo.setTraits(getTraits());
@@ -466,6 +468,29 @@ public class SuperiorHorse {
 
     public void resetSpeedLevel() {
         setSpeedLevel(SpeedLevel.CANTER);
+    }
+
+    public void setWaterBraveryFactor(double multiplier) {
+        if (lastWaterBraveryMultiplier == multiplier) {
+            return;
+        }
+
+        HashSet<AttributeInstance> attributes = new HashSet<>();
+
+        attributes.add(bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED));
+        attributes.add(bukkitEntity.getAttribute(Attribute.HORSE_JUMP_STRENGTH));
+    
+        for (AttributeInstance attribute : attributes) {
+            for (AttributeModifier modifier : attribute.getModifiers()) {
+                if (modifier.getName().equals(WATER_BRAVERY_KEY)) {
+                    attribute.removeModifier(modifier);
+                    break;
+                }
+            }
+            attribute.addModifier(new AttributeModifier(WATER_BRAVERY_KEY, multiplier - 1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
+        }
+
+        lastWaterBraveryMultiplier = multiplier;
     }
 }
 

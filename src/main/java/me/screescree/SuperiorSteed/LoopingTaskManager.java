@@ -19,6 +19,7 @@ import me.screescree.SuperiorSteed.superiorhorse.features.traits.ExtrovertHandle
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.FriendlyHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.LonerHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.waterbravery.WaterCheck;
+import me.screescree.SuperiorSteed.superiorhorse.features.waterbravery.WaterScare;
 
 public class LoopingTaskManager {
     private ArrayList<LoopingTask<Player>> playerTasks = new ArrayList<>();
@@ -38,6 +39,7 @@ public class LoopingTaskManager {
         horseTasks.add(new FriendlyHandler());
         horseTasks.add(new ExtrovertHandler());
         horseTasks.add(new WaterCheck());
+        horseTasks.add(new WaterScare());
     }
 
     public void start() {
