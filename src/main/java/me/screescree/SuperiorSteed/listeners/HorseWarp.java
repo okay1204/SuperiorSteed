@@ -1,6 +1,7 @@
 package me.screescree.SuperiorSteed.listeners;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -10,12 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import me.screescree.SuperiorSteed.SuperiorSteed;
 
 public class HorseWarp implements Listener {
     private Map<Player, Horse> warpingPlayers = new HashMap<Player, Horse>();
+    private HashSet<Player> waitingForHorse = new HashSet<Player>();
 
     @EventHandler(ignoreCancelled = true)
     public void onWarpCommand(PlayerCommandPreprocessEvent event) {
@@ -50,9 +53,18 @@ public class HorseWarp implements Listener {
 
         horse.eject();
         horse.teleport(event.getTo());
+        waitingForHorse.add(player);
 
         Bukkit.getScheduler().runTaskLater(SuperiorSteed.getInstance(), () -> {
             horse.addPassenger(player);
-        }, 10);
+            waitingForHorse.remove(player);
+        }, 20);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (waitingForHorse.contains(event.getPlayer())) {
+            event.setCancelled(true);
+        }
     }
 }
