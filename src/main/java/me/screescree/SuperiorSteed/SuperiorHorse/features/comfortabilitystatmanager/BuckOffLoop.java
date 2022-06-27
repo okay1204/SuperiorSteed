@@ -11,7 +11,7 @@ import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 
 public class BuckOffLoop implements LoopingTask<Player> {
     private static double buckChance(double comfortability) {
-        return Math.max(0, (-0.00222 * comfortability) + 0.002);
+        return Math.max(0, (-0.00033333 * comfortability) + 0.0003);
     }
 
     @Override

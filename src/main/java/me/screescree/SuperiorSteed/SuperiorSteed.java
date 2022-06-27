@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.jeff_media.customblockdata.CustomBlockData;
 
 import me.screescree.SuperiorSteed.listeners.BrewingSeeds;
+import me.screescree.SuperiorSteed.listeners.HorseWarp;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
 import me.screescree.SuperiorSteed.superiorhorse.features.horsenofalldamage.HorseNoFallDamageListener;
 import me.screescree.SuperiorSteed.superiorhorse.features.ridepermissions.RidePermissionsListener;
@@ -37,6 +38,7 @@ public class SuperiorSteed extends JavaPlugin
         
         // general listeners
         pm.registerEvents(new BrewingSeeds(), this);
+        pm.registerEvents(new HorseWarp(), this);
 
         // superiorhorse features
         pm.registerEvents(new SpeedChangerListener(), this);
