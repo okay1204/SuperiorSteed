@@ -57,6 +57,8 @@ public class GroomItemUse implements Listener {
             groomedBy.add(customModelData);
             superiorHorse.setGroomedBy(groomedBy);
             
+            superiorHorse.friendlinessStat().add(0.02);
+            
             if (superiorHorse.verifyGrooming()) {
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                 player.sendMessage(Format.colorize("&a" + superiorHorse.getName(20) + " has been groomed by all " + SuperiorHorse.GROOMING_ITEM_AMOUNT + " items for today!"));
