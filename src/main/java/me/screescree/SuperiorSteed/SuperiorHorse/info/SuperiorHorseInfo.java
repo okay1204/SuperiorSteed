@@ -2,6 +2,7 @@ package me.screescree.SuperiorSteed.superiorhorse.info;
 
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.entity.Horse.Color;
@@ -23,6 +24,10 @@ public class SuperiorHorseInfo {
     // 311040000 is 6 months- when an adult is labelled as a senior.
     public static final long AGE_SENIOR = 311040000;
     private long age = AGE_ADULT;
+
+    // Will have numbers from 1 to 5, each number signifying a different grooming item.
+    private Set<Integer> groomedBy = new HashSet<>();
+    private int groomExpireTimer = 0;
     
     private boolean isMale = ThreadLocalRandom.current().nextDouble() < 0.5;
     // Male horses can either be a stallion or a gelding
@@ -52,8 +57,6 @@ public class SuperiorHorseInfo {
         speed = (0.44999998807907104D + random.nextDouble() * 0.3D + random.nextDouble() * 0.3D + random.nextDouble() * 0.3D) * 0.25D;
         jumpStrength = 0.4000000059604645D + random.nextDouble() * 0.2D + random.nextDouble() * 0.2D + random.nextDouble() * 0.2D;
         maxHealth = 15.0F + (float) random.nextInt(8) + (float) random.nextInt(9);
-
-        // Random traits
 
         // randomize order of values from Trait enum
         Trait[] randomizedTraits = Trait.values();
@@ -154,6 +157,22 @@ public class SuperiorHorseInfo {
 
     public void setAge(long age) {
         this.age = age;
+    }
+
+    public Set<Integer> getGroomedBy() {
+        return groomedBy;
+    }
+
+    public void setGroomedBy(Set<Integer> groomedBy) {
+        this.groomedBy = groomedBy;
+    }
+
+    public int getGroomExpireTimer() {
+        return groomExpireTimer;
+    }
+
+    public void setGroomExpireTimer(int groomExpireTimer) {
+        this.groomExpireTimer = groomExpireTimer;
     }
 
     public boolean isMale() {

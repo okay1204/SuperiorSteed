@@ -1,6 +1,7 @@
 package me.screescree.SuperiorSteed.commands;
 
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
@@ -14,11 +15,12 @@ import org.bukkit.persistence.PersistentDataType;
 import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_BOOLEAN;
+import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_SET_INTEGER;
 import me.screescree.SuperiorSteed.utils.Format;
 import me.screescree.SuperiorSteed.utils.RayTraceUtils;
 
 public class ReadPersistentData extends CustomCommand implements TabCompleter {    
-    private final List<String> PERSISTENT_TYPES = List.of("double", "integer", "long", "boolean", "string");
+    private final List<String> PERSISTENT_TYPES = List.of("double", "integer", "long", "boolean", "string", "hashset_integer");
 
     public ReadPersistentData() {
         super("readpersistentdata");
@@ -76,6 +78,10 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
         else if (type.equals("string")) {
             String value = container.get(new NamespacedKey(plugin, key), PersistentDataType.STRING);
             sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value : "null")));
+        }
+        else if (type.equals("hashset_integer")) {
+            Set<Integer> value = container.get(new NamespacedKey(plugin, key), new PersistentDataType_SET_INTEGER());
+            sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
         }
 
         return true;

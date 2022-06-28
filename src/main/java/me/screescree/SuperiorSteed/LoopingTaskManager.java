@@ -13,6 +13,8 @@ import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
 import me.screescree.SuperiorSteed.superiorhorse.features.ageing.NaturalAge;
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.BuckOffLoop;
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.ComfortabilityWithPlayer;
+import me.screescree.SuperiorSteed.superiorhorse.features.grooming.GroomTimer;
+import me.screescree.SuperiorSteed.superiorhorse.features.grooming.UncomfortablyNotGroomed;
 import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SendActionBarLoop;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.AngelHandler;
@@ -42,6 +44,8 @@ public class LoopingTaskManager {
         horseTasks.add(new WaterCheck());
         horseTasks.add(new WaterScare());
         horseTasks.add(new NaturalAge());
+        horseTasks.add(new GroomTimer());
+        horseTasks.add(new UncomfortablyNotGroomed());
     }
 
     public void start() {

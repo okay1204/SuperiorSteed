@@ -20,6 +20,7 @@ import net.md_5.bungee.api.ChatColor;
 public class AmountPicker {
     private StaticPane pane;
     private ItemStack item;
+    private GuiItem guiItem;
     private String name;
     private String units;
     private double amount;
@@ -49,7 +50,8 @@ public class AmountPicker {
         this.amountSetter = statSetter;
         this.gui = gui;
 
-        pane.addItem(new GuiItem(item), 0, 0);
+        this.guiItem = new GuiItem(item);
+        pane.addItem(guiItem, 0, 0);
         pane.setOnClick(event -> {
             onClick(event);
         });
@@ -91,6 +93,14 @@ public class AmountPicker {
         gui.update();
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
     private String roundAndFormat(double number)  {
         // if precision < 0, do not round
         // if precision = 0, round to integer
@@ -119,6 +129,15 @@ public class AmountPicker {
         HumanEntity human = event.getWhoClicked();
         if (human instanceof Player) {
             ((Player) human).playSound(human.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1, pitch);
+        }
+    }
+
+    public void setVisible(boolean visible) {
+        if (!visible && pane.getItems().size() > 0) {
+            pane.removeItem(guiItem);
+        }
+        else if (visible && pane.getItems().size() == 0) {
+            pane.addItem(guiItem, 0, 0);
         }
     }
 }

@@ -1,6 +1,7 @@
 package me.screescree.SuperiorSteed.superiorhorse;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -27,10 +28,14 @@ import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.info.Trait;
 import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_BOOLEAN;
+import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_SET_INTEGER;
 
 public class SuperiorHorse {
-    private final String SPEED_LEVEL_KEY = "superiorsteed.speedlevel";
-    private final String WATER_BRAVERY_KEY = "superiorsteed.waterbravery";
+    private static final String SPEED_LEVEL_KEY = "superiorsteed.speedlevel";
+    private static final String WATER_BRAVERY_KEY = "superiorsteed.waterbravery";
+
+    public static final int GROOMING_ITEM_AMOUNT = 5;
+
     private double lastWaterBraveryMultiplier;
 
     private SuperiorHorseEntity nmsEntity;
@@ -44,6 +49,9 @@ public class SuperiorHorse {
     private Stat waterBravery;
 
     private long age;
+
+    private Set<Integer> groomedBy = new HashSet<>();
+    private int groomExpireTimer = 0;
 
     private boolean isMale;
     private boolean isStallion;
@@ -128,10 +136,20 @@ public class SuperiorHorse {
 
         // copy attribute modifiers
         for (Attribute attribute : Attribute.values()) {
+            // remove the "Random spawn bonus" modifier, from bukkitEntity because it spawns with it naturally
+            AttributeInstance naturalAttributeInstance = bukkitEntity.getAttribute(attribute);
+
+            if (naturalAttributeInstance != null) {
+                for (AttributeModifier modifier : naturalAttributeInstance.getModifiers()) {
+                    if (modifier.getName().equals("Random spawn bonus")) {
+                        naturalAttributeInstance.removeModifier(modifier);
+                    }
+                }
+            }
+
             AttributeInstance attributeInstance = horse.getAttribute(attribute);
             if (attributeInstance != null) {
                 for (AttributeModifier modifier : attributeInstance.getModifiers()) {
-                    
                     // skip any potion effect modifiers since we've already copied them
                     if (modifier.getName().startsWith("effect.minecraft")) {
                         continue;
@@ -165,12 +183,15 @@ public class SuperiorHorse {
         double waterBravery = containerValueOrDefault(container, "waterBravery", generatedInfo.getWaterBravery());
 
         long age = containerValueOrDefault(container, "age", generatedInfo.getAge());
+        
+        Set<Integer> groomedBy = containerIntegersValueOrDefault(container, "groomedBy", generatedInfo.getGroomedBy());
+        int groomExpireTimer = containerValueOrDefault(container, "groomExpireTimer", generatedInfo.getGroomExpireTimer());
 
         boolean isMale = containerValueOrDefault(container, "isMale", generatedInfo.isMale());
         boolean isStallion = containerValueOrDefault(container, "isStallion", generatedInfo.isStallion());
 
         HashSet<Trait> traits = new HashSet<Trait>();
-        for (Trait trait : containerValueOrDefault(container, "traits", generatedInfo.getTraits())) {
+        for (Trait trait : containerTraitsValueOrDefault(container, "traits", generatedInfo.getTraits())) {
             traits.add(trait);
         }
         int favoriteSeedId = containerValueOrDefault(container, "favoriteSeed", generatedInfo.getFavoriteSeed() != null ? generatedInfo.getFavoriteSeed().getId() : -1);
@@ -184,6 +205,9 @@ public class SuperiorHorse {
         horseInfo.setWaterBravery(waterBravery);
 
         horseInfo.setAge(age);
+
+        horseInfo.setGroomedBy(groomedBy);
+        horseInfo.setGroomExpireTimer(groomExpireTimer);
         
         horseInfo.setMale(isMale);
         horseInfo.setStallion(isStallion);
@@ -258,7 +282,17 @@ public class SuperiorHorse {
         }
     }
 
-    public HashSet<Trait> containerValueOrDefault(PersistentDataContainer container, String keyName, HashSet<Trait> defaultValue) {
+    public Set<Integer> containerIntegersValueOrDefault(PersistentDataContainer container, String keyName, Set<Integer> defaultValue) {
+        NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
+        if (container.has(key, new PersistentDataType_SET_INTEGER())) {
+            return container.get(key, new PersistentDataType_SET_INTEGER());
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
+    public HashSet<Trait> containerTraitsValueOrDefault(PersistentDataContainer container, String keyName, HashSet<Trait> defaultValue) {
         NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
         if (container.has(key, PersistentDataType.STRING)) {
             String[] traitStrings = container.get(key, PersistentDataType.STRING).split(",");
@@ -306,6 +340,10 @@ public class SuperiorHorse {
         else {
             bukkitEntity.setBaby();
         }
+
+        // setGroomedBy(horseInfo.getGroomedBy());
+        setGroomedBy(horseInfo.getGroomedBy());
+        setGroomExpireTimer(horseInfo.getGroomExpireTimer());
         
         setMale(horseInfo.isMale());
         setStallion(horseInfo.isStallion());
@@ -342,6 +380,9 @@ public class SuperiorHorse {
         horseInfo.setWaterBravery(waterBravery.get());
 
         horseInfo.setAge(age);
+
+        horseInfo.setGroomedBy(groomedBy);
+        horseInfo.setGroomExpireTimer(groomExpireTimer);
 
         horseInfo.setMale(isMale);
         horseInfo.setStallion(isStallion);
@@ -431,6 +472,46 @@ public class SuperiorHorse {
 
     public void incrementAge() {
         setAge(age + 1);
+    }
+
+    public Set<Integer> getGroomedBy() {
+        return groomedBy;
+    }
+
+    public void setGroomedBy(Set<Integer> groomedBy) {
+        this.groomedBy = groomedBy;
+
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "groomedBy"), new PersistentDataType_SET_INTEGER(), groomedBy);
+    }
+
+    public boolean verifyGrooming() {
+        if (groomedBy.size() >= GROOMING_ITEM_AMOUNT) {
+            setGroomedBy(new HashSet<Integer>());
+            // one day later, the horse will need to be groomed again
+            setGroomExpireTimer(1728000);
+            return true;
+        }
+        return false;
+    }
+
+    public int getGroomExpireTimer() {
+        return groomExpireTimer;
+    }
+
+    public void setGroomExpireTimer(int groomExpireTimer) {
+        this.groomExpireTimer = groomExpireTimer;
+
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "groomExpireTimer"), PersistentDataType.INTEGER, groomExpireTimer);
+    }
+
+    public void decrementGroomExpireTimer() {
+        if (groomExpireTimer > 0) {
+            setGroomExpireTimer(groomExpireTimer - 1);
+        }
+    }
+
+    public boolean isFinishedGrooming() {
+        return groomExpireTimer > 0;
     }
 
     public boolean isMale() {

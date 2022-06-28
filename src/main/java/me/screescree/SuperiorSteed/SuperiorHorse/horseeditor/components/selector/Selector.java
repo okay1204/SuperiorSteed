@@ -15,6 +15,12 @@ public class Selector<T> {
     private String name;
     private ItemStack item;
 
+    public Selector(T definedValue, ItemStack item) {
+        this.definedValue = definedValue;
+        this.item = item;
+        this.name = item.getItemMeta().getDisplayName();
+    }
+
     public Selector(T definedValue, Material material, String name) {
         this.definedValue = definedValue;
 

@@ -67,10 +67,11 @@ public class HorseStats extends CustomCommand {
         stats += addStatMessage("Comfortability", superiorHorse.comfortabilityStat().get());
         stats += "\n";
         stats += addStatMessage("Water Bravery", superiorHorse.waterBraveryStat().get());
-
+        
         player.sendMessage(stats);
+        player.sendMessage(Format.colorize("&bGrooming Status: " + (superiorHorse.isFinishedGrooming() ? "&aGroomed" : "&cNot Groomed")));
         player.sendMessage("\n");
-
+        
         String horseType;
         if (superiorHorse.isMale()) {
             horseType = Format.colorize("&9♂ Male");
