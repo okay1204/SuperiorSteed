@@ -22,6 +22,8 @@ import me.screescree.SuperiorSteed.superiorhorse.features.traits.AngelHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.ExtrovertHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.FriendlyHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.LonerHandler;
+import me.screescree.SuperiorSteed.superiorhorse.features.trust.BabyLeashIncrease;
+import me.screescree.SuperiorSteed.superiorhorse.features.trust.HungerHydrationModifier;
 import me.screescree.SuperiorSteed.superiorhorse.features.waterbravery.WaterCheck;
 import me.screescree.SuperiorSteed.superiorhorse.features.waterbravery.WaterScare;
 
@@ -48,6 +50,8 @@ public class LoopingTaskManager {
         horseTasks.add(new GroomTimer());
         horseTasks.add(new NotGroomedPenalty());
         horseTasks.add(new PlayerRidingChecker());
+        horseTasks.add(new BabyLeashIncrease());
+        horseTasks.add(new HungerHydrationModifier());
     }
 
     public void start() {
