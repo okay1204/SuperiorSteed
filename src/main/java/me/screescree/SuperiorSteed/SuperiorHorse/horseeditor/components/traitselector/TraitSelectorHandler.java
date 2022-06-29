@@ -2,6 +2,7 @@ package me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.traitse
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
@@ -18,9 +19,9 @@ public class TraitSelectorHandler {
     private ArrayList<TraitSelector> selectors;
     private ArrayList<TraitSelector> selected = new ArrayList<>();
     private OutlinePane pane;
-    private HashSet<Trait> initialValues;
+    private Set<Trait> initialValues;
 
-    public TraitSelectorHandler(Gui gui, OutlinePane pane, HashSet<Trait> initialValues, TraitCallback callback) {
+    public TraitSelectorHandler(Gui gui, OutlinePane pane, Set<Trait> initialValues, TraitCallback callback) {
         selectors = new ArrayList<TraitSelector>();
         this.pane = pane;
         this.initialValues = initialValues;

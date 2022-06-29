@@ -7,8 +7,8 @@ import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.DrinkWaterGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.EatSeedsGoal;
+import me.screescree.SuperiorSteed.superiorhorse.entity.goals.HorseBreedGoal;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -17,7 +17,6 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RunAroundLikeCrazyGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
@@ -44,10 +43,11 @@ public class SuperiorHorseEntity extends Horse {
         return random;
     }
 
+    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.2D));
         this.goalSelector.addGoal(1, new RunAroundLikeCrazyGoal(this, 1.2D));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, AbstractHorse.class));
+        this.goalSelector.addGoal(2, new HorseBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new DrinkWaterGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new EatSeedsGoal(this, 0.8D));
@@ -57,6 +57,7 @@ public class SuperiorHorseEntity extends Horse {
         this.addBehaviourGoals();
     }
 
+    @Override
     protected void addBehaviourGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.25D, Ingredient.of(new ItemLike[]{Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE}), false));

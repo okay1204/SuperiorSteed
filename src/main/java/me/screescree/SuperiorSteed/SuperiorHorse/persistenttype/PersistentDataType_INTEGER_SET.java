@@ -8,7 +8,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import com.google.common.reflect.TypeToken;
 
-public class PersistentDataType_SET_INTEGER implements PersistentDataType<int[], Set<Integer>> {
+public class PersistentDataType_INTEGER_SET implements PersistentDataType<int[], Set<Integer>> {
     @Override
     public Class<int[]> getPrimitiveType() {
         return int[].class;

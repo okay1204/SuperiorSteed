@@ -28,7 +28,9 @@ import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.info.Trait;
 import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_BOOLEAN;
-import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_SET_INTEGER;
+import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_ENUM_SET;
+import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_HORSE_INFO;
+import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_INTEGER_SET;
 
 public class SuperiorHorse {
     private static final String SPEED_LEVEL_KEY = "superiorsteed.speedlevel";
@@ -56,10 +58,14 @@ public class SuperiorHorse {
     private boolean isMale;
     private boolean isStallion;
 
-    private HashSet<Trait> traits;
+    private Set<Trait> traits;
     private Seed favoriteSeed;
 
     private SpeedLevel speedLevel = SpeedLevel.CANTER;
+
+    private int pregnancyTimer = 0;
+    private Stat pregnancyComplication;
+    private SuperiorHorseInfo pregnantWith = null;
 
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
@@ -81,7 +87,7 @@ public class SuperiorHorse {
         bukkitEntity.setLoveModeTicks(horse.getLoveModeTicks());
         bukkitEntity.setBreed(horse.canBreed());
         bukkitEntity.setAgeLock(true);
-        bukkitEntity.setAbsorptionAmount(horse.getAbsorptionAmount());;
+        bukkitEntity.setAbsorptionAmount(horse.getAbsorptionAmount());
 
         // Copying max health is necessary here to prevent setHealth from erroring if the health is greater than the max health.
         bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
@@ -190,11 +196,13 @@ public class SuperiorHorse {
         boolean isMale = containerValueOrDefault(container, "isMale", generatedInfo.isMale());
         boolean isStallion = containerValueOrDefault(container, "isStallion", generatedInfo.isStallion());
 
-        HashSet<Trait> traits = new HashSet<Trait>();
-        for (Trait trait : containerTraitsValueOrDefault(container, "traits", generatedInfo.getTraits())) {
-            traits.add(trait);
-        }
+        Set<Trait> traits = containerTraitsValueOrDefault(container, "traits", generatedInfo.getTraits());
+
         int favoriteSeedId = containerValueOrDefault(container, "favoriteSeed", generatedInfo.getFavoriteSeed() != null ? generatedInfo.getFavoriteSeed().getId() : -1);
+
+        int pregnancyTimer = containerValueOrDefault(container, "pregnancyTimer", generatedInfo.getPregnancyTimer());
+        double pregnancyComplication = containerValueOrDefault(container, "pregnancyComplication", generatedInfo.getPregnancyComplication());
+        SuperiorHorseInfo pregnantWith = containerValueOrDefault(container, "pregnantWith", generatedInfo.getPregnantWith());
 
         SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
         horseInfo.setHunger(hunger);
@@ -223,6 +231,10 @@ public class SuperiorHorse {
 
         horseInfo.setTraits(traits);
         horseInfo.setFavoriteSeed(Seed.getFromId(favoriteSeedId));
+
+        horseInfo.setPregnancyTimer(pregnancyTimer);
+        horseInfo.setPregnancyComplication(pregnancyComplication);
+        horseInfo.setPregnantWith(pregnantWith);
         
         update(horseInfo);
         horse.remove();
@@ -284,26 +296,31 @@ public class SuperiorHorse {
 
     public Set<Integer> containerIntegersValueOrDefault(PersistentDataContainer container, String keyName, Set<Integer> defaultValue) {
         NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
-        if (container.has(key, new PersistentDataType_SET_INTEGER())) {
-            return container.get(key, new PersistentDataType_SET_INTEGER());
+        PersistentDataType_INTEGER_SET type = new PersistentDataType_INTEGER_SET();
+        if (container.has(key, type)) {
+            return container.get(key, type);
         }
         else {
             return defaultValue;
         }
     }
 
-    public HashSet<Trait> containerTraitsValueOrDefault(PersistentDataContainer container, String keyName, HashSet<Trait> defaultValue) {
+    public Set<Trait> containerTraitsValueOrDefault(PersistentDataContainer container, String keyName, Set<Trait> defaultValue) {
         NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
-        if (container.has(key, PersistentDataType.STRING)) {
-            String[] traitStrings = container.get(key, PersistentDataType.STRING).split(",");
+        PersistentDataType_ENUM_SET<Trait> type = new PersistentDataType_ENUM_SET<>(Trait.class);
+        if (container.has(key, type)) {
+            return container.get(key, type);
+        }
+        else {
+            return defaultValue;
+        }
+    }
 
-            HashSet<Trait> traits = new HashSet<Trait>();
-            if (traitStrings[0].length() > 0) {
-                for (String traitString : traitStrings) {
-                    traits.add(Trait.valueOf(traitString));
-                }
-            }
-            return traits;
+    public SuperiorHorseInfo containerValueOrDefault(PersistentDataContainer container, String keyName, SuperiorHorseInfo defaultValue) {
+        NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
+        PersistentDataType_HORSE_INFO type = new PersistentDataType_HORSE_INFO();
+        if (container.has(key, type)) {
+            return container.get(key, type);
         }
         else {
             return defaultValue;
@@ -323,6 +340,8 @@ public class SuperiorHorse {
             friendliness = new Stat(horseInfo.getFriendliness(), container, new NamespacedKey(plugin, "friendliness"));
             comfortability = new Stat(horseInfo.getComfortability(), container, new NamespacedKey(plugin, "comfortability"));
             waterBravery = new Stat(horseInfo.getWaterBravery(), container, new NamespacedKey(plugin, "waterBravery"));
+            
+            pregnancyComplication = new Stat(horseInfo.getPregnancyComplication(), container, new NamespacedKey(plugin, "pregnancyComplication"));
         }
         else {
             hunger.set(horseInfo.getHunger());
@@ -331,6 +350,8 @@ public class SuperiorHorse {
             friendliness.set(horseInfo.getFriendliness());
             comfortability.set(horseInfo.getComfortability());
             waterBravery.set(horseInfo.getWaterBravery());
+
+            pregnancyComplication.set(horseInfo.getPregnancyComplication());
         }
 
         setAge(horseInfo.getAge());
@@ -359,6 +380,9 @@ public class SuperiorHorse {
         
         setTraits(horseInfo.getTraits());
         setFavoriteSeed(horseInfo.getFavoriteSeed());
+        
+        setPregnancyTimer(horseInfo.getPregnancyTimer());
+        setPregnantWith(horseInfo.getPregnantWith());
     }
 
     public boolean equals(SuperiorHorse other) {
@@ -475,13 +499,15 @@ public class SuperiorHorse {
     }
 
     public Set<Integer> getGroomedBy() {
-        return groomedBy;
+        Set<Integer> copy = new HashSet<>();
+        copy.addAll(groomedBy);
+        return copy;
     }
 
     public void setGroomedBy(Set<Integer> groomedBy) {
         this.groomedBy = groomedBy;
 
-        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "groomedBy"), new PersistentDataType_SET_INTEGER(), groomedBy);
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "groomedBy"), new PersistentDataType_INTEGER_SET(), groomedBy);
     }
 
     public boolean verifyGrooming() {
@@ -532,11 +558,11 @@ public class SuperiorHorse {
         bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "isStallion"), new PersistentDataType_BOOLEAN(), isStallion);
     }
 
-    public HashSet<Trait> getTraits() {
+    public Set<Trait> getTraits() {
         return traits;
     }
 
-    public void setTraits(HashSet<Trait> traits) {
+    public void setTraits(Set<Trait> traits) {
         this.traits = traits;
         String traitString = "";
         for (Trait trait : traits) {
@@ -592,12 +618,49 @@ public class SuperiorHorse {
         setSpeedLevel(SpeedLevel.CANTER);
     }
 
+    public int getPregnancyTimer() {
+        return pregnancyTimer;
+    }
+
+    public void setPregnancyTimer(int pregnancyTimer) {
+        this.pregnancyTimer = pregnancyTimer;
+
+        // TODO make horse give birth if timer is 0
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "pregnancyTimer"), PersistentDataType.INTEGER, pregnancyTimer);
+    }
+
+    public void decrementPregnancyTimer() {
+        if (pregnancyTimer > 0) {
+            setPregnancyTimer(pregnancyTimer - 1);
+        }
+    }
+
+    public Stat pregnancyComplicationStat() {
+        return pregnancyComplication;
+    }
+
+    public SuperiorHorseInfo getPregnantWith() {
+        return pregnantWith;
+    }
+
+    public void setPregnantWith(SuperiorHorseInfo pregnantWith) {
+        this.pregnantWith = pregnantWith;
+        PersistentDataContainer container = bukkitEntity.getPersistentDataContainer();
+
+        if (pregnantWith != null) {
+            container.set(new NamespacedKey(SuperiorSteed.getInstance(), "pregnantWith"), new PersistentDataType_HORSE_INFO(), pregnantWith);
+        }
+        else if (container.has(new NamespacedKey(SuperiorSteed.getInstance(), "pregnantWith"), new PersistentDataType_HORSE_INFO())) {
+            container.remove(new NamespacedKey(SuperiorSteed.getInstance(), "pregnantWith"));
+        }
+    }
+
     public void setWaterBraveryFactor(double multiplier) {
         if (lastWaterBraveryMultiplier == multiplier) {
             return;
         }
 
-        HashSet<AttributeInstance> attributes = new HashSet<>();
+        Set<AttributeInstance> attributes = new HashSet<>();
 
         attributes.add(bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED));
         attributes.add(bukkitEntity.getAttribute(Attribute.HORSE_JUMP_STRENGTH));
@@ -613,6 +676,10 @@ public class SuperiorHorse {
         }
 
         lastWaterBraveryMultiplier = multiplier;
+    }
+
+    public void becomePregnant() {
+        // TODO
     }
 }
 

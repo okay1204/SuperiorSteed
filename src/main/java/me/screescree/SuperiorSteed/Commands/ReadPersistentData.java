@@ -15,7 +15,7 @@ import org.bukkit.persistence.PersistentDataType;
 import me.screescree.SuperiorSteed.CustomCommand;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_BOOLEAN;
-import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_SET_INTEGER;
+import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_INTEGER_SET;
 import me.screescree.SuperiorSteed.utils.Format;
 import me.screescree.SuperiorSteed.utils.RayTraceUtils;
 
@@ -80,7 +80,7 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
             sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value : "null")));
         }
         else if (type.equals("hashset_integer")) {
-            Set<Integer> value = container.get(new NamespacedKey(plugin, key), new PersistentDataType_SET_INTEGER());
+            Set<Integer> value = container.get(new NamespacedKey(plugin, key), new PersistentDataType_INTEGER_SET());
             sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
         }
 

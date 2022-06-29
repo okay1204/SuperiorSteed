@@ -1,6 +1,6 @@
 package me.screescree.SuperiorSteed.commands;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -88,7 +88,7 @@ public class HorseStats extends CustomCommand {
         }
         player.sendMessage(horseType);
 
-        HashSet<Trait> traits = superiorHorse.getTraits();
+        Set<Trait> traits = superiorHorse.getTraits();
         String traitString = Format.colorize("&3Traits: ");
         if (!traits.isEmpty()) {
             for (Trait trait : traits) {

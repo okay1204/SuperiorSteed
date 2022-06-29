@@ -46,9 +46,14 @@ public class SuperiorHorseInfo {
     private double maxHealth;
 
     // Traits
-    private HashSet<Trait> traits = new HashSet<>();
+    private Set<Trait> traits = new HashSet<>();
     // Trait attributes
     private Seed favoriteSeed;
+
+    // Pregnancy
+    private int pregnancyTimer = 0;
+    private double pregnancyComplication = 1.0;
+    private SuperiorHorseInfo pregnantWith = null;
 
     public SuperiorHorseInfo() {
         Random random = ThreadLocalRandom.current();
@@ -239,11 +244,11 @@ public class SuperiorHorseInfo {
         this.maxHealth = maxHealth;
     }
 
-    public HashSet<Trait> getTraits() {
+    public Set<Trait> getTraits() {
         return traits;
     }
 
-    public void setTraits(HashSet<Trait> traits) {
+    public void setTraits(Set<Trait> traits) {
         this.traits = traits;
 
         // If the horse has the PICKY_EATER trait, set the favorite seed
@@ -284,5 +289,29 @@ public class SuperiorHorseInfo {
 
     public void setFavoriteSeed(Seed favoriteSeed) {
         this.favoriteSeed = favoriteSeed;
+    }
+
+    public int getPregnancyTimer() {
+        return pregnancyTimer;
+    }
+
+    public void setPregnancyTimer(int pregnancyTimer) {
+        this.pregnancyTimer = pregnancyTimer;
+    }
+
+    public double getPregnancyComplication() {
+        return pregnancyComplication;
+    }
+
+    public void setPregnancyComplication(double pregnancyComplication) {
+        this.pregnancyComplication = pregnancyComplication;
+    }
+
+    public SuperiorHorseInfo getPregnantWith() {
+        return pregnantWith;
+    }
+
+    public void setPregnantWith(SuperiorHorseInfo pregnantWith) {
+        this.pregnantWith = pregnantWith;
     }
 }

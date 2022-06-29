@@ -26,7 +26,11 @@ public class StopFeedGrowth implements Listener {
             event.getRightClicked() instanceof Horse &&
             feedableItems.contains(event.getPlayer().getInventory().getItem(event.getHand()).getType())
         ) {
-            ((Horse) event.getRightClicked()).setAge(-24000);
+            Horse horse = (Horse) event.getRightClicked();
+
+            if (!horse.isAdult()) {
+                ((Horse) event.getRightClicked()).setAge(-24000);
+            }
         }
     }
 }
