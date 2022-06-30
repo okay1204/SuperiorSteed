@@ -3,8 +3,12 @@ package me.screescree.SuperiorSteed.superiorhorse.entity.goals;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
+
+import org.bukkit.Location;
+import org.bukkit.Particle;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
@@ -34,6 +38,10 @@ public class HorseBreedGoal extends Goal {
     private boolean canBreed(LivingEntity other) {
         SuperiorHorse horseWrapper = animal.getWrapper();
 
+        if (horseWrapper.isPregnant()) {
+            return false;
+        }
+
         SuperiorHorseEntity otherHorse = (SuperiorHorseEntity) other;
         SuperiorHorse otherHorseWrapper = otherHorse.getWrapper();
 
@@ -48,8 +56,6 @@ public class HorseBreedGoal extends Goal {
         if (otherHorseWrapper.isMale() && !otherHorseWrapper.isStallion()) {
             return false;
         }
-
-        // TODO add a check so that a pregnant female horse can't breed
 
         return true;
     }
@@ -101,12 +107,26 @@ public class HorseBreedGoal extends Goal {
     }
 
     protected void breed() {
-        if (!animal.getWrapper().isMale()) {
-            animal.getWrapper().becomePregnant();
+        try {
+            if (animal.getWrapper().isMale()) {
+                partner.getWrapper().becomePregnant(animal.getWrapper());
+            }
+            else {
+                animal.getWrapper().becomePregnant(partner.getWrapper());
+            }
         }
-        else {
-            partner.getWrapper().becomePregnant();
+        catch (Exception e) {
+            e.printStackTrace();
         }
+        
+        Random random = animal.getRandom();
+        for (int i = 0; i < 10; i++) {
+            double randX = random.nextDouble(-1, 1);
+            double randY = random.nextDouble(1, 2);
+            double randZ = random.nextDouble(-1, 1);
+            level.getWorld().spawnParticle(Particle.HEART, new Location(level.getWorld(), animal.getX() + randX, animal.getY() + randY, animal.getZ() + randZ), 1);
+        }
+
         animal.resetLove();
         animal.setAge(6000);
         partner.resetLove();

@@ -1,6 +1,7 @@
 package me.screescree.SuperiorSteed.superiorhorse;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -14,12 +15,15 @@ import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Horse.Color;
+import org.bukkit.entity.Horse.Style;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import io.netty.util.internal.ThreadLocalRandom;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
 import me.screescree.SuperiorSteed.superiorhorse.info.Seed;
@@ -28,9 +32,11 @@ import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 import me.screescree.SuperiorSteed.superiorhorse.info.Trait;
 import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_BOOLEAN;
+import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_ENUM;
 import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_ENUM_SET;
 import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_HORSE_INFO;
 import me.screescree.SuperiorSteed.superiorhorse.persistenttype.PersistentDataType_INTEGER_SET;
+import me.screescree.SuperiorSteed.utils.RandomUtil;
 
 public class SuperiorHorse {
     private static final String SPEED_LEVEL_KEY = "superiorsteed.speedlevel";
@@ -86,7 +92,7 @@ public class SuperiorHorse {
         bukkitEntity.setBreedCause(horse.getBreedCause());
         bukkitEntity.setLoveModeTicks(horse.getLoveModeTicks());
         bukkitEntity.setBreed(horse.canBreed());
-        bukkitEntity.setAgeLock(true);
+        bukkitEntity.setAgeLock(false);
         bukkitEntity.setAbsorptionAmount(horse.getAbsorptionAmount());
 
         // Copying max health is necessary here to prevent setHealth from erroring if the health is greater than the max health.
@@ -198,7 +204,7 @@ public class SuperiorHorse {
 
         Set<Trait> traits = containerTraitsValueOrDefault(container, "traits", generatedInfo.getTraits());
 
-        int favoriteSeedId = containerValueOrDefault(container, "favoriteSeed", generatedInfo.getFavoriteSeed() != null ? generatedInfo.getFavoriteSeed().getId() : -1);
+        Seed favoriteSeed = containerValueOrDefault(container, "favoriteSeed", generatedInfo.getFavoriteSeed(), Seed.class);
 
         int pregnancyTimer = containerValueOrDefault(container, "pregnancyTimer", generatedInfo.getPregnancyTimer());
         double pregnancyComplication = containerValueOrDefault(container, "pregnancyComplication", generatedInfo.getPregnancyComplication());
@@ -230,7 +236,7 @@ public class SuperiorHorse {
         horseInfo.setMaxHealth(horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 
         horseInfo.setTraits(traits);
-        horseInfo.setFavoriteSeed(Seed.getFromId(favoriteSeedId));
+        horseInfo.setFavoriteSeed(favoriteSeed);
 
         horseInfo.setPregnancyTimer(pregnancyTimer);
         horseInfo.setPregnancyComplication(pregnancyComplication);
@@ -248,7 +254,7 @@ public class SuperiorHorse {
         nmsEntity = new SuperiorHorseEntity(spawnLocation.getWorld(), this);
         bukkitEntity = ((CraftWorld) spawnLocation.getWorld()).addEntity(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         bukkitEntity.teleport(spawnLocation, TeleportCause.PLUGIN);
-        bukkitEntity.setAgeLock(true);
+        bukkitEntity.setAgeLock(false);
 
         update(horseInfo);
     }
@@ -286,6 +292,17 @@ public class SuperiorHorse {
     public boolean containerValueOrDefault(PersistentDataContainer container, String keyName, boolean defaultValue) {
         NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
         PersistentDataType_BOOLEAN type = new PersistentDataType_BOOLEAN();
+        if (container.has(key, type)) {
+            return container.get(key, type);
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
+    public <E extends Enum<E>> E containerValueOrDefault(PersistentDataContainer container, String keyName, E defaultValue, Class<E> enumClass) {
+        NamespacedKey key = new NamespacedKey(SuperiorSteed.getInstance(), keyName);
+        PersistentDataType_ENUM<E> type = new PersistentDataType_ENUM<>(enumClass);
         if (container.has(key, type)) {
             return container.get(key, type);
         }
@@ -422,6 +439,10 @@ public class SuperiorHorse {
 
         horseInfo.setTraits(getTraits());
         horseInfo.setFavoriteSeed(getFavoriteSeed());
+
+        horseInfo.setPregnancyTimer(getPregnancyTimer());
+        horseInfo.setPregnancyComplication(pregnancyComplication.get());
+        horseInfo.setPregnantWith(getPregnantWith());
         return horseInfo;
     }
 
@@ -564,11 +585,8 @@ public class SuperiorHorse {
 
     public void setTraits(Set<Trait> traits) {
         this.traits = traits;
-        String traitString = "";
-        for (Trait trait : traits) {
-            traitString += trait.name() + ",";
-        }
-        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "traits"), PersistentDataType.STRING, traitString);
+
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "traits"), new PersistentDataType_ENUM_SET<Trait>(Trait.class), traits);
     }
 
     public Seed getFavoriteSeed() {
@@ -578,8 +596,7 @@ public class SuperiorHorse {
     public void setFavoriteSeed(Seed favoriteSeed) {
         this.favoriteSeed = favoriteSeed;
 
-        int seedId = favoriteSeed != null ? favoriteSeed.getId() : -1;
-        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "favoriteSeed"), PersistentDataType.INTEGER, seedId);
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "favoriteSeed"), new PersistentDataType_ENUM<Seed>(Seed.class), favoriteSeed);
     }
 
     public SuperiorHorseEntity getNMSEntity() {
@@ -625,14 +642,7 @@ public class SuperiorHorse {
     public void setPregnancyTimer(int pregnancyTimer) {
         this.pregnancyTimer = pregnancyTimer;
 
-        // TODO make horse give birth if timer is 0
         bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "pregnancyTimer"), PersistentDataType.INTEGER, pregnancyTimer);
-    }
-
-    public void decrementPregnancyTimer() {
-        if (pregnancyTimer > 0) {
-            setPregnancyTimer(pregnancyTimer - 1);
-        }
     }
 
     public Stat pregnancyComplicationStat() {
@@ -678,8 +688,108 @@ public class SuperiorHorse {
         lastWaterBraveryMultiplier = multiplier;
     }
 
-    public void becomePregnant() {
-        // TODO
+    public boolean isPregnant() {
+        return pregnancyTimer > 0;
+    }
+
+    public void becomePregnant(SuperiorHorse maleHorse) {
+        // 5184000 is 3 days in ticks
+        setPregnancyTimer(5184000);
+        pregnancyComplication.set(1.0);
+
+        SuperiorHorseInfo pregnantWith = new SuperiorHorseInfo();
+
+        Random random = ThreadLocalRandom.current();
+
+        // small chance to generate a new color, or inherit one of parent's colors
+        if (random.nextDouble() < 0.1111) {
+            pregnantWith.setColor(RandomUtil.getRandomEnum(Color.class));
+        }
+        else {
+            if (random.nextDouble() < 0.5) {
+                pregnantWith.setColor(maleHorse.getBukkitEntity().getColor());
+            }
+            else {
+                pregnantWith.setColor(bukkitEntity.getColor());
+            }
+        }
+
+        // small chance to generate a new style, or inherit one of parent's styles
+        if (random.nextDouble() < 0.2) {
+            pregnantWith.setStyle(RandomUtil.getRandomEnum(Style.class));
+        }
+        else {
+            if (random.nextDouble() < 0.5) {
+                pregnantWith.setStyle(maleHorse.getBukkitEntity().getStyle());
+            }
+            else {
+                pregnantWith.setStyle(bukkitEntity.getStyle());
+            }
+        }
+
+        // stats will be averaged between this horse, the father, and a randomized set of stats
+        pregnantWith.setHunger((hunger.get() + maleHorse.hungerStat().get() + random.nextDouble()) / 3);
+        pregnantWith.setHydration((hydration.get() + maleHorse.hydrationStat().get() + random.nextDouble()) / 3);
+        pregnantWith.setTrust((trust.get() + maleHorse.trustStat().get() + random.nextDouble()) / 3);
+        pregnantWith.setFriendliness((friendliness.get() + maleHorse.friendlinessStat().get() + random.nextDouble()) / 3);
+        pregnantWith.setComfortability((comfortability.get() + maleHorse.comfortabilityStat().get() + random.nextDouble()) / 3);
+        pregnantWith.setWaterBravery((waterBravery.get() + maleHorse.waterBraveryStat().get() + random.nextDouble()) / 3);
+
+        pregnantWith.setSpeed((
+            bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() +
+            maleHorse.getBukkitEntity().getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() +
+            SuperiorHorseInfo.randomSpeed()
+        ) / 3);
+
+        pregnantWith.setJumpStrength((
+            bukkitEntity.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue() +
+            maleHorse.getBukkitEntity().getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue() +
+            SuperiorHorseInfo.randomJumpStrength()
+        ) / 3);
+
+        pregnantWith.setMaxHealth((
+            bukkitEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() +
+            maleHorse.getBukkitEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() +
+            SuperiorHorseInfo.randomMaxHealth()
+        ) / 3);
+
+        pregnantWith.setAge(0);
+        pregnantWith.setOwnerUuid(getOwner() != null ? getOwner().getUniqueId() : null);
+        
+        // horse will have much higher chance of recieving traits from parents
+
+        // shuffle values from Trait enum
+        Trait[] shuffledTraits = Trait.values();
+        for (int i = 0; i < shuffledTraits.length; i++) {
+            int j = random.nextInt(shuffledTraits.length);
+            Trait temp = shuffledTraits[i];
+            shuffledTraits[i] = shuffledTraits[j];
+            shuffledTraits[j] = temp;
+        }
+
+        Set<Trait> traits = new HashSet<>();
+        Seed favoriteSeed = RandomUtil.getRandomEnum(Seed.class);
+
+        for (Trait trait : shuffledTraits) {
+            double chance = 0.05;
+            if (getTraits().contains(trait)) {
+                chance += 0.3;
+            }
+            if (maleHorse.getTraits().contains(trait)) {
+                chance += 0.3;
+            }
+
+            if (random.nextDouble() < chance) {
+                if (trait.isCompatible(traits)) {
+                    traits.add(trait);
+                }
+            }
+        }
+
+        pregnantWith.setTraits(traits);
+        pregnantWith.setFavoriteSeed(favoriteSeed);
+
+        setPregnantWith(pregnantWith);
     }
 }
 

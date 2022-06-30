@@ -11,6 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import me.screescree.SuperiorSteed.utils.Format;
 
@@ -24,9 +26,10 @@ public class ToggleButton {
     private String disabledName;
 
     private ItemStack item;
+    private StaticPane pane;
     private GuiItem guiItem;
 
-    public ToggleButton(boolean enabled, Material enabledMaterial, String enabledName, Material disabledMaterial, String disabledName, Gui gui, ToggleCallback callback) {
+    public ToggleButton(boolean enabled, Material enabledMaterial, String enabledName, Material disabledMaterial, String disabledName, Gui gui, int x, int y, ToggleCallback callback) {
         this.enabled = enabled;
 
         this.enabledMaterial = enabledMaterial;
@@ -34,6 +37,8 @@ public class ToggleButton {
 
         this.enabledName = enabledName;
         this.disabledName = disabledName;
+
+        pane = new StaticPane(x, y, 1, 1);
 
         // placeholder material to initialize the item
         item = new ItemStack(Material.STRUCTURE_VOID);
@@ -51,6 +56,8 @@ public class ToggleButton {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
             }
         });
+
+        pane.addItem(guiItem, 0, 0);
     }
 
     private void setItemStack(boolean enabled) {
@@ -65,7 +72,16 @@ public class ToggleButton {
         item.setItemMeta(meta);
     }
 
-    public GuiItem getGuiItem() {
-        return guiItem;
+    public Pane getPane() {
+        return pane;
+    }
+
+    public void setVisible(boolean visible) {
+        if (!visible && pane.getItems().size() > 0) {
+            pane.removeItem(guiItem);
+        }
+        else if (visible && pane.getItems().size() == 0) {
+            pane.addItem(guiItem, 0, 0);
+        }
     }
 }

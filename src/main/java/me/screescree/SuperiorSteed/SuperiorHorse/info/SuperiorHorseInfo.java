@@ -9,6 +9,7 @@ import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
 
 import io.netty.util.internal.ThreadLocalRandom;
+import me.screescree.SuperiorSteed.utils.RandomUtil;
 
 public class SuperiorHorseInfo {
     // Stats
@@ -34,8 +35,8 @@ public class SuperiorHorseInfo {
     private boolean isStallion = true;
     
     // Looks
-    private Color color = getRandomEnum(Color.class);;
-    private Style style = getRandomEnum(Style.class);
+    private Color color = RandomUtil.getRandomEnum(Color.class);;
+    private Style style = RandomUtil.getRandomEnum(Style.class);
 
     // Owner
     private UUID ownerUuid = null;
@@ -48,7 +49,7 @@ public class SuperiorHorseInfo {
     // Traits
     private Set<Trait> traits = new HashSet<>();
     // Trait attributes
-    private Seed favoriteSeed;
+    private Seed favoriteSeed = RandomUtil.getRandomEnum(Seed.class);
 
     // Pregnancy
     private int pregnancyTimer = 0;
@@ -59,36 +60,27 @@ public class SuperiorHorseInfo {
         Random random = ThreadLocalRandom.current();
 
         // These generators were copied from actual Minecraft code.
-        speed = (0.44999998807907104D + random.nextDouble() * 0.3D + random.nextDouble() * 0.3D + random.nextDouble() * 0.3D) * 0.25D;
-        jumpStrength = 0.4000000059604645D + random.nextDouble() * 0.2D + random.nextDouble() * 0.2D + random.nextDouble() * 0.2D;
-        maxHealth = 15.0F + (float) random.nextInt(8) + (float) random.nextInt(9);
+        speed = randomSpeed();
+        jumpStrength = randomJumpStrength();
+        maxHealth = randomMaxHealth();
 
-        // randomize order of values from Trait enum
-        Trait[] randomizedTraits = Trait.values();
-        for (int i = 0; i < randomizedTraits.length; i++) {
-            int j = random.nextInt(randomizedTraits.length);
-            Trait temp = randomizedTraits[i];
-            randomizedTraits[i] = randomizedTraits[j];
-            randomizedTraits[j] = temp;
+        // shuffle values from Trait enum
+        Trait[] shuffledTraits = Trait.values();
+        for (int i = 0; i < shuffledTraits.length; i++) {
+            int j = random.nextInt(shuffledTraits.length);
+            Trait temp = shuffledTraits[i];
+            shuffledTraits[i] = shuffledTraits[j];
+            shuffledTraits[j] = temp;
         }
 
         // for each trait, 5% chance of adding it to the horse (if it's compatible with traits already on the horse)
-        for (Trait trait : randomizedTraits) {
+        for (Trait trait : shuffledTraits) {
             if (random.nextDouble() < 0.05) {
                 if (trait.isCompatible(traits)) {
                     traits.add(trait);
-
-                    if (trait.equals(Trait.PICKY_EATER)) {
-                        favoriteSeed = getRandomEnum(Seed.class);
-                    }
                 }
             }
         }
-    }
-
-    private static <E extends Enum<E>> E getRandomEnum(Class<E> enumClass) {
-        Random random = ThreadLocalRandom.current();
-        return enumClass.getEnumConstants()[random.nextInt(enumClass.getEnumConstants().length)];
     }
 
     public static SuperiorHorseInfo startingTemplate() {
@@ -106,6 +98,21 @@ public class SuperiorHorseInfo {
         horseInfo.clearTraits();
 
         return horseInfo;
+    }
+
+    public static double randomSpeed() {
+        Random random = ThreadLocalRandom.current();
+        return (0.44999998807907104D + random.nextDouble() * 0.3D + random.nextDouble() * 0.3D + random.nextDouble() * 0.3D) * 0.25D;
+    }
+
+    public static double randomJumpStrength() {
+        Random random = ThreadLocalRandom.current();
+        return 0.4000000059604645D + random.nextDouble() * 0.2D + random.nextDouble() * 0.2D + random.nextDouble() * 0.2D;
+    }
+
+    public static double randomMaxHealth() {
+        Random random = ThreadLocalRandom.current();
+        return 15.0D + (double) random.nextInt(8) + (double) random.nextInt(9);
     }
 
     public double getHunger() {
@@ -250,11 +257,6 @@ public class SuperiorHorseInfo {
 
     public void setTraits(Set<Trait> traits) {
         this.traits = traits;
-
-        // If the horse has the PICKY_EATER trait, set the favorite seed
-        if (traits.contains(Trait.PICKY_EATER)) {
-            favoriteSeed = getRandomEnum(Seed.class);
-        }
     }
 
     // Returns true if the trait was compatible with the horse's traits
@@ -262,10 +264,6 @@ public class SuperiorHorseInfo {
         if (trait.isCompatible(traits)) {
             traits.add(trait);
             return true;
-        }
-
-        if (trait.equals(Trait.PICKY_EATER)) {
-            favoriteSeed = getRandomEnum(Seed.class);
         }
 
         return false;

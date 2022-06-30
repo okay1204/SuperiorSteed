@@ -7,8 +7,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
@@ -31,8 +29,6 @@ public class TypeMenu extends SubMenu {
     }
 
     public TypeMenu(Gui gui, SuperiorHorseInfo horseInfo) {
-        StaticPane pane = new StaticPane(0, 0, 7, 3, Priority.NORMAL);
-
         ToggleButton stallionToggle = new ToggleButton(
             horseInfo.isStallion(),
             Material.GRASS_BLOCK,
@@ -40,38 +36,38 @@ public class TypeMenu extends SubMenu {
             Material.OAK_SAPLING,
             Format.colorize("&a&lGelding"),
             gui,
+            5,
+            1,
             enabled -> {
                 horseInfo.setStallion(enabled);
             }
         );
         
-        if (horseInfo.isMale()) {
-            pane.addItem(stallionToggle.getGuiItem(), 5, 1);
-        }
+        stallionToggle.setVisible(horseInfo.isMale());
+        
+        panes.add(stallionToggle.getPane());
 
-        pane.addItem(
-            new ToggleButton(
-                horseInfo.isMale(),
-                Material.BLUE_CONCRETE,
-                Format.colorize("&9&lMale"),
-                Material.PINK_CONCRETE,
-                Format.colorize("&d&lFemale"),
-                gui,
-                enabled -> {
-                    horseInfo.setMale(enabled);
-
-                    if (enabled) {
-                        pane.addItem(stallionToggle.getGuiItem(), 5, 1);
-                    }
-                    else {
-                        pane.removeItem(stallionToggle.getGuiItem());
-                    }
-                }
-            ).getGuiItem(),
+        ToggleButton maleToggle =new ToggleButton(
+            horseInfo.isMale(),
+            Material.BLUE_CONCRETE,
+            Format.colorize("&9&lMale"),
+            Material.PINK_CONCRETE,
+            Format.colorize("&d&lFemale"),
+            gui,
             1,
-            1
+            1,
+            enabled -> {
+                horseInfo.setMale(enabled);
+
+                if (enabled) {
+                    stallionToggle.setVisible(true);
+                }
+                else {
+                    stallionToggle.setVisible(false);
+                }
+            }
         );
 
-        panes.add(pane);
+        panes.add(maleToggle.getPane());
     }
 }

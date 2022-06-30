@@ -1,6 +1,7 @@
 package me.screescree.SuperiorSteed.superiorhorse;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,7 +19,7 @@ import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 
 public class SuperiorHorsesManager implements Listener {
     // cache of all superior horses, to retain NMS horse instances
-    private HashSet<SuperiorHorse> superiorHorses = new HashSet<SuperiorHorse>();
+    private Set<SuperiorHorse> superiorHorses = new HashSet<SuperiorHorse>();
     private boolean isSpawningCustomHorse = false;
 
     public SuperiorHorsesManager() {
@@ -52,7 +53,7 @@ public class SuperiorHorsesManager implements Listener {
         plugin.getLogger().info("Cache verified! Added " + added + " new horses to cache.");
     }
 
-    public HashSet<SuperiorHorse> getCache() {
+    public Set<SuperiorHorse> getCache() {
         return superiorHorses;
     }
 
@@ -92,7 +93,7 @@ public class SuperiorHorsesManager implements Listener {
         superiorHorses.add(superiorHorse);
         return superiorHorse;
     }
-
+    
     public SuperiorHorse newSuperiorHorse(Location location, SuperiorHorseInfo horseInfo) {
         isSpawningCustomHorse = true;
         SuperiorHorse superiorHorse = new SuperiorHorse(location, horseInfo);

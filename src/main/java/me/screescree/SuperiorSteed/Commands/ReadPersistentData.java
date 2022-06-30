@@ -20,7 +20,7 @@ import me.screescree.SuperiorSteed.utils.Format;
 import me.screescree.SuperiorSteed.utils.RayTraceUtils;
 
 public class ReadPersistentData extends CustomCommand implements TabCompleter {    
-    private final List<String> PERSISTENT_TYPES = List.of("double", "integer", "long", "boolean", "string", "hashset_integer");
+    private final List<String> PERSISTENT_TYPES = List.of("double", "integer", "long", "boolean", "string", "integer_set");
 
     public ReadPersistentData() {
         super("readpersistentdata");
@@ -79,11 +79,10 @@ public class ReadPersistentData extends CustomCommand implements TabCompleter {
             String value = container.get(new NamespacedKey(plugin, key), PersistentDataType.STRING);
             sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value : "null")));
         }
-        else if (type.equals("hashset_integer")) {
+        else if (type.equals("integer_set")) {
             Set<Integer> value = container.get(new NamespacedKey(plugin, key), new PersistentDataType_INTEGER_SET());
             sender.sendMessage(Format.colorize("&a" + key + ": &f" + (value != null ? value.toString() : "null")));
         }
-
         return true;
     }
 

@@ -48,12 +48,12 @@ public class SuperiorHorseEntity extends Horse {
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.2D));
         this.goalSelector.addGoal(1, new RunAroundLikeCrazyGoal(this, 1.2D));
         this.goalSelector.addGoal(2, new HorseBreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new DrinkWaterGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new EatSeedsGoal(this, 0.8D));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(4, new DrinkWaterGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new EatSeedsGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new FollowParentGoal(this, 1.0D));
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.7D));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
         this.addBehaviourGoals();
     }
 

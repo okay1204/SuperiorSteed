@@ -104,6 +104,12 @@ public class HorseStats extends CustomCommand {
 
         player.sendMessage(traitString);
 
+        if (superiorHorse.isPregnant()) {
+            player.sendMessage("\n");
+            player.sendMessage(Format.colorize("&5Pregnant for: &d" + new AgeTimeSplitter(superiorHorse.getPregnancyTimer()).formatString()));
+            player.sendMessage(addStatMessage("Pregnancy Complication", superiorHorse.pregnancyComplicationStat().get()));
+        }
+
         return true;
     }
 

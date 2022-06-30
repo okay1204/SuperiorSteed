@@ -23,7 +23,41 @@ public class AgeTimeSplitter {
     }
 
     public String formatString() {
-        return String.format("%d years, %d months, %d days, %d hours, %d minutes, %d seconds", years, months % 12, days % 30, hours % 24, minutes % 60, seconds % 60);
+        StringBuilder sb = new StringBuilder();
+        if (years > 0) {
+            sb.append(years + " year" + (years == 1 ? "" : "s"));
+        }
+        if (months > 0) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(months + " month" + (months == 1 ? "" : "s"));
+        }
+        if (days > 0) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(days + " day" + (days == 1 ? "" : "s"));
+        }
+        if (hours > 0) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(hours + " hour" + (hours == 1 ? "" : "s"));
+        }
+        if (minutes > 0) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(minutes + " minute" + (minutes == 1 ? "" : "s"));
+        }
+        if (seconds > 0) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(seconds + " second" + (seconds == 1 ? "" : "s"));
+        }
+        return sb.toString();
     }
 
     public long getTicks() {

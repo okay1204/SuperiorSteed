@@ -21,6 +21,7 @@ import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.Attributes
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.GroomingMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.LooksMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.OwnerMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.PregnancyMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.StatsMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.TraitsMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.TypeMenu;
@@ -75,6 +76,12 @@ public class HorseEditor {
         });
         submitLabel.setOnClick(event -> {
             player.closeInventory();
+
+            if (horseInfo.isMale()) {
+                horseInfo.setPregnancyTimer(0);
+                horseInfo.setPregnantWith(null);
+            }
+
             submitCallback.onSubmit(horseInfo);
         });
         
@@ -109,16 +116,20 @@ public class HorseEditor {
         submenus.add(new OwnerMenu(gui, horseInfo));
         submenus.add(new AgeMenu(gui, horseInfo));
         submenus.add(new GroomingMenu(gui, horseInfo));
+        submenus.add(new PregnancyMenu(gui, horseInfo));
 
         paginatedPane.addPane(0, mainMenu);
         for (int i = 0; i < submenus.size(); i++) {
             int page = i + 1;
-            for (Pane pane : submenus.get(i).getPanes()) {
+            SubMenu submenu = submenus.get(i);
+            for (Pane pane : submenu.getPanes()) {
                 paginatedPane.addPane(page, pane);
             }
             mainMenu.addItem(
-                new GuiItem(submenus.get(i).getSubmenuItem(), event -> {
+                new GuiItem(submenu.getSubmenuItem(), event -> {
                     paginatedPane.setPage(page);
+                    submenu.onShow();
+
                     backLabel.setVisible(true);
                     gui.update();
                 })

@@ -10,4 +10,5 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 public abstract class SubMenu {
     public abstract ArrayList<Pane> getPanes();
     public abstract ItemStack getSubmenuItem();
+    public void onShow() {};
 }

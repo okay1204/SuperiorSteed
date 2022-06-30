@@ -46,7 +46,9 @@ public class PersistentDataType_HORSE_INFO implements PersistentDataType<Persist
         info.setColor(container.get(new NamespacedKey(plugin, "color"), new PersistentDataType_ENUM<Color>(Color.class)));
         info.setStyle(container.get(new NamespacedKey(plugin, "style"), new PersistentDataType_ENUM<Style>(Style.class)));
 
-        info.setOwnerUuid(container.get(new NamespacedKey(plugin, "ownerUuid"), new PersistentDataType_UUID()));
+        if (container.has(new NamespacedKey(plugin, "ownerUuid"), new PersistentDataType_UUID())) {
+            info.setOwnerUuid(container.get(new NamespacedKey(plugin, "ownerUuid"), new PersistentDataType_UUID()));
+        }
 
         info.setSpeed(container.get(new NamespacedKey(plugin, "speed"), PersistentDataType.DOUBLE));
         info.setJumpStrength(container.get(new NamespacedKey(plugin, "jumpStrength"), PersistentDataType.DOUBLE));
@@ -61,10 +63,7 @@ public class PersistentDataType_HORSE_INFO implements PersistentDataType<Persist
         if (container.has(new NamespacedKey(plugin, "pregnantWith"), this)) {
             info.setPregnantWith(container.get(new NamespacedKey(plugin, "pregnantWith"), this));
         }
-        else {
-            info.setPregnantWith(null);
-        }
-
+        
         return info;
     }
 
@@ -90,7 +89,9 @@ public class PersistentDataType_HORSE_INFO implements PersistentDataType<Persist
         container.set(new NamespacedKey(SuperiorSteed.getInstance(), "color"), new PersistentDataType_ENUM<Color>(Color.class), info.getColor());
         container.set(new NamespacedKey(SuperiorSteed.getInstance(), "style"), new PersistentDataType_ENUM<Style>(Style.class), info.getStyle());
 
-        container.set(new NamespacedKey(SuperiorSteed.getInstance(), "ownerUuid"), new PersistentDataType_UUID(), info.getOwnerUuid());
+        if (info.getOwnerUuid() != null) {
+            container.set(new NamespacedKey(SuperiorSteed.getInstance(), "ownerUuid"), new PersistentDataType_UUID(), info.getOwnerUuid());
+        }
 
         container.set(new NamespacedKey(SuperiorSteed.getInstance(), "speed"), PersistentDataType.DOUBLE, info.getSpeed());
         container.set(new NamespacedKey(SuperiorSteed.getInstance(), "jumpStrength"), PersistentDataType.DOUBLE, info.getJumpStrength());

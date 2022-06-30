@@ -3,11 +3,14 @@ package me.screescree.SuperiorSteed;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import me.screescree.SuperiorSteed.superiorhorse.BirthInfo;
+import me.screescree.SuperiorSteed.superiorhorse.Births;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
 import me.screescree.SuperiorSteed.superiorhorse.features.ageing.NaturalAge;
@@ -16,6 +19,7 @@ import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.Comfort
 import me.screescree.SuperiorSteed.superiorhorse.features.friendliness.PlayerRidingChecker;
 import me.screescree.SuperiorSteed.superiorhorse.features.grooming.GroomTimer;
 import me.screescree.SuperiorSteed.superiorhorse.features.grooming.NotGroomedPenalty;
+import me.screescree.SuperiorSteed.superiorhorse.features.pregnancy.PregnancyTimer;
 import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SendActionBarLoop;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.AngelHandler;
@@ -52,6 +56,7 @@ public class LoopingTaskManager {
         horseTasks.add(new PlayerRidingChecker());
         horseTasks.add(new BabyLeashIncrease());
         horseTasks.add(new HungerHydrationModifier());
+        horseTasks.add(new PregnancyTimer());
     }
 
     public void start() {
@@ -90,10 +95,14 @@ public class LoopingTaskManager {
         for (Map.Entry<Integer, HashSet<LoopingTask<SuperiorHorse>>> entry : horseLoops.entrySet()) {
             Bukkit.getScheduler().runTaskTimer(SuperiorSteed.getInstance(), () -> {
                 SuperiorHorsesManager manager = SuperiorSteed.getInstance().getHorseManager();
-                HashSet<SuperiorHorse> toRemove = new HashSet<>();
-                for (SuperiorHorse horse : manager.getCache()) {
+
+                Iterator<SuperiorHorse> iterator = manager.getCache().iterator();
+
+                while (iterator.hasNext()) {
+                    SuperiorHorse horse = iterator.next();
+                    
                     if (!manager.checkValidity(horse)) {
-                        toRemove.add(horse);
+                        iterator.remove();
                         continue;
                     }
 
@@ -102,9 +111,11 @@ public class LoopingTaskManager {
                     }
                 }
 
-                for (SuperiorHorse horse : toRemove) {
-                    manager.removeHorse(horse);
+                for (BirthInfo birthInfo : Births.get()) {
+                    manager.newSuperiorHorse(birthInfo.getLocation(), birthInfo.getHorseInfo());
                 }
+
+                Births.clear();
 
             }, entry.getKey(), entry.getKey());
         }
