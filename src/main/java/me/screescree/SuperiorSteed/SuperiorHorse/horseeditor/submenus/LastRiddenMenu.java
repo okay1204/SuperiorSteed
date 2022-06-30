@@ -12,14 +12,13 @@ import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.SubMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.components.timepicker.TimePicker;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
-import net.md_5.bungee.api.ChatColor;
 
-public class AgeMenu extends SubMenu {
+public class LastRiddenMenu extends SubMenu {
     private ArrayList<Pane> panes = new ArrayList<>();
 
     @Override
     public ItemStack getSubmenuItem() {
-        return HorseEditor.customItem(Material.EXPOSED_COPPER, ChatColor.of("#a67661") + "Age", false);
+        return HorseEditor.customItem(Material.SADDLE, "&7Age", true);
     }
 
     @Override
@@ -27,9 +26,9 @@ public class AgeMenu extends SubMenu {
         return panes;
     }
 
-    public AgeMenu(Gui gui, SuperiorHorseInfo horseInfo) {
-        TimePicker timePicker = new TimePicker(gui, horseInfo.getAge(), (ticks) -> {
-            horseInfo.setAge(ticks);
+    public LastRiddenMenu(Gui gui, SuperiorHorseInfo horseInfo) {
+        TimePicker timePicker = new TimePicker(gui, horseInfo.getLastRidden(), (ticks) -> {
+            horseInfo.setLastRidden(ticks);
         });
 
         for (Pane pane : timePicker.getPanes()) {

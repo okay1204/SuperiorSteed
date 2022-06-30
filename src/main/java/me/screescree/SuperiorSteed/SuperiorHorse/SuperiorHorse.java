@@ -73,6 +73,8 @@ public class SuperiorHorse {
     private Stat pregnancyComplication;
     private SuperiorHorseInfo pregnantWith = null;
 
+    private long lastRidden;
+
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
 
@@ -210,6 +212,8 @@ public class SuperiorHorse {
         double pregnancyComplication = containerValueOrDefault(container, "pregnancyComplication", generatedInfo.getPregnancyComplication());
         SuperiorHorseInfo pregnantWith = containerValueOrDefault(container, "pregnantWith", generatedInfo.getPregnantWith());
 
+        long lastRidden = containerValueOrDefault(container, "lastRidden", generatedInfo.getLastRidden());
+
         SuperiorHorseInfo horseInfo = new SuperiorHorseInfo();
         horseInfo.setHunger(hunger);
         horseInfo.setHydration(hydration);
@@ -241,6 +245,8 @@ public class SuperiorHorse {
         horseInfo.setPregnancyTimer(pregnancyTimer);
         horseInfo.setPregnancyComplication(pregnancyComplication);
         horseInfo.setPregnantWith(pregnantWith);
+
+        horseInfo.setLastRidden(lastRidden);
         
         update(horseInfo);
         horse.remove();
@@ -400,6 +406,8 @@ public class SuperiorHorse {
         
         setPregnancyTimer(horseInfo.getPregnancyTimer());
         setPregnantWith(horseInfo.getPregnantWith());
+
+        setLastRidden(horseInfo.getLastRidden());
     }
 
     public boolean equals(SuperiorHorse other) {
@@ -443,6 +451,8 @@ public class SuperiorHorse {
         horseInfo.setPregnancyTimer(getPregnancyTimer());
         horseInfo.setPregnancyComplication(pregnancyComplication.get());
         horseInfo.setPregnantWith(getPregnantWith());
+
+        horseInfo.setLastRidden(getLastRidden());
         return horseInfo;
     }
 
@@ -790,6 +800,20 @@ public class SuperiorHorse {
         pregnantWith.setFavoriteSeed(favoriteSeed);
 
         setPregnantWith(pregnantWith);
+    }
+
+    public long getLastRidden() {
+        return lastRidden;
+    }
+
+    public void setLastRidden(long lastRidden) {
+        this.lastRidden = lastRidden;
+
+        bukkitEntity.getPersistentDataContainer().set(new NamespacedKey(SuperiorSteed.getInstance(), "lastRidden"), PersistentDataType.LONG, lastRidden);
+    }
+
+    public void incrementLastRidden() {
+        setLastRidden(getLastRidden() + 1);
     }
 }
 

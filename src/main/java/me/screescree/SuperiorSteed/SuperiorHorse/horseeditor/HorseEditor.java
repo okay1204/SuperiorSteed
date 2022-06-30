@@ -19,6 +19,7 @@ import com.github.stefvanschie.inventoryframework.pane.component.Label;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.AgeMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.AttributesMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.GroomingMenu;
+import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.LastRiddenMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.LooksMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.OwnerMenu;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.submenus.PregnancyMenu;
@@ -117,6 +118,7 @@ public class HorseEditor {
         submenus.add(new AgeMenu(gui, horseInfo));
         submenus.add(new GroomingMenu(gui, horseInfo));
         submenus.add(new PregnancyMenu(gui, horseInfo));
+        submenus.add(new LastRiddenMenu(gui, horseInfo));
 
         paginatedPane.addPane(0, mainMenu);
         for (int i = 0; i < submenus.size(); i++) {

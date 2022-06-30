@@ -56,6 +56,9 @@ public class SuperiorHorseInfo {
     private double pregnancyComplication = 1.0;
     private SuperiorHorseInfo pregnantWith = null;
 
+    // Misc
+    private long lastRidden = 0;
+
     public SuperiorHorseInfo() {
         Random random = ThreadLocalRandom.current();
 
@@ -311,5 +314,13 @@ public class SuperiorHorseInfo {
 
     public void setPregnantWith(SuperiorHorseInfo pregnantWith) {
         this.pregnantWith = pregnantWith;
+    }
+
+    public long getLastRidden() {
+        return lastRidden;
+    }
+
+    public void setLastRidden(long lastRidden) {
+        this.lastRidden = lastRidden;
     }
 }

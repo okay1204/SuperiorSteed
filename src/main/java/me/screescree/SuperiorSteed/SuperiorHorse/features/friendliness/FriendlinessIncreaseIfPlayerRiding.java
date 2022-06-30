@@ -3,7 +3,7 @@ package me.screescree.SuperiorSteed.superiorhorse.features.friendliness;
 import me.screescree.SuperiorSteed.LoopingTask;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 
-public class PlayerRidingChecker implements LoopingTask<SuperiorHorse> {
+public class FriendlinessIncreaseIfPlayerRiding implements LoopingTask<SuperiorHorse> {
     @Override
     public int getIntervalTicks() {
         // run every minute
@@ -12,10 +12,7 @@ public class PlayerRidingChecker implements LoopingTask<SuperiorHorse> {
 
     @Override
     public void runLoopingTask(SuperiorHorse superiorHorse) {
-        if (superiorHorse.getBukkitEntity().isEmpty()) {
-            superiorHorse.friendlinessStat().add(-0.00016666667);
-        }
-        else {
+        if (!superiorHorse.getBukkitEntity().isEmpty()) {
             superiorHorse.friendlinessStat().add(0.01);
         }
     }

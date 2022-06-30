@@ -16,9 +16,11 @@ import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
 import me.screescree.SuperiorSteed.superiorhorse.features.ageing.NaturalAge;
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.BuckOffLoop;
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.ComfortabilityWithPlayer;
-import me.screescree.SuperiorSteed.superiorhorse.features.friendliness.PlayerRidingChecker;
+import me.screescree.SuperiorSteed.superiorhorse.features.friendliness.FriendlinessDecreaseTimer;
+import me.screescree.SuperiorSteed.superiorhorse.features.friendliness.FriendlinessIncreaseIfPlayerRiding;
 import me.screescree.SuperiorSteed.superiorhorse.features.grooming.GroomTimer;
 import me.screescree.SuperiorSteed.superiorhorse.features.grooming.NotGroomedPenalty;
+import me.screescree.SuperiorSteed.superiorhorse.features.lastridden.LastRiddenCounter;
 import me.screescree.SuperiorSteed.superiorhorse.features.pregnancy.PregnancyTimer;
 import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SendActionBarLoop;
@@ -53,10 +55,12 @@ public class LoopingTaskManager {
         horseTasks.add(new NaturalAge());
         horseTasks.add(new GroomTimer());
         horseTasks.add(new NotGroomedPenalty());
-        horseTasks.add(new PlayerRidingChecker());
+        horseTasks.add(new FriendlinessIncreaseIfPlayerRiding());
+        horseTasks.add(new FriendlinessDecreaseTimer());
         horseTasks.add(new BabyLeashIncrease());
         horseTasks.add(new HungerHydrationModifier());
         horseTasks.add(new PregnancyTimer());
+        horseTasks.add(new LastRiddenCounter());
     }
 
     public void start() {
