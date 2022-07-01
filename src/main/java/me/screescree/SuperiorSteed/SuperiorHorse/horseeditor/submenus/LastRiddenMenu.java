@@ -18,7 +18,7 @@ public class LastRiddenMenu extends SubMenu {
 
     @Override
     public ItemStack getSubmenuItem() {
-        return HorseEditor.customItem(Material.SADDLE, "&7Age", true);
+        return HorseEditor.customItem(Material.SADDLE, "&7Last Ridden", true);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package me.screescree.SuperiorSteed.superiorhorse.features.grooming;
 
-import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -14,10 +13,10 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.netty.util.internal.ThreadLocalRandom;
 import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.utils.Format;
+import me.screescree.SuperiorSteed.utils.ParticleUtil;
 
 public class GroomItemUse implements Listener {
     @EventHandler
@@ -67,13 +66,7 @@ public class GroomItemUse implements Listener {
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
             }
 
-            Random random = ThreadLocalRandom.current();
-            for (int i = 0; i < 10; i++) {
-                double randX = random.nextDouble(-1, 1);
-                double randY = random.nextDouble(1, 2);
-                double randZ = random.nextDouble(-1, 1);
-                player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, superiorHorse.getBukkitEntity().getLocation().add(randX, randY, randZ), 1);
-            }
+            ParticleUtil.spawnParticles(Particle.VILLAGER_HAPPY, superiorHorse.getBukkitEntity().getLocation());
         }
     }
 }

@@ -75,6 +75,8 @@ public class SuperiorHorse {
 
     private long lastRidden;
 
+    private boolean isMadAtPlayer;
+
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
 
@@ -814,6 +816,14 @@ public class SuperiorHorse {
 
     public void incrementLastRidden() {
         setLastRidden(getLastRidden() + 1);
+    }
+
+    public boolean isMadAtPlayer() {
+        return isMadAtPlayer;
+    }
+
+    public void setMadAtPlayer(boolean madAtPlayer) {
+        this.isMadAtPlayer = madAtPlayer;
     }
 }
 

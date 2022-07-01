@@ -11,8 +11,10 @@ public class LastRiddenCounter implements LoopingTask<SuperiorHorse> {
 
     @Override
     public void runLoopingTask(SuperiorHorse superiorHorse) {
-        if (superiorHorse.getBukkitEntity().isEmpty()) {
-            superiorHorse.incrementLastRidden();
+        if (superiorHorse.getBukkitEntity().isEmpty() && !superiorHorse.isPregnant()) {
+            if (superiorHorse.getBukkitEntity().isTamed()) {
+                superiorHorse.incrementLastRidden();
+            }
         }
         else {
             if (superiorHorse.getLastRidden() > 0) {

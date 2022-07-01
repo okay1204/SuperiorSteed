@@ -3,15 +3,14 @@ package me.screescree.SuperiorSteed.superiorhorse.entity.goals;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import org.bukkit.Location;
 import org.bukkit.Particle;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
+import me.screescree.SuperiorSteed.utils.ParticleUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
@@ -119,13 +118,7 @@ public class HorseBreedGoal extends Goal {
             e.printStackTrace();
         }
         
-        Random random = animal.getRandom();
-        for (int i = 0; i < 10; i++) {
-            double randX = random.nextDouble(-1, 1);
-            double randY = random.nextDouble(1, 2);
-            double randZ = random.nextDouble(-1, 1);
-            level.getWorld().spawnParticle(Particle.HEART, new Location(level.getWorld(), animal.getX() + randX, animal.getY() + randY, animal.getZ() + randZ), 1);
-        }
+        ParticleUtil.spawnParticles(Particle.HEART, animal.getBukkitEntity().getLocation());
 
         animal.resetLove();
         animal.setAge(6000);

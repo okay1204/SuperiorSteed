@@ -12,8 +12,8 @@ public class FriendlinessDecreaseTimer implements LoopingTask<SuperiorHorse> {
 
     @Override
     public void runLoopingTask(SuperiorHorse superiorHorse) {
-        // if the horse has not been ridden for 24 hours and is not pregnant, decrease friendliness by 0.1
-        if (superiorHorse.getLastRidden() > 1728000 && !superiorHorse.isPregnant()) {
+        // if the horse has not been ridden for 24 hours, decrease friendliness by 0.1
+        if (superiorHorse.getLastRidden() > 1728000) {
             superiorHorse.friendlinessStat().add(-0.1);
         }
     }

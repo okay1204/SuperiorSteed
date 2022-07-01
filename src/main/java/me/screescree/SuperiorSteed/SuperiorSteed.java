@@ -13,6 +13,7 @@ import me.screescree.SuperiorSteed.superiorhorse.features.horsenofalldamage.Hors
 import me.screescree.SuperiorSteed.superiorhorse.features.pregnancy.NoRideWhenPregnant;
 import me.screescree.SuperiorSteed.superiorhorse.features.ridepermissions.RidePermissionsListener;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SpeedChangerListener;
+import me.screescree.SuperiorSteed.superiorhorse.features.traits.BusyBeeCalmDownHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.trust.NoLeadAndJump;
 import me.screescree.SuperiorSteed.superiorhorse.features.waterbravery.HurtInWater;
 
@@ -51,6 +52,7 @@ public class SuperiorSteed extends JavaPlugin
         pm.registerEvents(new HurtInWater(), this);
         pm.registerEvents(new GroomItemUse(), this);
         pm.registerEvents(new NoRideWhenPregnant(), this);
+        pm.registerEvents(new BusyBeeCalmDownHandler(), this);
 
         new LoopingTaskManager().start();
     }
