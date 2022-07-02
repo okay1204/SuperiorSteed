@@ -2,6 +2,7 @@ package me.screescree.SuperiorSteed.superiorhorse.features.friendliness;
 
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.event.EventHandler;
@@ -50,8 +51,13 @@ public class AttackHorse implements Listener {
                     else {
                         victim.setAttackingBack(false);
                     }
-
                 }
+                else if (!victim.isAttackingBack()) {
+                    Bukkit.getScheduler().runTaskLater(SuperiorSteed.getInstance(), () -> {
+                        victim.getNMSEntity().setStanding(false);
+                    }, 1);
+                }
+
                 victim.setAttackedByHorseTimer(1200);
             }
         }

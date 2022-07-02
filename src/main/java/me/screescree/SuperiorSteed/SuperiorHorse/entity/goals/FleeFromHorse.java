@@ -8,10 +8,10 @@ public class FleeFromHorse extends AvoidEntityGoal<SuperiorHorseEntity> {
     private SuperiorHorseEntity horse;
 
     public FleeFromHorse(SuperiorHorseEntity horse, float maxDist, double walkSpeedModifier, double sprintSpeedModifier) {
-        super(horse, SuperiorHorseEntity.class, var -> true, maxDist, walkSpeedModifier, sprintSpeedModifier, livingEntity -> {
+        super(horse, SuperiorHorseEntity.class, livingEntity -> {
             SuperiorHorseEntity otherHorse = (SuperiorHorseEntity) livingEntity;
             return otherHorse.getTarget() != null && otherHorse.getTarget().equals(horse);
-        });
+        }, maxDist, walkSpeedModifier, sprintSpeedModifier, var -> true);
         this.horse = horse;
     }
 
