@@ -13,6 +13,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Horse.Color;
@@ -75,7 +76,10 @@ public class SuperiorHorse {
 
     private long lastRidden;
 
-    private boolean isMadAtPlayer;
+    private boolean isMadAtPlayer = false;
+    private boolean isMadAtHorse = false;
+    private boolean isAttackingBack = false;
+    private double attackedByHorseTimer = 0;
 
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
@@ -824,6 +828,40 @@ public class SuperiorHorse {
 
     public void setMadAtPlayer(boolean madAtPlayer) {
         this.isMadAtPlayer = madAtPlayer;
+    }
+
+    public boolean isMadAtHorse() {
+        return isMadAtHorse;
+    }
+
+    public void setMadAtHorse(boolean madAtHorse) {
+        this.isMadAtHorse = madAtHorse;
+    }
+    
+    public boolean isAttackingBack() {
+        return isAttackingBack;
+    }
+
+    public void setAttackingBack(boolean attackingBack) {
+        this.isAttackingBack = attackingBack;
+    }
+
+    public double getAttackedByHorseTimer() {
+        return attackedByHorseTimer;
+    }
+
+    public void setAttackedByHorseTimer(double attackedByHorseTimer) {
+        this.attackedByHorseTimer = attackedByHorseTimer;
+    }
+
+    public void decrementAttackedByHorseTimer() {
+        if (attackedByHorseTimer > 0) {
+            attackedByHorseTimer--;
+        }
+    }
+
+    public boolean isLeashedByPlayer() {
+        return bukkitEntity.isLeashed() && bukkitEntity.getLeashHolder().getType() == EntityType.PLAYER;
     }
 }
 

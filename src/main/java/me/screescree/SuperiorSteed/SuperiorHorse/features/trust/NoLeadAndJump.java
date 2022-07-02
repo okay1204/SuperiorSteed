@@ -27,7 +27,7 @@ public class NoLeadAndJump implements Listener {
         Player player = event.getPlayer();
         if (
             event.getRightClicked() instanceof Horse &&
-            ((Horse) event.getRightClicked()).isLeashed() &&
+            !((Horse) event.getRightClicked()).isLeashed() &&
             player.getInventory().getItem(event.getHand()).getType() == Material.LEAD
         ) {
             SuperiorHorse superiorHorse = SuperiorSteed.getInstance().getHorseManager().getSuperiorHorse((Horse) event.getRightClicked());

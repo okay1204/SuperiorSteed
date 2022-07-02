@@ -8,9 +8,12 @@ import org.bukkit.craftbukkit.v1_18_R1.attribute.CraftAttributeMap;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.AngryBusyBeeAttackGoal;
+import me.screescree.SuperiorSteed.superiorhorse.entity.goals.AttackHorseGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.DrinkWaterGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.EatSeedsGoal;
+import me.screescree.SuperiorSteed.superiorhorse.entity.goals.FleeFromHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.HorseBreedGoal;
+import me.screescree.SuperiorSteed.superiorhorse.entity.goals.HurtByHorseGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
@@ -65,25 +68,26 @@ public class SuperiorHorseEntity extends Horse {
 
     @Override
     protected void registerGoals() {
-        super.createLivingAttributes().add(Attributes.ATTACK_DAMAGE, 3.0D);
-
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.2D));
-        this.goalSelector.addGoal(1, new RunAroundLikeCrazyGoal(this, 1.2D));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(3, new HorseBreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new DrinkWaterGoal(this, 1.0D));
-        this.goalSelector.addGoal(6, new EatSeedsGoal(this, 1.0D));
-        this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.7D));
-        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(2, new FleeFromHorse(this, 6.0F, 1.0D, 2.0D));
+        this.goalSelector.addGoal(3, new RunAroundLikeCrazyGoal(this, 1.2D));
+        this.goalSelector.addGoal(3, new PanicGoal(this, 1.2D));
+        this.goalSelector.addGoal(4, new HorseBreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new DrinkWaterGoal(this, 1.0D));
+        this.goalSelector.addGoal(7, new EatSeedsGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.0D));
+        this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 0.7D));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
         this.addBehaviourGoals();
     }
 
     @Override
     protected void addBehaviourGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.25D, Ingredient.of(new ItemLike[]{Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE}), false));
+        this.goalSelector.addGoal(5, new TemptGoal(this, 1.25D, Ingredient.of(new ItemLike[]{Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE}), false));
+        this.targetSelector.addGoal(0, new HurtByHorseGoal(this));
+        this.targetSelector.addGoal(1, new AttackHorseGoal(this));
         this.targetSelector.addGoal(2, new AngryBusyBeeAttackGoal(this));
     }
 }

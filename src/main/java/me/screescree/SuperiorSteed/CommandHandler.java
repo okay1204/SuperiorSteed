@@ -6,6 +6,7 @@ import me.screescree.SuperiorSteed.commands.HorseCache;
 import me.screescree.SuperiorSteed.commands.HorseJumpAndSpeedTest;
 import me.screescree.SuperiorSteed.commands.HorsePerms;
 import me.screescree.SuperiorSteed.commands.HorseStats;
+import me.screescree.SuperiorSteed.commands.MakeHorseAngry;
 import me.screescree.SuperiorSteed.commands.ReadPersistentData;
 import me.screescree.SuperiorSteed.commands.ShavingTimer;
 import me.screescree.SuperiorSteed.commands.SummonHorse;
@@ -23,5 +24,6 @@ public class CommandHandler {
         new HorsePerms();
         new ShavingTimer();
         new GetTicksLived();
+        new MakeHorseAngry();
     }
 }
