@@ -8,6 +8,7 @@ import me.screescree.SuperiorSteed.commands.HorsePerms;
 import me.screescree.SuperiorSteed.commands.HorseStats;
 import me.screescree.SuperiorSteed.commands.MakeHorseAngry;
 import me.screescree.SuperiorSteed.commands.ReadPersistentData;
+import me.screescree.SuperiorSteed.commands.SetWalkTargetTest;
 import me.screescree.SuperiorSteed.commands.ShavingTimer;
 import me.screescree.SuperiorSteed.commands.SummonHorse;
 import me.screescree.SuperiorSteed.commands.UpdateHorse;
@@ -25,5 +26,6 @@ public class CommandHandler {
         new ShavingTimer();
         new GetTicksLived();
         new MakeHorseAngry();
+        new SetWalkTargetTest();
     }
 }

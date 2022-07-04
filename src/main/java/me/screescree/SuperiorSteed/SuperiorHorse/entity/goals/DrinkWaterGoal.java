@@ -1,99 +1,101 @@
 package me.screescree.SuperiorSteed.superiorhorse.entity.goals;
 
-import java.util.ArrayList;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Waterlogged;
 
 import me.screescree.SuperiorSteed.superiorhorse.entity.ConsumeGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
 import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
+import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 
 public class DrinkWaterGoal extends ConsumeGoal {
-    private final int MAX_DISTANCE = 20;
 
     public DrinkWaterGoal(SuperiorHorseEntity superiorHorse, double d0) {
         super(superiorHorse, () -> superiorHorse.getWrapper().hydrationStat(), d0);
+        setDesiredBlockPredicate(this::isDesiredBlock);
     }
 
-    @Override
-    protected BlockPos lookForSuitablePos() {
-        BlockPos blockposition = mob.blockPosition();
-        return !mob.level.getBlockState(blockposition).getCollisionShape(mob.level, blockposition).isEmpty() ? null : BlockPos.findClosestMatch(blockposition, MAX_DISTANCE, 1, blockPos -> {
-            // Check if block is air
-            if (mob.level.getBlockState(blockPos).getMaterial() != Material.AIR) {
-                return false;
-            }
+    private boolean isDesiredBlock(Block block) {
+        // Check if block is air
+        if (block.getType() != Material.AIR) {
+            return false;
+        }
 
-            // Check if block underneath is drinkable and one block around it is solid
-            BlockState blockStatBelow = mob.level.getBlockState(blockPos.below());
-            if (isDrinkable(blockStatBelow)) {
+        // If the horse is an adult, it's hitbox is bigger so we can check if the air block directly above the water
+        Block blockBelow = block.getRelative(BlockFace.DOWN);
+        if (mob.getWrapper().getAge() >= SuperiorHorseInfo.AGE_ADULT) {
+            if (isDrinkable(blockBelow)) {
                 for (int xOffset = -1; xOffset <= 1; xOffset++) {
                     for (int zOffset = -1; zOffset <= 1; zOffset++) {
-                        if (mob.level.getBlockState(blockPos.offset(xOffset, -1, zOffset)).getMaterial().isSolid()) {
+                        if (blockBelow.getRelative(xOffset, 0, zOffset).getType().isSolid()) {
                             return true;
                         }
                     }
                 }
             }
-
-            // Check if drinkable source is directly next to the block
-            for (int xOffset = -1; xOffset <= 1; xOffset++) {
-                for (int zOffset = -1; zOffset <= 1; zOffset++) {
-                    BlockState blockState = mob.level.getBlockState(blockPos.offset(xOffset, 0, zOffset));
-                    // check if the block is water, waterlogged, or a water cauldron
-                    if (isDrinkable(blockState)) {
-                        return true;
+        }
+        // if it's a baby, we must check the side blocks instead
+        else {
+            if (blockBelow.getType().isSolid()) {
+                for (int xOffset = -1; xOffset <= 1; xOffset++) {
+                    for (int zOffset = -1; zOffset <= 1; zOffset++) {
+                        if (isDrinkable(blockBelow.getRelative(xOffset, 0, zOffset))) {
+                            return true;
+                        }
                     }
                 }
             }
+        }
 
-            return false;
-        }).orElse(null);
+        // Check if drinkable source is directly next to the block
+        for (int xOffset = -1; xOffset <= 1; xOffset++) {
+            for (int zOffset = -1; zOffset <= 1; zOffset++) {
+                if (isDrinkable(block.getRelative(xOffset, 0, zOffset))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     // checks if nearby blocks are water, and returns the water block if so. Returns null if not.
     @Override
     protected BlockPos getConsumableSourcePos() {
-        BlockPos mobBlockPos = mob.blockPosition();
 
-        ArrayList<BlockPos> waterPosList = new ArrayList<BlockPos>();
+        BlockPos mobBlockPos = mob.blockPosition();
+        Vec3 mobPos = mob.position();
+
+        BlockPos closestWaterPos = null;
+        Vec3 closestVec = null;
 
         // Checks for a drinkable source within a radius of 2 blocks underneath or around the horse
-        for (int xOffset = -3; xOffset <= 3; xOffset++) {
+        for (int xOffset = -1; xOffset <= 1; xOffset++) {
             for (int yOffset = -1; yOffset <= 0; yOffset++) {
-                for (int zOffset = -3; zOffset <= 3; zOffset++) {
+                for (int zOffset = -1; zOffset <= 1; zOffset++) {
                     BlockPos waterPos = mobBlockPos.offset(xOffset, yOffset, zOffset);
-                    BlockState blockState = mob.level.getBlockState(waterPos);
-                    if (isDrinkable(blockState)) {
-                        waterPosList.add(waterPos);
+                    
+                    Block block = ((World) mob.level.getWorld()).getBlockAt(waterPos.getX(), waterPos.getY(), waterPos.getZ());
+                    if (isDesiredBlock(block)) {
+                        // keep track of water pos that is closest to the horse
+                        if (
+                            closestWaterPos == null ||
+                            mobPos.distanceTo(new Vec3(closestWaterPos.getX(), closestWaterPos.getY(), closestWaterPos.getZ())) < mobPos.distanceTo(closestVec)
+                        ) {
+                            closestWaterPos = waterPos;
+                            closestVec = new Vec3(closestWaterPos.getX(), closestWaterPos.getY(), closestWaterPos.getZ());
+                        }
                     }
                 }
             }
         }
 
-        if (waterPosList.isEmpty()) {
-            return null;
-        }
-        else {
-            // return water pos that is closest to the horse
-            BlockPos closestWaterPos = waterPosList.get(0);
-            Vec3 closestVec = new Vec3(closestWaterPos.getX(), closestWaterPos.getY(), closestWaterPos.getZ());
-            Vec3 mobPos = mob.position();
-            // iterate through water pos list except for the first one, and find the closest one to the horse
-            for (int i = 1; i < waterPosList.size(); i++) {
-                BlockPos waterPos = waterPosList.get(i);
-                if (mobPos.distanceTo(new Vec3(waterPos.getX(), waterPos.getY(), waterPos.getZ())) < mobPos.distanceTo(closestVec)) {
-                    closestWaterPos = waterPos;
-                    closestVec = new Vec3(closestWaterPos.getX(), closestWaterPos.getY(), closestWaterPos.getZ());
-                }
-            }
-
-            return closestWaterPos;
-        }
+        return closestWaterPos;
     }
 
     protected double randomizeStartConsumingLimit() {
@@ -104,7 +106,19 @@ public class DrinkWaterGoal extends ConsumeGoal {
         stat.add(0.01);
     }
 
-    private boolean isDrinkable(BlockState blockState) {
-        return blockState.getMaterial() == Material.WATER || blockState.getFluidState().is(FluidTags.WATER) || blockState.is(Blocks.WATER_CAULDRON);
+    private boolean isDrinkable(Block block) {
+        if (block.getType() == Material.WATER) {
+            return true;
+        }
+
+        if (block.getType() == Material.WATER_CAULDRON) {
+            return true;
+        }
+
+        if (block.getBlockData() instanceof Waterlogged && ((Waterlogged) block.getBlockData()).isWaterlogged()) {
+            return true;
+        }
+
+        return false;
     }
 }

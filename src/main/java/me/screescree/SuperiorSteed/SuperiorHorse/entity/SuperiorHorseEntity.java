@@ -12,6 +12,7 @@ import me.screescree.SuperiorSteed.superiorhorse.entity.goals.AttackHorseGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.DrinkWaterGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.EatSeedsGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.FleeFromHorse;
+import me.screescree.SuperiorSteed.superiorhorse.entity.goals.FollowHorseParentGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.HorseBreedGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.HurtByHorseGoal;
 import net.minecraft.world.entity.EntityType;
@@ -19,7 +20,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
@@ -35,7 +35,8 @@ import net.minecraft.world.level.ItemLike;
 
 public class SuperiorHorseEntity extends Horse {
     private final SuperiorHorse superiorHorseWrapper;
-
+    private boolean isUsingConsumingGoal;
+    
     public SuperiorHorseEntity(org.bukkit.World world, SuperiorHorse superiorHorseWrapper) {
         super(EntityType.HORSE, ((CraftWorld) world).getHandle());
         this.superiorHorseWrapper = superiorHorseWrapper;
@@ -52,6 +53,8 @@ public class SuperiorHorseEntity extends Horse {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(100);
     }
 
     public SuperiorHorseEntity(org.bukkit.entity.Horse horse, SuperiorHorse superiorHorseWrapper) {
@@ -66,6 +69,14 @@ public class SuperiorHorseEntity extends Horse {
         return random;
     }
 
+    public boolean isUsingConsumingGoal() {
+        return isUsingConsumingGoal;
+    }
+
+    public void setUsingConsumingGoal(boolean isUsingConsumingGoal) {
+        this.isUsingConsumingGoal = isUsingConsumingGoal;
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
@@ -74,8 +85,8 @@ public class SuperiorHorseEntity extends Horse {
         this.goalSelector.addGoal(3, new PanicGoal(this, 1.2D));
         this.goalSelector.addGoal(4, new HorseBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new DrinkWaterGoal(this, 1.0D));
-        this.goalSelector.addGoal(7, new EatSeedsGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.0D));
+        this.goalSelector.addGoal(7, new EatSeedsGoal(this, 1.2D));
+        this.goalSelector.addGoal(8, new FollowHorseParentGoal(this, 1.0D));
         this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 0.7D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
