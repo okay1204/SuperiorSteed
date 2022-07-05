@@ -82,8 +82,8 @@ public class EatSeedsGoal extends ConsumeGoal {
 
         updateEdibleSeeds();
 
-        for (double xOffset = -2; xOffset <= 2; xOffset++) {
-            for (double zOffset = -2; zOffset <= 2; zOffset++) {
+        for (double xOffset = -1; xOffset <= 1; xOffset++) {
+            for (double zOffset = -1; zOffset <= 1; zOffset++) {
 
                 BlockPos brewingPos = mobBlockPos.offset(xOffset, 0, zOffset);
                 if (mob.level.getBlockState(brewingPos).is(Blocks.BREWING_STAND)) {
