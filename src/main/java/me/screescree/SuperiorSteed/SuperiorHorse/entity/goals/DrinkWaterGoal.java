@@ -6,17 +6,19 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Waterlogged;
 
+import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.ConsumeGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
-import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import me.screescree.SuperiorSteed.superiorhorse.info.SuperiorHorseInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 
 public class DrinkWaterGoal extends ConsumeGoal {
+    private double startConsumingMin;
 
-    public DrinkWaterGoal(SuperiorHorseEntity superiorHorse, double d0) {
-        super(superiorHorse, () -> superiorHorse.getWrapper().hydrationStat(), d0);
+    public DrinkWaterGoal(SuperiorHorseEntity superiorHorse, double speedModifier) {
+        super(superiorHorse, speedModifier);
+        randomizeStartConsumingMin();
         setDesiredBlockPredicate(this::isDesiredBlock);
     }
 
@@ -98,12 +100,38 @@ public class DrinkWaterGoal extends ConsumeGoal {
         return closestWaterPos;
     }
 
-    protected double randomizeStartConsumingLimit() {
-        return mob.getRandom().nextDouble(0.9, 0.98);
+    @Override
+    public boolean canUse() {
+        SuperiorHorse wrapper = mob.getWrapper();
+        if (wrapper.hydrationStat() == null || wrapper.hydrationStat().get() > startConsumingMin) {
+            return false;
+        }
+
+        return super.canUse();
     }
 
-    protected void increaseStat(Stat stat, BlockPos sourcePos) {
-        stat.add(0.01);
+    @Override
+    public boolean canContinueToUse() {
+        SuperiorHorse wrapper = mob.getWrapper();
+        if (Math.abs(wrapper.hydrationStat().get() - 1.0) < 0.001) {
+            return false;
+        }
+
+        return super.canContinueToUse();
+    }
+
+    private void randomizeStartConsumingMin() {
+        startConsumingMin = mob.getRandom().nextDouble(0.9, 0.98);
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        randomizeStartConsumingMin();
+    }
+
+    protected void increaseStat(BlockPos sourcePos) {
+        mob.getWrapper().hydrationStat().add(0.01);
     }
 
     private boolean isDrinkable(Block block) {

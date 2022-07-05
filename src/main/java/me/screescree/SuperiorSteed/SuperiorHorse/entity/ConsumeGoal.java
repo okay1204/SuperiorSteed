@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
@@ -17,25 +16,21 @@ public abstract class ConsumeGoal extends Goal {
 
     protected final SuperiorHorseEntity mob;
     private final double speedModifier;
-    private final GetStatFunction getStatFunction;
     private Predicate<Block> desiredBlockPredicate;
     private Block targetBlock;
-    private double startConsumingLimit;
     private Vec3 lastTickPos;
     private int ticksSinceLastMove = 0;
 
-    public ConsumeGoal(SuperiorHorseEntity superiorHorse, GetStatFunction statFunction, double d0, Predicate<Block> desiredBlockPredicate) {
+    public ConsumeGoal(SuperiorHorseEntity superiorHorse, double speedModifier, Predicate<Block> desiredBlockPredicate) {
         mob = superiorHorse;
-        speedModifier = d0;
-        this.getStatFunction = statFunction;
-        startConsumingLimit = randomizeStartConsumingLimit();
+        this.speedModifier = speedModifier;
         this.desiredBlockPredicate = desiredBlockPredicate;
         lastTickPos = mob.position();
         setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
-    public ConsumeGoal(SuperiorHorseEntity superiorHorse, GetStatFunction statFunction, double d0) {
-        this(superiorHorse, statFunction, d0, null);
+    public ConsumeGoal(SuperiorHorseEntity superiorHorse, double speedModifier) {
+        this(superiorHorse, speedModifier, null);
     }
 
     protected void setDesiredBlockPredicate(Predicate<Block> desiredBlock) {
@@ -45,14 +40,6 @@ public abstract class ConsumeGoal extends Goal {
     @Override
     public boolean canUse() {
         if (desiredBlockPredicate == null) {
-            return false;
-        }
-
-        if (getStatFunction.getStat() == null) {
-            return false;
-        }
-        
-        if (getStatFunction.getStat().get() > startConsumingLimit) {
             return false;
         }
 
@@ -67,11 +54,6 @@ public abstract class ConsumeGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (Math.abs(getStatFunction.getStat().get() - 1.0) < 0.001) {
-            return false;
-        }
-
-        
         BlockPos foundBlockPos = findTargetBlock();
         if (foundBlockPos == null) {
             if (desiredBlockPredicate.test(targetBlock)) {
@@ -123,12 +105,13 @@ public abstract class ConsumeGoal extends Goal {
             }
             else {
                 lastTickPos = mob.position();
+                ticksSinceLastMove = 0;
             }
             
         }
         else if (mob.getNavigation().isDone()) {
             mob.getLookControl().setLookAt(sourcePos.getX() + 0.5, sourcePos.getY() + 0.5, sourcePos.getZ() + 0.5, 2000, 2000);
-            increaseStat(getStatFunction.getStat(), sourcePos);
+            increaseStat(sourcePos);
             mob.getWrapper().getBukkitEntity().setEatingHaystack(true);
         }
     }
@@ -145,12 +128,9 @@ public abstract class ConsumeGoal extends Goal {
 
     public void stop() {
         mob.setUsingConsumingGoal(false);
-        startConsumingLimit = randomizeStartConsumingLimit();
     }
-
-    protected abstract double randomizeStartConsumingLimit();
 
     protected abstract BlockPos getConsumableSourcePos();
 
-    protected abstract void increaseStat(Stat stat, BlockPos sourcePos);
+    protected abstract void increaseStat(BlockPos sourcePos);
 }

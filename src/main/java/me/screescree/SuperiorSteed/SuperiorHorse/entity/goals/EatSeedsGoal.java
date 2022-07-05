@@ -15,7 +15,6 @@ import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.ConsumeGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.SuperiorHorseEntity;
 import me.screescree.SuperiorSteed.superiorhorse.info.Seed;
-import me.screescree.SuperiorSteed.superiorhorse.info.Stat;
 import me.screescree.SuperiorSteed.superiorhorse.info.Trait;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
@@ -23,9 +22,11 @@ import net.minecraft.world.phys.Vec3;
 
 public class EatSeedsGoal extends ConsumeGoal {
     private Set<Material> edibleSeeds;
+    private double startConsumingMin;
 
-    public EatSeedsGoal(SuperiorHorseEntity superiorHorse, double d0) {
-        super(superiorHorse, () -> superiorHorse.getWrapper().hungerStat(), d0);
+    public EatSeedsGoal(SuperiorHorseEntity superiorHorse, double speedModifier) {
+        super(superiorHorse, speedModifier);
+        randomizeStartConsumingMin();
         setDesiredBlockPredicate(this::isDesiredBlock);
     }
 
@@ -58,7 +59,10 @@ public class EatSeedsGoal extends ConsumeGoal {
         for (int i = 0; i <= 2; i++) {
             ItemStack item = inventory.getItem(i);
             if (item != null) {
-                if (edibleSeeds.contains(inventory.getItem(i).getType())) {
+                if (!hungerIsFull() && edibleSeeds.contains(inventory.getItem(i).getType())) {
+                    return true;
+                }
+                else if (!pregnancyComplicationIsFull() && inventory.getItem(i).getType() == Material.BEETROOT_SEEDS) {
                     return true;
                 }
             }
@@ -137,22 +141,82 @@ public class EatSeedsGoal extends ConsumeGoal {
         super.tick();
     }
 
-    protected double randomizeStartConsumingLimit() {
-        return mob.getRandom().nextDouble(0.9, 0.95);
+    @Override
+    public boolean canUse() {
+        SuperiorHorse wrapper = mob.getWrapper();
+        if (wrapper.hungerStat() == null) {
+            return false;
+        }
+
+        if (
+            wrapper.hungerStat().get() > startConsumingMin &&
+            (!wrapper.isPregnant() || wrapper.pregnancyComplicationStat().get() > startConsumingMin)
+        ) {
+            return false;
+        }
+
+        return super.canUse();
     }
 
-    protected void increaseStat(Stat stat, BlockPos sourcePos) {
-        stat.add(0.05);
+    @Override
+    public boolean canContinueToUse() {
+        if (hungerIsFull() && pregnancyComplicationIsFull()) {
+            return false;
+        }
+
+        return super.canContinueToUse();
+    }
+
+    private void randomizeStartConsumingMin() {
+        startConsumingMin = mob.getRandom().nextDouble(0.9, 0.95);
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        randomizeStartConsumingMin();
+    }
+
+    private boolean hungerIsFull() {
+        return Math.abs(mob.getWrapper().hungerStat().get() - 1.0) < 0.001;
+    }
+
+    private boolean pregnancyComplicationIsFull() {
+        return !mob.getWrapper().isPregnant() || Math.abs(mob.getWrapper().pregnancyComplicationStat().get() - 1.0) < 0.001;
+    }
+
+    protected void increaseStat(BlockPos sourcePos) {
+        SuperiorHorse wrapper = mob.getWrapper();
 
         Block block = ((World) mob.level.getWorld()).getBlockAt(sourcePos.getX(), sourcePos.getY(), sourcePos.getZ());
         BrewerInventory inventory = ((BrewingStand) block.getState()).getInventory();
 
-        for (int i = 0; i <= 2; i++) {
-            ItemStack item = inventory.getItem(i);
-            if (item != null) {
-                if (edibleSeeds.contains(inventory.getItem(i).getType())) {
-                    inventory.setItem(i, null);
-                    break;
+        if (!hungerIsFull()) {
+            for (int i = 0; i <= 2; i++) {
+                ItemStack item = inventory.getItem(i);
+                if (item != null) {
+                    if (edibleSeeds.contains(inventory.getItem(i).getType())) {
+                        wrapper.hungerStat().add(0.05);
+                        if (wrapper.isPregnant() && inventory.getItem(i).getType() == Material.BEETROOT_SEEDS) {
+                            wrapper.pregnancyComplicationStat().add(0.05);
+                        }
+                        
+                        inventory.setItem(i, null);
+                        break;
+                    }
+                }
+            }
+        }
+        else if (!pregnancyComplicationIsFull()) {
+            for (int i = 0; i <= 2; i++) {
+                ItemStack item = inventory.getItem(i);
+                if (item != null) {
+                    if (inventory.getItem(i).getType() == Material.BEETROOT_SEEDS) {
+                        wrapper.pregnancyComplicationStat().add(0.05);
+
+                        inventory.setItem(i, null);
+                        break;
+                    }
                 }
             }
         }
