@@ -41,14 +41,18 @@ public class HorseBreedGoal extends Goal {
             return false;
         }
 
-        SuperiorHorseEntity otherHorse = (SuperiorHorseEntity) other;
-        SuperiorHorse otherHorseWrapper = otherHorse.getWrapper();
-
-        if (horseWrapper.isMale() == otherHorseWrapper.isMale()) {
+        if (horseWrapper.isMale() && !horseWrapper.isStallion()) {
             return false;
         }
 
-        if (horseWrapper.isMale() && !horseWrapper.isStallion()) {
+        SuperiorHorseEntity otherHorse = (SuperiorHorseEntity) other;
+        SuperiorHorse otherHorseWrapper = otherHorse.getWrapper();
+        
+        if (otherHorseWrapper.isPregnant()) {
+            return false;
+        }
+
+        if (horseWrapper.isMale() == otherHorseWrapper.isMale()) {
             return false;
         }
 
