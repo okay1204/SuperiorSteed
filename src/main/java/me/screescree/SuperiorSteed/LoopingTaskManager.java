@@ -24,6 +24,7 @@ import me.screescree.SuperiorSteed.superiorhorse.features.lastridden.LastRiddenC
 import me.screescree.SuperiorSteed.superiorhorse.features.pregnancy.PregnancyTimer;
 import me.screescree.SuperiorSteed.superiorhorse.features.shavingsuse.ShavingsUseHorseTracker;
 import me.screescree.SuperiorSteed.superiorhorse.features.speedchanger.SendActionBarLoop;
+import me.screescree.SuperiorSteed.superiorhorse.features.stomach.StomachTimer;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.AngelHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.ExtrovertHandler;
 import me.screescree.SuperiorSteed.superiorhorse.features.traits.FriendlyHandler;
@@ -61,6 +62,7 @@ public class LoopingTaskManager {
         horseTasks.add(new HungerHydrationModifier());
         horseTasks.add(new PregnancyTimer());
         horseTasks.add(new LastRiddenCounter());
+        horseTasks.add(new StomachTimer());
     }
 
     public void start() {
