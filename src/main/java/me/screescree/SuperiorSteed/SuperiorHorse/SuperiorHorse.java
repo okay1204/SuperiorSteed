@@ -80,6 +80,8 @@ public class SuperiorHorse {
     private boolean isMadAtHorse = false;
     private boolean isAttackingBack = false;
     private double attackedByHorseTimer = 0;
+    
+    private long stomachHurtDelay = (long) (ThreadLocalRandom.current().nextDouble(3) * 20);
 
     public SuperiorHorse(Horse horse) {
         Location spawnLocation = horse.getLocation();
@@ -862,6 +864,10 @@ public class SuperiorHorse {
 
     public boolean isLeashedByPlayer() {
         return bukkitEntity.isLeashed() && bukkitEntity.getLeashHolder().getType() == EntityType.PLAYER;
+    }
+
+    public long getStomachHurtDelay() {
+        return stomachHurtDelay;
     }
 }
 

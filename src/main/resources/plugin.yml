@@ -17,8 +17,8 @@ commands:
 
   # admin commands
   summonhorse:
-    description: "Displays a GUI to summon a custom horse."
-    usage: "§cUsage: /<command>" 
+    description: "Displays a GUI to summon a custom horse. Optional: Quantity specifies how many horses you want to spawn."
+    usage: "§cUsage: /<command> [<quantity>]"
     permission: "superiorsteed.admin.summonhorse"
   updatehorse:
     description: "Displays a GUI to modify the horse you are currently riding or looking at."

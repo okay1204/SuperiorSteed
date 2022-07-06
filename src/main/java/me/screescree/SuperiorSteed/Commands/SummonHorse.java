@@ -24,6 +24,23 @@ public class SummonHorse extends CustomCommand {
             sender.sendMessage(Format.colorize("&cThis command can only be used by a player."));
             return true;
         }
+
+        int quantity = 1;
+        if (args.length >= 1) {
+            try {
+                quantity = Integer.parseInt(args[0]);
+            }
+            catch (NumberFormatException e) {
+                sender.sendMessage(Format.colorize("&cThe quantity must be a positive integer."));
+                return true;
+            }
+
+            if (quantity <= 0) {
+                sender.sendMessage(Format.colorize("&cThe quantity must be a positive integer."));
+                return true;
+            }
+        }
+        final int finalQuantity = quantity;
         
         SuperiorSteed plugin = SuperiorSteed.getInstance();
         new HorseEditor(player, "Summon Horse", horseInfo -> {
@@ -31,8 +48,10 @@ public class SummonHorse extends CustomCommand {
                 player.sendMessage(getNoPermissionMessage());
                 return;
             }
-            plugin.getHorseManager().newSuperiorHorse(player.getLocation(), horseInfo);
-            player.sendMessage(Format.colorize("&aYou have summoned a new horse."));
+            for (int i = 0; i < finalQuantity; i++) {
+                plugin.getHorseManager().newSuperiorHorse(player.getLocation(), horseInfo);
+            }
+            player.sendMessage(Format.colorize("&aYou have summoned " + finalQuantity +  " new horse" + (finalQuantity > 1 ? "s" : "") + "."));
         });
                 
         return true;
