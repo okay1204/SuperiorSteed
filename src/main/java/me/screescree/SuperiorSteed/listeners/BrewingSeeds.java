@@ -1,13 +1,12 @@
 package me.screescree.SuperiorSteed.listeners;
 
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.screescree.SuperiorSteed.superiorhorse.info.Seed;;
+import me.screescree.SuperiorSteed.superiorhorse.info.Seed;
 
 public class BrewingSeeds implements Listener {
     @EventHandler
@@ -18,7 +17,7 @@ public class BrewingSeeds implements Listener {
             // If the slot is one of the three potion slots
             if (event.getSlot() >= 0 && event.getSlot() <= 2) {
                 // If the item is a seed
-                if (event.getCurrentItem().getType() == Material.AIR && event.getCursor() != null && Seed.MATERIALS.contains(event.getCursor().getType())) {
+                if (event.getCurrentItem().getType().isAir() && event.getCursor() != null && Seed.MATERIALS.contains(event.getCursor().getType())) {
                     ItemStack droppedItem = event.getCursor().clone();
                     droppedItem.setAmount(1);
                     event.getCursor().setAmount(event.getCursor().getAmount() - 1);

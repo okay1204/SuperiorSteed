@@ -24,7 +24,7 @@ public class DrinkWaterGoal extends ConsumeGoal {
 
     private boolean isDesiredBlock(Block block) {
         // Check if block is air
-        if (block.getType() != Material.AIR) {
+        if (!block.getType().isAir()) {
             return false;
         }
 

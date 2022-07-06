@@ -40,15 +40,18 @@ public abstract class ConsumeGoal extends Goal {
     @Override
     public boolean canUse() {
         if (desiredBlockPredicate == null) {
+            System.out.println("canUse false 1");
             return false;
         }
 
         BlockPos foundBlockPos = findTargetBlock();
         if (foundBlockPos == null) {
+            System.out.println("canUse false 2");
             return false;
         }
 
         targetBlock = ((World) mob.level.getWorld()).getBlockAt(foundBlockPos.getX(), foundBlockPos.getY(), foundBlockPos.getZ());
+        System.out.println("canUse true 3");
         return true;
     }
 
@@ -88,6 +91,7 @@ public abstract class ConsumeGoal extends Goal {
 
     public void tick() {
         BlockPos sourcePos = getConsumableSourcePos();
+        System.out.println(sourcePos);
         if (sourcePos == null) {
             mob.getWrapper().getBukkitEntity().setEatingHaystack(false);
             moveToTargetBlock();

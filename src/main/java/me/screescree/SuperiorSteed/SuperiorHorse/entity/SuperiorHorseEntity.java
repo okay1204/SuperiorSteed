@@ -10,6 +10,7 @@ import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.AngryBusyBeeAttackGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.AttackHorseGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.DrinkWaterGoal;
+import me.screescree.SuperiorSteed.superiorhorse.entity.goals.EatGrassGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.EatSeedsGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.FleeFromHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.FollowHorseParentGoal;
@@ -84,12 +85,13 @@ public class SuperiorHorseEntity extends Horse {
         this.goalSelector.addGoal(3, new RunAroundLikeCrazyGoal(this, 1.2D));
         this.goalSelector.addGoal(3, new PanicGoal(this, 1.2D));
         this.goalSelector.addGoal(4, new HorseBreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(6, new DrinkWaterGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new DrinkWaterGoal(this, 1.2D));
         this.goalSelector.addGoal(7, new EatSeedsGoal(this, 1.2D));
-        this.goalSelector.addGoal(8, new FollowHorseParentGoal(this, 1.0D));
-        this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 0.7D));
-        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(8, new EatGrassGoal(this, 1.0D));
+        this.goalSelector.addGoal(9, new FollowHorseParentGoal(this, 1.0D));
+        this.goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 0.7D));
+        this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(12, new RandomLookAroundGoal(this));
         this.addBehaviourGoals();
     }
 
