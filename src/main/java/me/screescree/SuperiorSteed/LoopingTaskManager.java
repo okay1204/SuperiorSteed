@@ -14,6 +14,8 @@ import me.screescree.SuperiorSteed.superiorhorse.Births;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorsesManager;
 import me.screescree.SuperiorSteed.superiorhorse.features.ageing.NaturalAge;
+import me.screescree.SuperiorSteed.superiorhorse.features.chunkloader.LoadChunksAroundHorse;
+import me.screescree.SuperiorSteed.superiorhorse.features.chunkloader.UnloadUnwantedChunks;
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.BuckOffLoop;
 import me.screescree.SuperiorSteed.superiorhorse.features.comfortability.ComfortabilityWithPlayer;
 import me.screescree.SuperiorSteed.superiorhorse.features.friendliness.FriendlinessDecreaseTimer;
@@ -63,6 +65,7 @@ public class LoopingTaskManager {
         horseTasks.add(new PregnancyTimer());
         horseTasks.add(new LastRiddenCounter());
         horseTasks.add(new StomachTimer());
+        horseTasks.add(new LoadChunksAroundHorse());
     }
 
     public void start() {
@@ -117,11 +120,14 @@ public class LoopingTaskManager {
                     }
                 }
 
+                // births
                 for (BirthInfo birthInfo : Births.get()) {
                     manager.newSuperiorHorse(birthInfo.getLocation(), birthInfo.getHorseInfo());
                 }
-
                 Births.clear();
+
+                // chunkloader
+                UnloadUnwantedChunks.run();
 
             }, entry.getKey(), entry.getKey());
         }

@@ -9,9 +9,9 @@ public class StomachTimer implements LoopingTask<SuperiorHorse> {
     @Override
     public int getIntervalTicks() {
         // run every hour
-        return 72000;
-        // // FIXME for testing, 10 seconds
-        // return 20 * 10;
+        // return 72000;
+        // FIXME for testing, 10 seconds
+        return 20 * 10;
     }
 
     @Override
@@ -24,6 +24,10 @@ public class StomachTimer implements LoopingTask<SuperiorHorse> {
         
         superiorHorse.hungerStat().add(decrementAmount);
         superiorHorse.hydrationStat().add(decrementAmount);
+
+        if (superiorHorse.isPregnant()) {
+            superiorHorse.pregnancyComplicationStat().add(-0.1);
+        }
     }
     
 }

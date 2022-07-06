@@ -2,3 +2,9 @@
 # This is the amount of time in minutes between each cache clear. Note that this may cause a little lag.
 # You may set this to 0 or a negative number to disable the cache verification (not recommended).
 verifyCacheInterval: 60
+
+# In order for horses to be able to eat seeds and drink water outside of player range, chunks need to be loaded around the horse, just like
+# how they are loaded around a player. This number is how many far out chunks are loaded. For example, 1 would load chunks 1 chunk away, 2 would load
+# chunks 2 chunks away (3x3 square of chunks), and so on. Increasing this number will increase the distance at which horses can pathfind, however
+# it will also increase the amount of lag that is caused by loading chunks.
+horseChunkDistance: 3

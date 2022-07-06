@@ -29,7 +29,7 @@ public class SuperiorHorsesManager implements Listener {
             }
         }
 
-        int verifyCacheInterval = SuperiorSteed.getInstance().getConfig().getInt("verifyCacheInterval") * 1200;
+        int verifyCacheInterval = SuperiorSteed.getInstance().getConfig().getInt("verifyCacheInterval", 60) * 1200;
         if (verifyCacheInterval > 0) {
             Bukkit.getScheduler().runTaskTimer(SuperiorSteed.getInstance(), this::verifyCache, verifyCacheInterval, verifyCacheInterval);
         }

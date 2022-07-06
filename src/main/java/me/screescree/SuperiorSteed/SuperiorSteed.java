@@ -1,5 +1,6 @@
 package me.screescree.SuperiorSteed;
 
+import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -57,6 +58,10 @@ public class SuperiorSteed extends JavaPlugin
         pm.registerEvents(new AttackHorse(), this);
 
         new LoopingTaskManager().start();
+
+        for (World world : getServer().getWorlds()) {
+            world.removePluginChunkTickets(this);
+        }
     }
     
     @Override

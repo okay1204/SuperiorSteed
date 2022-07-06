@@ -1,6 +1,7 @@
 package me.screescree.SuperiorSteed;
 
 import me.screescree.SuperiorSteed.commands.Geld;
+import me.screescree.SuperiorSteed.commands.GetChunkTickets;
 import me.screescree.SuperiorSteed.commands.GetTicksLived;
 import me.screescree.SuperiorSteed.commands.HorseCache;
 import me.screescree.SuperiorSteed.commands.HorseJumpAndSpeedTest;
@@ -27,5 +28,6 @@ public class CommandHandler {
         new GetTicksLived();
         new MakeHorseAngry();
         new SetWalkTargetTest();
+        new GetChunkTickets();
     }
 }

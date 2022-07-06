@@ -58,6 +58,10 @@ commands:
     description: "Sets the walk target of the horse you are looking at."
     usage: "§cUsage: /<command> <x> <y> <z>"
     permission: "superiorsteed.debug.setwalktargettest"
+  getchunktickets:
+    description: "Displays the chunk tickets currently active around horses."
+    usage: "§cUsage: /<command>"
+    permission: "superiorsteed.debug.getchunktickets"
 
 permissions:
   superiorsteed.horsestats:
@@ -99,6 +103,7 @@ permissions:
       superiorsteed.debug.gettickslived: true
       superiorsteed.debug.makehorseangry: true
       superiorsteed.debug.setwalktargettest: true
+      superiorsteed.debug.getchunktickets: true
   superiorsteed.debug.horsecache:
     description: "Allows the user to see the cache of all horses in the server."
     default: false
@@ -119,4 +124,7 @@ permissions:
     default: false
   superiorsteed.debug.setwalktargettest:
     description: "Allows the user to set the walk target of a horse."
+    default: false
+  superiorsteed.debug.getchunktickets:
+    description: "Allows the user to see the chunk tickets currently active around horses."
     default: false

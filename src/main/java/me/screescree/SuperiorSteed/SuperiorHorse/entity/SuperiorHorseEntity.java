@@ -79,6 +79,11 @@ public class SuperiorHorseEntity extends Horse {
     }
 
     @Override
+    public void inactiveTick() {
+        tick();
+    }
+
+    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(2, new FleeFromHorse(this, 10.0F, 1.5D, 2.0D));
