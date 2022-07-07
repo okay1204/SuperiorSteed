@@ -1,89 +1,95 @@
 package me.screescree.SuperiorSteed.superiorhorse.entity;
 
 import java.util.EnumSet;
-import java.util.function.Predicate;
 
-import org.bukkit.World;
 import org.bukkit.block.Block;
 
+import me.screescree.SuperiorSteed.SuperiorSteed;
+import me.screescree.SuperiorSteed.superiorhorse.entity.blockfinder.BlockFinder;
+import me.screescree.SuperiorSteed.superiorhorse.entity.blockfinder.StepResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class ConsumeGoal extends Goal {
-    private final static int MAX_DISTANCE = 20;
+    private final static int STEPS_PER_TICK = SuperiorSteed.getInstance().getConfig().getInt("pathfinding-steps-per-tick", 20);
 
     protected final SuperiorHorseEntity mob;
     private final double speedModifier;
-    private Predicate<Block> desiredBlockPredicate;
     private Block targetBlock;
     private Vec3 lastTickPos;
     private int ticksSinceLastMove = 0;
+    private BlockFinder blockFinder;
 
-    public ConsumeGoal(SuperiorHorseEntity superiorHorse, double speedModifier, Predicate<Block> desiredBlockPredicate) {
+    public ConsumeGoal(SuperiorHorseEntity superiorHorse, double speedModifier) {
         mob = superiorHorse;
         this.speedModifier = speedModifier;
-        this.desiredBlockPredicate = desiredBlockPredicate;
         lastTickPos = mob.position();
         setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
-    public ConsumeGoal(SuperiorHorseEntity superiorHorse, double speedModifier) {
-        this(superiorHorse, speedModifier, null);
-    }
-
-    protected void setDesiredBlockPredicate(Predicate<Block> desiredBlock) {
-        this.desiredBlockPredicate = desiredBlock;
-    }
-
     @Override
     public boolean canUse() {
-        if (desiredBlockPredicate == null) {
+        if (!canStart()) {
+            blockFinder = null;
             return false;
         }
 
-        BlockPos foundBlockPos = findTargetBlock();
-        if (foundBlockPos == null) {
-            return false;
+        if (blockFinder == null) {
+            if (mob.getWrapper() == null) {
+                return false;
+            }
+
+            blockFinder = new BlockFinder(mob.getWrapper(), this::isDesiredBlock);
         }
 
-        targetBlock = ((World) mob.level.getWorld()).getBlockAt(foundBlockPos.getX(), foundBlockPos.getY(), foundBlockPos.getZ());
-        return true;
+        for (int i = 0; i < STEPS_PER_TICK; i++) {
+            StepResult stepResult = blockFinder.step();
+            if (stepResult == StepResult.SUCCESS) {
+                targetBlock = blockFinder.getFound();
+                blockFinder = new BlockFinder(mob.getWrapper(), this::isDesiredBlock);
+                return true;
+            }
+            else if (stepResult == StepResult.FAILURE) {
+                blockFinder = new BlockFinder(mob.getWrapper(), this::isDesiredBlock);
+                return false;
+            }
+        }
+
+        // return false if blockfinder is still progress
+        return false;
     }
 
     @Override
     public boolean canContinueToUse() {
-        BlockPos foundBlockPos = findTargetBlock();
-        if (foundBlockPos == null) {
-            if (desiredBlockPredicate.test(targetBlock)) {
-                Path path = mob.getNavigation().getPath();
-                if (path != null && !path.isDone()) {
-                    return true;
-                }
-            }
-
+        if (!canContinue()) {
+            blockFinder = null;
             return false;
         }
 
-        targetBlock = ((World) mob.level.getWorld()).getBlockAt(foundBlockPos.getX(), foundBlockPos.getY(), foundBlockPos.getZ());
-        return true;
-    }
-
-    public BlockPos findTargetBlock() {
-        BlockPos foundBlockPos = BlockPos.findClosestMatch(mob.blockPosition(), MAX_DISTANCE, 5, blockPos -> {
-            boolean isDesiredBlock = desiredBlockPredicate.test(((World) mob.level.getWorld()).getBlockAt(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-            if (isDesiredBlock) {
-                Path path = mob.getNavigation().createPath(blockPos, 0);
-                if (path == null || path.canReach()) {
-                    return true;
-                }
-            }
-
+        Path path = mob.getNavigation().getPath();
+        if (path != null && path.isDone()) {
+            blockFinder = null;
             return false;
-        }).orElse(null);
+        }
 
-        return foundBlockPos;
+        for (int i = 0; i < STEPS_PER_TICK; i++) {
+            StepResult stepResult = blockFinder.step();
+            if (stepResult == StepResult.SUCCESS) {
+                targetBlock = blockFinder.getFound();
+                blockFinder = new BlockFinder(mob.getWrapper(), this::isDesiredBlock);
+                return true;
+            }
+            else if (stepResult == StepResult.FAILURE) {
+                blockFinder = new BlockFinder(mob.getWrapper(), this::isDesiredBlock);
+                // we return true in case the horse is still on its path to the target block
+                return true;
+            }
+        }
+
+        // return true if blockfinder is still in progress
+        return true;
     }
 
     public void tick() {
@@ -133,4 +139,10 @@ public abstract class ConsumeGoal extends Goal {
     protected abstract BlockPos getConsumableSourcePos();
 
     protected abstract void increaseStat(BlockPos sourcePos);
+
+    protected abstract boolean isDesiredBlock(Block block);
+
+    protected abstract boolean canStart();
+
+    protected abstract boolean canContinue();
 }

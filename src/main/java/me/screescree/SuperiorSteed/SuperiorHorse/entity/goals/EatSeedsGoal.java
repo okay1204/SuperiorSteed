@@ -27,10 +27,10 @@ public class EatSeedsGoal extends ConsumeGoal {
     public EatSeedsGoal(SuperiorHorseEntity superiorHorse, double speedModifier) {
         super(superiorHorse, speedModifier);
         randomizeStartConsumingMin();
-        setDesiredBlockPredicate(this::isDesiredBlock);
     }
 
-    private boolean isDesiredBlock(Block block) {
+    @Override
+    protected boolean isDesiredBlock(Block block) {
         if (block.getType() != Material.BREWING_STAND) {
             return false;
         }
@@ -142,7 +142,7 @@ public class EatSeedsGoal extends ConsumeGoal {
     }
 
     @Override
-    public boolean canUse() {
+    public boolean canStart() {
         SuperiorHorse wrapper = mob.getWrapper();
         if (wrapper.hungerStat() == null) {
             return false;
@@ -155,16 +155,16 @@ public class EatSeedsGoal extends ConsumeGoal {
             return false;
         }
 
-        return super.canUse();
+        return true;
     }
 
     @Override
-    public boolean canContinueToUse() {
+    public boolean canContinue() {
         if (hungerIsFull() && pregnancyComplicationIsFull()) {
             return false;
         }
 
-        return super.canContinueToUse();
+        return true;
     }
 
     private void randomizeStartConsumingMin() {

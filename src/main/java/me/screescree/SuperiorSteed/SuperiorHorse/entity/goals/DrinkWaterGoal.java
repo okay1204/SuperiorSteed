@@ -19,10 +19,10 @@ public class DrinkWaterGoal extends ConsumeGoal {
     public DrinkWaterGoal(SuperiorHorseEntity superiorHorse, double speedModifier) {
         super(superiorHorse, speedModifier);
         randomizeStartConsumingMin();
-        setDesiredBlockPredicate(this::isDesiredBlock);
     }
 
-    private boolean isDesiredBlock(Block block) {
+    @Override
+    protected boolean isDesiredBlock(Block block) {
         // Check if block is air
         if (!block.getType().isAir()) {
             return false;
@@ -101,23 +101,23 @@ public class DrinkWaterGoal extends ConsumeGoal {
     }
 
     @Override
-    public boolean canUse() {
+    public boolean canStart() {
         SuperiorHorse wrapper = mob.getWrapper();
         if (wrapper.hydrationStat() == null || wrapper.hydrationStat().get() > startConsumingMin) {
             return false;
         }
 
-        return super.canUse();
+        return true;
     }
 
     @Override
-    public boolean canContinueToUse() {
+    public boolean canContinue() {
         SuperiorHorse wrapper = mob.getWrapper();
         if (Math.abs(wrapper.hydrationStat().get() - 1.0) < 0.001) {
             return false;
         }
 
-        return super.canContinueToUse();
+        return true;
     }
 
     private void randomizeStartConsumingMin() {

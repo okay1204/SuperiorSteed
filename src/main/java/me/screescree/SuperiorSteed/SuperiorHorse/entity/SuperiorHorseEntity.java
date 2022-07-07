@@ -90,8 +90,8 @@ public class SuperiorHorseEntity extends Horse {
         this.goalSelector.addGoal(3, new RunAroundLikeCrazyGoal(this, 1.2D));
         this.goalSelector.addGoal(3, new PanicGoal(this, 1.2D));
         this.goalSelector.addGoal(4, new HorseBreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(6, new DrinkWaterGoal(this, 1.2D));
-        this.goalSelector.addGoal(7, new EatSeedsGoal(this, 1.2D));
+        this.goalSelector.addGoal(6, new DrinkWaterGoal(this, 1.0D));
+        this.goalSelector.addGoal(7, new EatSeedsGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new EatGrassGoal(this, 1.0D));
         this.goalSelector.addGoal(9, new FollowHorseParentGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 0.7D));

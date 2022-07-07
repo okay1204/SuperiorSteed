@@ -1,7 +1,10 @@
 package me.screescree.SuperiorSteed.commands;
 
+import java.util.List;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import me.screescree.SuperiorSteed.CustomCommand;
@@ -9,7 +12,7 @@ import me.screescree.SuperiorSteed.SuperiorSteed;
 import me.screescree.SuperiorSteed.superiorhorse.horseeditor.HorseEditor;
 import me.screescree.SuperiorSteed.utils.Format;
 
-public class SummonHorse extends CustomCommand {
+public class SummonHorse extends CustomCommand implements TabCompleter {
     public SummonHorse() {
         super("summonhorse");
     }
@@ -55,5 +58,10 @@ public class SummonHorse extends CustomCommand {
         });
                 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        return List.of();
     }
 }

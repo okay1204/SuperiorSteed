@@ -16,10 +16,10 @@ public class EatGrassGoal extends ConsumeGoal {
     public EatGrassGoal(SuperiorHorseEntity superiorHorse, double speedModifier) {
         super(superiorHorse, speedModifier);
         randomizeStartConsumingMin();
-        setDesiredBlockPredicate(this::isDesiredBlock);
     }
 
-    private boolean isDesiredBlock(Block block) {
+    @Override
+    protected boolean isDesiredBlock(Block block) {
         return !block.getType().isSolid() && block.getRelative(BlockFace.DOWN).getType() == Material.GRASS_BLOCK;
     }
 
@@ -32,7 +32,7 @@ public class EatGrassGoal extends ConsumeGoal {
     }
 
     @Override
-    public boolean canUse() {
+    public boolean canStart() {
         SuperiorHorse wrapper = mob.getWrapper();
         if (wrapper.hungerStat() == null) {
             return false;
@@ -42,16 +42,16 @@ public class EatGrassGoal extends ConsumeGoal {
             return false;
         }
 
-        return super.canUse();
+        return true;
     }
 
     @Override
-    public boolean canContinueToUse() {
+    public boolean canContinue() {
         if (hungerIsFull()) {
             return false;
         }
 
-        return super.canContinueToUse();
+        return true;
     }
 
     private void randomizeStartConsumingMin() {
