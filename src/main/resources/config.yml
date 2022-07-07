@@ -11,5 +11,5 @@ horse-chunk-distance: 3
 
 # This is how many "steps" are taken to finding a path, such as a path to a brewing stand, grass block, or a drinkable water source. The larger
 # this number is, the faster horses will pathfind. However, a larger value will also increase the amount of entity lag. For reference,
-# a value of 20 will take an average of 13 seconds to find a path.
+# a value of 20 will take an average of 13 seconds to find a path. Setting a value of 0 or lower will disable custom pathfinding completely. (not recommended)
 pathfinding-steps-per-tick: 20
