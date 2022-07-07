@@ -1,10 +1,12 @@
 package me.screescree.SuperiorSteed.superiorhorse.entity;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Random;
 
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_18_R1.attribute.CraftAttributeMap;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.AngryBusyBeeAttackGoal;
@@ -28,15 +30,21 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RunAroundLikeCrazyGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 
 public class SuperiorHorseEntity extends Horse {
     private final SuperiorHorse superiorHorseWrapper;
     private boolean isUsingConsumingGoal;
+    private Method moveTailMethod;
+    private Field eatingCounterField;
+    private Method animalAiStepMethod;
     
     public SuperiorHorseEntity(org.bukkit.World world, SuperiorHorse superiorHorseWrapper) {
         super(EntityType.HORSE, ((CraftWorld) world).getHandle());
@@ -56,6 +64,18 @@ public class SuperiorHorseEntity extends Horse {
         }
 
         getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(100);
+
+        try {
+                moveTailMethod = AbstractHorse.class.getDeclaredMethod("fy");
+                moveTailMethod.setAccessible(true);
+
+                eatingCounterField = AbstractHorse.class.getDeclaredField("cw");
+                eatingCounterField.setAccessible(true);
+
+                animalAiStepMethod = Animal.class.getDeclaredMethod("w_");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public SuperiorHorseEntity(org.bukkit.entity.Horse horse, SuperiorHorse superiorHorseWrapper) {
@@ -107,5 +127,52 @@ public class SuperiorHorseEntity extends Horse {
         this.targetSelector.addGoal(0, new HurtByHorseGoal(this));
         this.targetSelector.addGoal(1, new AttackHorseGoal(this));
         this.targetSelector.addGoal(2, new AngryBusyBeeAttackGoal(this));
+    }
+
+    @Override
+    public void aiStep() {
+        if (this.random.nextInt(200) == 0) {
+            try {
+                moveTailMethod.invoke(this);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            animalAiStepMethod.invoke(this);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (!this.level.isClientSide && this.isAlive()) {
+            if (this.random.nextInt(900) == 0 && this.deathTime == 0) {
+                this.heal(1.0F, RegainReason.REGEN);
+            }
+
+            if (this.canEatGrass()) {
+                if (!this.isEating() && !this.isVehicle() && this.random.nextInt(300) == 0 && this.level.getBlockState(this.blockPosition().below()).is(Blocks.GRASS_BLOCK)) {
+                    this.setEating(true);
+                }
+
+                if (this.isEating()) {
+                    try {
+                        eatingCounterField.set(this, eatingCounterField.getInt(this) + 1);
+
+                        if (eatingCounterField.getInt(this) > 50) {
+                            eatingCounterField.set(this, 0);
+                            this.setEating(false);
+                        }
+                    }
+                    catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            this.followMommy();
+        }
     }
 }
