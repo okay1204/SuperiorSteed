@@ -21,6 +21,7 @@ public abstract class ConsumeGoal extends Goal {
     private Vec3 lastTickPos;
     private int ticksSinceLastMove = 0;
     private BlockFinder blockFinder;
+    private BlockPos sourcePos;
 
     public ConsumeGoal(SuperiorHorseEntity superiorHorse, double speedModifier) {
         mob = superiorHorse;
@@ -69,7 +70,8 @@ public abstract class ConsumeGoal extends Goal {
         }
 
         Path path = mob.getNavigation().getPath();
-        if (path != null && path.isDone()) {
+        sourcePos = getConsumableSourcePos();
+        if (sourcePos == null && path != null && path.isDone()) {
             blockFinder = null;
             return false;
         }
@@ -83,17 +85,20 @@ public abstract class ConsumeGoal extends Goal {
             }
             else if (stepResult == StepResult.FAILURE) {
                 blockFinder = new BlockFinder(mob.getWrapper(), this::isDesiredBlock);
-                // we return true in case the horse is still on its path to the target block
-                return true;
+
+                if (isDesiredBlock(targetBlock) && (path == null || !path.isDone())) {
+                    return true;
+                }
+
+                return false;
             }
         }
 
-        // return true if blockfinder is still in progress
         return true;
     }
 
+    @Override
     public void tick() {
-        BlockPos sourcePos = getConsumableSourcePos();
         if (sourcePos == null) {
             mob.getWrapper().getBukkitEntity().setEatingHaystack(false);
             moveToTargetBlock();
@@ -120,6 +125,7 @@ public abstract class ConsumeGoal extends Goal {
             increaseStat(sourcePos);
             mob.getWrapper().getBukkitEntity().setEatingHaystack(true);
         }
+
     }
 
     public void start() {
