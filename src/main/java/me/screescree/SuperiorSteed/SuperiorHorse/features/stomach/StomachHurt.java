@@ -18,10 +18,10 @@ public class StomachHurt implements LoopingTask<SuperiorHorse> {
         double determiningHurtAmount = 0;
 
         if (isZero(superiorHorse.hungerStat().get())) {
-            determiningHurtAmount += 2;
+            determiningHurtAmount += 1;
         }
         if (isZero(superiorHorse.hydrationStat().get())) {
-            determiningHurtAmount += 2;
+            determiningHurtAmount += 1;
         }
 
         if (determiningHurtAmount > 0) {
