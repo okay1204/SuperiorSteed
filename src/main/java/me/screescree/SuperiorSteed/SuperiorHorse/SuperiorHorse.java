@@ -42,6 +42,7 @@ import me.screescree.SuperiorSteed.utils.RandomUtil;
 public class SuperiorHorse {
     private static final String SPEED_LEVEL_KEY = "superiorsteed.speedlevel";
     private static final String WATER_BRAVERY_KEY = "superiorsteed.waterbravery";
+    private static final String SLOW_THIRST_KEY = "superiorsteed.slowthirst";
 
     public static final int GROOMING_ITEM_AMOUNT = 5;
 
@@ -80,6 +81,9 @@ public class SuperiorHorse {
     private boolean isMadAtHorse = false;
     private boolean isAttackingBack = false;
     private double attackedByHorseTimer = 0;
+
+    private static final double SLOW_THIRST_MULTIPLIER = 0.5;
+    private boolean isSlowThirsty = false;
     
     private long stomachHurtDelay = (long) (ThreadLocalRandom.current().nextDouble(3) * 20);
 
@@ -186,6 +190,10 @@ public class SuperiorHorse {
                             // If the player is riding the horse, copy the speed level modifier and speed level
                             speedLevel = SpeedLevel.getFromScalar(modifier.getAmount());
                         }
+                    }
+
+                    else if (modifier.getName().equals(SLOW_THIRST_KEY)) {
+                        isSlowThirsty = true;
                     }
 
                     bukkitEntity.getAttribute(attribute).addModifier(modifier);
@@ -704,6 +712,26 @@ public class SuperiorHorse {
         }
 
         lastWaterBraveryMultiplier = multiplier;
+    }
+
+    public void setSlowThirst(boolean isSlowThirsty) {
+        if (this.isSlowThirsty == isSlowThirsty) {
+            return;
+        }
+
+        this.isSlowThirsty = isSlowThirsty;
+        AttributeInstance movementSpeed = bukkitEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        if (isSlowThirsty) {
+            movementSpeed.addModifier(new AttributeModifier(SLOW_THIRST_KEY, SLOW_THIRST_MULTIPLIER - 1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
+        }
+        else {
+            for (AttributeModifier modifier : movementSpeed.getModifiers()) {
+                if (modifier.getName().equals(SLOW_THIRST_KEY)) {
+                    movementSpeed.removeModifier(modifier);
+                    break;
+                }
+            }
+        }
     }
 
     public boolean isPregnant() {
