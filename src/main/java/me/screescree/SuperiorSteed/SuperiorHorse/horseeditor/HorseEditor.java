@@ -7,12 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.github.stefvanschie.inventoryframework.font.util.Font;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.github.stefvanschie.inventoryframework.pane.component.Label;
 
@@ -32,7 +32,7 @@ import me.screescree.SuperiorSteed.utils.Format;
 public class HorseEditor {
     SuperiorHorseInfo horseInfo;
     ChestGui gui;
-    Label backLabel;
+    StaticPane backPane;
     ArrayList<SubMenu> submenus;
 
     public static ItemStack customItem(Material material, String name, boolean colorize) {
@@ -68,14 +68,9 @@ public class HorseEditor {
         gui.addPane(background);
         
         // Submit Pane (submit button)
-        Label submitLabel = new Label(8, 4, 1, 1, Font.LIME);
-        submitLabel.setText("✓", (character, item) -> {
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(Format.colorize("&aSubmit"));
-            item.setItemMeta(meta);
-            return new GuiItem(item);
-        });
-        submitLabel.setOnClick(event -> {
+        StaticPane submitPane = new StaticPane(8, 4, 1, 1);
+        GuiItem submitButton = guiItem(Material.LIME_DYE, "&aSubmit", true);
+        submitPane.setOnClick(event -> {
             player.closeInventory();
 
             if (horseInfo.isMale()) {
@@ -85,25 +80,23 @@ public class HorseEditor {
 
             submitCallback.onSubmit(horseInfo);
         });
-        
-        gui.addPane(submitLabel);
+
+        submitPane.addItem(submitButton, 0, 0);
+        gui.addPane(submitPane);
         
         // Back Pane (back button)
-        backLabel = new Label(0, 4, 1, 1, Font.OAK_PLANKS);
-        backLabel.setText("←", (character, item) -> {
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(Format.colorize("&eBack"));
-            item.setItemMeta(meta);
-            return new GuiItem(item);
-        });
-        backLabel.setVisible(false);
-        backLabel.setOnClick(event -> {
+        backPane = new StaticPane(0, 4, 1, 1);
+        GuiItem backButton = guiItem(Material.ARROW, "&cBack", true);
+        
+        backPane.setVisible(false);
+        backPane.setOnClick(event -> {
             paginatedPane.setPage(0);
-            backLabel.setVisible(false);
+            backPane.setVisible(false);
             gui.update();
         });
 
-        gui.addPane(backLabel);
+        backPane.addItem(backButton, 0, 0);
+        gui.addPane(backPane);
 
         // Main Menu, to pick between each submenu
         OutlinePane mainMenu = new OutlinePane(0, 0, 7, 3, Priority.HIGH);
@@ -114,7 +107,8 @@ public class HorseEditor {
         submenus.add(new StatsMenu(gui, horseInfo));
         submenus.add(new TypeMenu(gui, horseInfo));
         submenus.add(new TraitsMenu(gui, horseInfo));
-        submenus.add(new OwnerMenu(gui, horseInfo));
+        // FIXME inventory manager doesn't support anvil GUIs right now, so this is disabled for now
+        // submenus.add(new OwnerMenu(gui, horseInfo));
         submenus.add(new AgeMenu(gui, horseInfo));
         submenus.add(new GroomingMenu(gui, horseInfo));
         submenus.add(new PregnancyMenu(gui, horseInfo));
@@ -132,7 +126,7 @@ public class HorseEditor {
                     paginatedPane.setPage(page);
                     submenu.onShow();
 
-                    backLabel.setVisible(true);
+                    backPane.setVisible(true);
                     gui.update();
                 })
             );

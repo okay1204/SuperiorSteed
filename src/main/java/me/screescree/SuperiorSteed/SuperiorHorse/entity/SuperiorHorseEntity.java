@@ -5,11 +5,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R1.SpigotTimings;
-import org.bukkit.craftbukkit.v1_18_R1.attribute.CraftAttributeMap;
+import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R2.SpigotTimings;
+import org.bukkit.craftbukkit.v1_20_R2.attribute.CraftAttributeMap;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import me.screescree.SuperiorSteed.superiorhorse.SuperiorHorse;
@@ -22,11 +21,10 @@ import me.screescree.SuperiorSteed.superiorhorse.entity.goals.FleeFromHorse;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.FollowHorseParentGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.HorseBreedGoal;
 import me.screescree.SuperiorSteed.superiorhorse.entity.goals.HurtByHorseGoal;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
@@ -59,7 +57,9 @@ public class SuperiorHorseEntity extends Horse {
     private Field eatingCounterField;
     private Field noJumpDelayField;
     private Method updateFallFlyingMethod;
+    private Method travelRiddenMethod;
 
+    @SuppressWarnings("null")
     public SuperiorHorseEntity(org.bukkit.World world, SuperiorHorse superiorHorseWrapper) {
         super(EntityType.HORSE, ((CraftWorld) world).getHandle());
         this.superiorHorseWrapper = superiorHorseWrapper;
@@ -68,31 +68,35 @@ public class SuperiorHorseEntity extends Horse {
                 createBaseHorseAttributes().add(Attributes.ATTACK_DAMAGE, 3.0).build());
         CraftAttributeMap craftAttributeMap = new CraftAttributeMap(attributeMap);
         try {
-            Field attributes = LivingEntity.class.getDeclaredField("bQ");
+            Field attributes = LivingEntity.class.getDeclaredField("bO");
             Field craftAttributes = LivingEntity.class.getDeclaredField("craftAttributes");
             attributes.setAccessible(true);
             attributes.set(this, attributeMap);
+
             craftAttributes.setAccessible(true);
             craftAttributes.set(this, craftAttributeMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(100);
-        
+
         try {
             // Reflection for removing eat grass default animation
-            moveTailMethod = AbstractHorse.class.getDeclaredMethod("fy");
+            moveTailMethod = AbstractHorse.class.getDeclaredMethod("t");
             moveTailMethod.setAccessible(true);
 
-            eatingCounterField = AbstractHorse.class.getDeclaredField("cw");
+            eatingCounterField = AbstractHorse.class.getDeclaredField("cC");
             eatingCounterField.setAccessible(true);
 
-            noJumpDelayField = LivingEntity.class.getDeclaredField("cc");
+            noJumpDelayField = LivingEntity.class.getDeclaredField("ca");
             noJumpDelayField.setAccessible(true);
 
-            updateFallFlyingMethod = LivingEntity.class.getDeclaredMethod("z");
+            updateFallFlyingMethod = LivingEntity.class.getDeclaredMethod("F");
             updateFallFlyingMethod.setAccessible(true);
+
+            travelRiddenMethod = LivingEntity.class.getDeclaredMethod("c", Player.class, Vec3.class);
+            travelRiddenMethod.setAccessible(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,10 +108,6 @@ public class SuperiorHorseEntity extends Horse {
 
     public SuperiorHorse getWrapper() {
         return superiorHorseWrapper;
-    }
-
-    public Random getRandom() {
-        return random;
     }
 
     public boolean isUsingConsumingGoal() {
@@ -143,13 +143,21 @@ public class SuperiorHorseEntity extends Horse {
     @Override
     protected void addBehaviourGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(5, new TemptGoal(this, 1.25D, Ingredient.of(new ItemLike[] { Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE }), false));
+        this.goalSelector.addGoal(5,
+                new TemptGoal(this, 1.25D, Ingredient
+                        .of(new ItemLike[] { Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE }),
+                        false));
         this.targetSelector.addGoal(0, new HurtByHorseGoal(this));
         this.targetSelector.addGoal(1, new AttackHorseGoal(this));
         this.targetSelector.addGoal(2, new AngryBusyBeeAttackGoal(this));
     }
 
+    public double randomNextDouble(double min, double max) {
+        return min + (max - min) * this.random.nextDouble();
+    }
+
     @Override
+    @SuppressWarnings("resource")
     public void aiStep() {
         try {
             if (this.random.nextInt(200) == 0) {
@@ -163,102 +171,108 @@ public class SuperiorHorseEntity extends Horse {
 
             if (this.isControlledByLocalInstance()) {
                 this.lerpSteps = 0;
-                this.setPacketCoordinates(this.getX(), this.getY(), this.getZ());
+                this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
             }
 
             if (this.lerpSteps > 0) {
-                double d0 = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
-                double d1 = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
-                double d2 = this.getZ() + (this.lerpZ - this.getZ()) / (double) this.lerpSteps;
-                double d3 = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
-                this.setYRot(this.getYRot() + (float) d3 / (float) this.lerpSteps);
-                this.setXRot(this.getXRot() + (float) (this.lerpXRot - (double) this.getXRot()) / (float) this.lerpSteps);
+                this.lerpPositionAndRotationStep(this.lerpSteps, this.lerpX, this.lerpY, this.lerpZ, this.lerpYRot,
+                        this.lerpXRot);
                 --this.lerpSteps;
-                this.setPos(d0, d1, d2);
-                this.setRot(this.getYRot(), this.getXRot());
             } else if (!this.isEffectiveAi()) {
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
             }
 
             if (this.lerpHeadSteps > 0) {
-                this.yHeadRot = (float) ((double) this.yHeadRot
-                        + Mth.wrapDegrees(this.lyHeadRot - (double) this.yHeadRot) / (double) this.lerpHeadSteps);
+                this.lerpHeadRotationStep(this.lerpHeadSteps, this.lerpYHeadRot);
                 --this.lerpHeadSteps;
             }
 
             Vec3 vec3d = this.getDeltaMovement();
-            double d4 = vec3d.x;
-            double d5 = vec3d.y;
-            double d6 = vec3d.z;
+            double d0 = vec3d.x;
+            double d1 = vec3d.y;
+            double d2 = vec3d.z;
             if (Math.abs(vec3d.x) < 0.003D) {
-                d4 = 0.0D;
+                d0 = 0.0D;
             }
 
             if (Math.abs(vec3d.y) < 0.003D) {
-                d5 = 0.0D;
+                d1 = 0.0D;
             }
 
             if (Math.abs(vec3d.z) < 0.003D) {
-                d6 = 0.0D;
+                d2 = 0.0D;
             }
 
-            this.setDeltaMovement(d4, d5, d6);
-            this.level.getProfiler().push("ai");
+            this.setDeltaMovement(d0, d1, d2);
+            this.level().getProfiler().push("ai");
             SpigotTimings.timerEntityAI.startTiming();
             if (this.isImmobile()) {
                 this.jumping = false;
                 this.xxa = 0.0F;
                 this.zza = 0.0F;
             } else if (this.isEffectiveAi()) {
-                this.level.getProfiler().push("newAi");
+                this.level().getProfiler().push("newAi");
                 this.serverAiStep();
-                this.level.getProfiler().pop();
+                this.level().getProfiler().pop();
             }
 
             SpigotTimings.timerEntityAI.stopTiming();
-            this.level.getProfiler().pop();
-            this.level.getProfiler().push("jump");
+            this.level().getProfiler().pop();
+            this.level().getProfiler().push("jump");
             if (this.jumping && this.isAffectedByFluids()) {
-                double d7;
+                double d3;
                 if (this.isInLava()) {
-                    d7 = this.getFluidHeight(FluidTags.LAVA);
+                    d3 = this.getFluidHeight(FluidTags.LAVA);
                 } else {
-                    d7 = this.getFluidHeight(FluidTags.WATER);
+                    d3 = this.getFluidHeight(FluidTags.WATER);
                 }
 
-                boolean flag = this.isInWater() && d7 > 0.0D;
-                double d8 = this.getFluidJumpThreshold();
-                if (!flag || this.onGround && !(d7 > d8)) {
-                    if (!this.isInLava() || this.onGround && !(d7 > d8)) {
-                        if ((this.onGround || flag && d7 <= d8) && noJumpDelayField.getInt(this) == 0) {
-                            this.jumpFromGround();
-                            noJumpDelayField.set(this, 10);
-                        }
-                    } else {
+                boolean flag = this.isInWater() && d3 > 0.0D;
+                double d4 = this.getFluidJumpThreshold();
+                if (!flag || this.onGround() && !(d3 > d4)) {
+                    if (this.isInLava() && (!this.onGround() || d3 > d4)) {
                         this.jumpInLiquid(FluidTags.LAVA);
+                    } else if ((this.onGround() || flag && d3 <= d4) && noJumpDelayField.getInt(this) == 0) {
+                        this.jumpFromGround();
+                        noJumpDelayField.setInt(this, 10);
                     }
                 } else {
                     this.jumpInLiquid(FluidTags.WATER);
                 }
             } else {
-                noJumpDelayField.set(this, 0);
+                noJumpDelayField.setInt(this, 0);
             }
 
-            this.level.getProfiler().pop();
-            this.level.getProfiler().push("travel");
+            this.level().getProfiler().pop();
+            this.level().getProfiler().push("travel");
             this.xxa *= 0.98F;
             this.zza *= 0.98F;
             updateFallFlyingMethod.invoke(this);
             AABB axisalignedbb = this.getBoundingBox();
-            SpigotTimings.timerEntityAIMove.startTiming();
-            this.travel(new Vec3((double) this.xxa, (double) this.yya, (double) this.zza));
+            Vec3 vec3d1 = new Vec3((double) this.xxa, (double) this.yya, (double) this.zza);
+            if (this.hasEffect(MobEffects.SLOW_FALLING) || this.hasEffect(MobEffects.LEVITATION)) {
+                this.resetFallDistance();
+            }
+
+            label103: {
+                SpigotTimings.timerEntityAIMove.startTiming();
+                LivingEntity entityliving = this.getControllingPassenger();
+                if (entityliving instanceof Player) {
+                    Player entityhuman = (Player) entityliving;
+                    if (this.isAlive()) {
+                        travelRiddenMethod.invoke(this, entityhuman, vec3d1);
+                        break label103;
+                    }
+                }
+
+                this.travel(vec3d1);
+            }
+
             SpigotTimings.timerEntityAIMove.stopTiming();
-            this.level.getProfiler().pop();
-            this.level.getProfiler().push("freezing");
-            boolean flag1 = this.getType().is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES);
-            int i;
-            if (!this.level.isClientSide && !this.isDeadOrDying()) {
-                i = this.getTicksFrozen();
+            this.level().getProfiler().pop();
+            this.level().getProfiler().push("freezing");
+            if (!this.level().isClientSide && !this.isDeadOrDying()) {
+                int i = this.getTicksFrozen();
                 if (this.isInPowderSnow && this.canFreeze()) {
                     this.setTicksFrozen(Math.min(this.getTicksRequiredToFreeze(), i + 1));
                 } else {
@@ -268,13 +282,12 @@ public class SuperiorHorseEntity extends Horse {
 
             this.removeFrost();
             this.tryAddFrost();
-            if (!this.level.isClientSide && this.tickCount % 40 == 0 && this.isFullyFrozen() && this.canFreeze()) {
-                i = flag1 ? 5 : 1;
-                this.hurt(DamageSource.FREEZE, (float) i);
+            if (!this.level().isClientSide && this.tickCount % 40 == 0 && this.isFullyFrozen() && this.canFreeze()) {
+                this.hurt(this.damageSources().freeze(), 1.0F);
             }
 
-            this.level.getProfiler().pop();
-            this.level.getProfiler().push("push");
+            this.level().getProfiler().pop();
+            this.level().getProfiler().push("push");
             if (this.autoSpinAttackTicks > 0) {
                 --this.autoSpinAttackTicks;
                 this.checkAutoSpinAttack(axisalignedbb, this.getBoundingBox());
@@ -283,16 +296,18 @@ public class SuperiorHorseEntity extends Horse {
             SpigotTimings.timerEntityAICollision.startTiming();
             this.pushEntities();
             SpigotTimings.timerEntityAICollision.stopTiming();
-            this.level.getProfiler().pop();
-            if (!this.level.isClientSide && this.isSensitiveToWater() && this.isInWaterRainOrBubble()) {
-                this.hurt(DamageSource.DROWN, 1.0F);
+            this.level().getProfiler().pop();
+            if (!this.level().isClientSide && this.isSensitiveToWater() && this.isInWaterRainOrBubble()) {
+                this.hurt(this.damageSources().drown(), 1.0F);
             }
 
-            this.level.getProfiler().push("looting");
-            if (!this.level.isClientSide && this.canPickUpLoot() && this.isAlive() && !this.dead
-                    && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                List<ItemEntity> list = this.level.getEntitiesOfClass(ItemEntity.class,
-                        this.getBoundingBox().inflate(1.0D, 0.0D, 1.0D));
+            this.level().getProfiler().push("looting");
+            if (!this.level().isClientSide && this.canPickUpLoot() && this.isAlive() && !this.dead
+                    && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                Vec3i baseblockposition = this.getPickupReach();
+                List<ItemEntity> list = this.level().getEntitiesOfClass(ItemEntity.class,
+                        this.getBoundingBox().inflate((double) baseblockposition.getX(),
+                                (double) baseblockposition.getY(), (double) baseblockposition.getZ()));
                 Iterator<ItemEntity> iterator = list.iterator();
 
                 while (iterator.hasNext()) {
@@ -304,23 +319,23 @@ public class SuperiorHorseEntity extends Horse {
                 }
             }
 
-            this.level.getProfiler().pop();
+            this.level().getProfiler().pop();
 
-            if (!this.ageLocked) {
+            if (!this.level().isClientSide && !this.ageLocked) {
                 if (this.isAlive()) {
-                    int j = this.getAge();
-                    if (j < 0) {
-                        ++j;
-                        this.setAge(j);
-                    } else if (j > 0) {
-                        --j;
-                        this.setAge(j);
+                    int i = this.getAge();
+                    if (i < 0) {
+                        ++i;
+                        this.setAge(i);
+                    } else if (i > 0) {
+                        --i;
+                        this.setAge(i);
                     }
                 }
             } else if (this.forcedAgeTimer > 0) {
                 if (this.forcedAgeTimer % 4 == 0) {
-                    this.level.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 0.5D,
-                            this.getRandomZ(1.0D), 0.0D, 0.0D, 0.0D);
+                    this.level().addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0D),
+                            this.getRandomY() + 0.5D, this.getRandomZ(1.0D), 0.0D, 0.0D, 0.0D);
                 }
 
                 --this.forcedAgeTimer;
@@ -333,17 +348,17 @@ public class SuperiorHorseEntity extends Horse {
             if (this.inLove > 0) {
                 --this.inLove;
                 if (this.inLove % 10 == 0) {
-                    double d0 = this.random.nextGaussian() * 0.02D;
-                    double d1 = this.random.nextGaussian() * 0.02D;
-                    double d2 = this.random.nextGaussian() * 0.02D;
-                    this.level.addParticle(ParticleTypes.HEART, this.getRandomX(1.0D), this.getRandomY() + 0.5D,
-                            this.getRandomZ(1.0D), d0, d1, d2);
+                    double d0_1 = this.random.nextGaussian() * 0.02D;
+                    double d1_1 = this.random.nextGaussian() * 0.02D;
+                    double d2_1 = this.random.nextGaussian() * 0.02D;
+                    this.level().addParticle(ParticleTypes.HEART, this.getRandomX(1.0D), this.getRandomY() + 0.5D,
+                            this.getRandomZ(1.0D), d0_1, d1_1, d2_1);
                 }
             }
 
             // !SECTION
 
-            if (this.isAlive()) {
+            if (!this.level().isClientSide && this.isAlive()) {
                 if (this.random.nextInt(900) == 0 && this.deathTime == 0) {
                     this.heal(1.0F, RegainReason.REGEN);
                 }
@@ -361,8 +376,8 @@ public class SuperiorHorseEntity extends Horse {
 
                 this.followMommy();
             }
-        }
-        catch (IllegalAccessException | InvocationTargetException e) {
+
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }

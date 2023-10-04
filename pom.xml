@@ -34,20 +34,20 @@
       <dependency>
           <groupId>org.spigotmc</groupId>
           <artifactId>spigot-api</artifactId>
-          <version>1.18.1-R0.1-SNAPSHOT</version>
+          <version>1.20.2-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
       </dependency>
       <dependency>
           <groupId>org.spigotmc</groupId>
           <artifactId>spigot</artifactId>
-          <version>1.18.1-R0.1-SNAPSHOT</version>
+          <version>1.20.2-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
           <classifier>remapped-mojang</classifier>
       </dependency>
       <dependency>
         <groupId>com.github.stefvanschie.inventoryframework</groupId>
         <artifactId>IF</artifactId>
-        <version>0.10.5</version>
+        <version>0.10.11</version>
       </dependency>
       <dependency>
         <groupId>com.oracle</groupId>
@@ -76,9 +76,9 @@
                     </goals>
                     <id>remap-obf</id>
                     <configuration>
-                        <srgIn>org.spigotmc:minecraft-server:1.18.1-R0.1-SNAPSHOT:txt:maps-mojang</srgIn>
+                        <srgIn>org.spigotmc:minecraft-server:1.20.2-R0.1-SNAPSHOT:txt:maps-mojang</srgIn>
                         <reverse>true</reverse>
-                        <remappedDependencies>org.spigotmc:spigot:1.18.1-R0.1-SNAPSHOT:jar:remapped-mojang</remappedDependencies>
+                        <remappedDependencies>org.spigotmc:spigot:1.20.2-R0.1-SNAPSHOT:jar:remapped-mojang</remappedDependencies>
                         <remappedArtifactAttached>true</remappedArtifactAttached>
                         <remappedClassifierName>remapped-obf</remappedClassifierName>
                     </configuration>
@@ -91,8 +91,8 @@
                     <id>remap-spigot</id>
                     <configuration>
                         <inputFile>${project.build.directory}/${project.artifactId}-${project.version}-remapped-obf.jar</inputFile>
-                        <srgIn>org.spigotmc:minecraft-server:1.18.1-R0.1-SNAPSHOT:csrg:maps-spigot</srgIn>
-                        <remappedDependencies>org.spigotmc:spigot:1.18.1-R0.1-SNAPSHOT:jar:remapped-obf</remappedDependencies>
+                        <srgIn>org.spigotmc:minecraft-server:1.20.2-R0.1-SNAPSHOT:csrg:maps-spigot</srgIn>
+                        <remappedDependencies>org.spigotmc:spigot:1.20.2-R0.1-SNAPSHOT:jar:remapped-obf</remappedDependencies>
                     </configuration>
                 </execution>
             </executions>

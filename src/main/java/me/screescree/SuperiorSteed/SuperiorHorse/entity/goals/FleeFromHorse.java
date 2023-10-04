@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 public class FleeFromHorse extends AvoidEntityGoal<SuperiorHorseEntity> {
     private SuperiorHorseEntity horse;
 
+    @SuppressWarnings("null")
     public FleeFromHorse(SuperiorHorseEntity horse, float maxDist, double walkSpeedModifier, double sprintSpeedModifier) {
         super(horse, SuperiorHorseEntity.class, livingEntity -> {
             SuperiorHorseEntity otherHorse = (SuperiorHorseEntity) livingEntity;

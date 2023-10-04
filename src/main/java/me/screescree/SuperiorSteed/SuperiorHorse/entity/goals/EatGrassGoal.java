@@ -28,7 +28,7 @@ public class EatGrassGoal extends ConsumeGoal {
     protected BlockPos getConsumableSourcePos() {
         BlockPos belowPos = mob.blockPosition().below();
 
-        return ((World) mob.level.getWorld()).getBlockAt(belowPos.getX(), belowPos.getY(), belowPos.getZ()).getType() == Material.GRASS_BLOCK ? belowPos : null;
+        return ((World) mob.level().getWorld()).getBlockAt(belowPos.getX(), belowPos.getY(), belowPos.getZ()).getType() == Material.GRASS_BLOCK ? belowPos : null;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class EatGrassGoal extends ConsumeGoal {
     }
 
     private void randomizeStartConsumingMin() {
-        startConsumingMin = mob.getRandom().nextDouble(0.85, 0.9);
+        startConsumingMin = mob.randomNextDouble(0.85, 0.9);
     }
 
     @Override

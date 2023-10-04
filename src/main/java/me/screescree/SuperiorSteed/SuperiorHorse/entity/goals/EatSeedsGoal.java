@@ -82,14 +82,14 @@ public class EatSeedsGoal extends ConsumeGoal {
 
         updateEdibleSeeds();
 
-        for (double xOffset = -1; xOffset <= 1; xOffset++) {
-            for (double zOffset = -1; zOffset <= 1; zOffset++) {
+        for (int xOffset = -1; xOffset <= 1; xOffset++) {
+            for (int zOffset = -1; zOffset <= 1; zOffset++) {
 
                 BlockPos brewingPos = mobBlockPos.offset(xOffset, 0, zOffset);
-                if (mob.level.getBlockState(brewingPos).is(Blocks.BREWING_STAND)) {
+                if (mob.level().getBlockState(brewingPos).is(Blocks.BREWING_STAND)) {
 
                     // check if the brewing stand contains edible seeds
-                    Block block = ((World) mob.level.getWorld()).getBlockAt(brewingPos.getX(), brewingPos.getY(), brewingPos.getZ());
+                    Block block = ((World) mob.level().getWorld()).getBlockAt(brewingPos.getX(), brewingPos.getY(), brewingPos.getZ());
                     if (hasEdibleSeed((BrewingStand) block.getState())) {
                         // keep track of brewing stand pos that is closest to the horse
                         if (
@@ -114,7 +114,7 @@ public class EatSeedsGoal extends ConsumeGoal {
 
         // if the mob's Y level ends with about .875, then it is possible that it is standing on a brewing stand
         if (Math.abs((mobPos.y() % 1.0) - 0.875) < 0.001) {
-            BlockPos mobBlockPos = new BlockPos(mobPos);
+            BlockPos mobBlockPos = BlockPos.containing(mobPos);
             // check for a brewing stand in a 3x3 radius around the horse
             boolean brewingStandFound = false;
 
@@ -123,7 +123,7 @@ public class EatSeedsGoal extends ConsumeGoal {
                     BlockPos brewingPos = mobBlockPos.offset(xOffset, 0, zOffset);
 
                     // if a brewing stand is found, teleport the horse .75 blocks down
-                    if (mob.level.getBlockState(brewingPos).is(Blocks.BREWING_STAND)) {
+                    if (mob.level().getBlockState(brewingPos).is(Blocks.BREWING_STAND)) {
                         Horse horse = mob.getWrapper().getBukkitEntity();
                         horse.teleport(horse.getLocation().add(0, -0.75, 0));
                         brewingStandFound = true;
@@ -168,7 +168,7 @@ public class EatSeedsGoal extends ConsumeGoal {
     }
 
     private void randomizeStartConsumingMin() {
-        startConsumingMin = mob.getRandom().nextDouble(0.9, 0.95);
+        startConsumingMin = mob.randomNextDouble(0.9, 0.95);
     }
 
     @Override
@@ -188,7 +188,7 @@ public class EatSeedsGoal extends ConsumeGoal {
     protected void increaseStat(BlockPos sourcePos) {
         SuperiorHorse wrapper = mob.getWrapper();
 
-        Block block = ((World) mob.level.getWorld()).getBlockAt(sourcePos.getX(), sourcePos.getY(), sourcePos.getZ());
+        Block block = ((World) mob.level().getWorld()).getBlockAt(sourcePos.getX(), sourcePos.getY(), sourcePos.getZ());
         BrewerInventory inventory = ((BrewingStand) block.getState()).getInventory();
 
         if (!hungerIsFull()) {

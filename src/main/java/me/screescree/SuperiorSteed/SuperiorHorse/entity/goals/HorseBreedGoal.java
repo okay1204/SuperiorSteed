@@ -27,7 +27,7 @@ public class HorseBreedGoal extends Goal {
 
     public HorseBreedGoal(SuperiorHorseEntity var0, double var1) {
         this.animal = var0;
-        this.level = var0.level;
+        this.level = var0.level();
         this.speedModifier = var1;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 
@@ -72,6 +72,7 @@ public class HorseBreedGoal extends Goal {
         }
     }
 
+    @SuppressWarnings("null")
     public boolean canContinueToUse() {
         return this.partner.isAlive() && this.partner.isInLove() && this.loveTime < 60;
     }
@@ -109,6 +110,7 @@ public class HorseBreedGoal extends Goal {
         return var3;
     }
 
+    @SuppressWarnings("null")
     protected void breed() {
         try {
             if (animal.getWrapper().isMale()) {

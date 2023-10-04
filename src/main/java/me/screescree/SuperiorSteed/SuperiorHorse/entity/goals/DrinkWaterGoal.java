@@ -82,7 +82,7 @@ public class DrinkWaterGoal extends ConsumeGoal {
                 for (int zOffset = -1; zOffset <= 1; zOffset++) {
                     BlockPos waterPos = mobBlockPos.offset(xOffset, yOffset, zOffset);
                     
-                    Block block = ((World) mob.level.getWorld()).getBlockAt(waterPos.getX(), waterPos.getY(), waterPos.getZ());
+                    Block block = ((World) mob.level().getWorld()).getBlockAt(waterPos.getX(), waterPos.getY(), waterPos.getZ());
                     if (isDesiredBlock(block)) {
                         // keep track of water pos that is closest to the horse
                         if (
@@ -121,7 +121,7 @@ public class DrinkWaterGoal extends ConsumeGoal {
     }
 
     private void randomizeStartConsumingMin() {
-        startConsumingMin = mob.getRandom().nextDouble(0.9, 0.98);
+        startConsumingMin = mob.randomNextDouble(0.9, 0.98);
     }
 
     @Override
